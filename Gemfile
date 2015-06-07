@@ -36,7 +36,9 @@ gem 'devise'
 gem 'cancancan'
 gem 'omniauth-github'
 gem 'quiet_assets'
+gem 'sidekiq'
 
+gem 'octokit'
 # For ruby lint
 gem 'rubocop'
 
