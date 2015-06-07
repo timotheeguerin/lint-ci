@@ -1,0 +1,18 @@
+<header>
+  <div class="header-left">
+    <a href="/"><h1>Hourglass</h1></a>
+  </div>
+  <% if user_signed_in? %>
+      <h3 class="username"><%= current_user.username %></h3>
+
+      <div class="dropdown">
+        <%= link_to 'Logout', destroy_user_session_path, method: :delete, class: 'button secondary-button' %>
+      </div>
+      </div>
+  <% else %>
+
+      <div class="header-right">
+        <%= link_to 'Sign in with Github', user_omniauth_authorize_path(:github), class: 'primary-button' %>
+      </div>
+  <% end %>
+</header>

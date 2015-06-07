@@ -1,0 +1,23 @@
+Metrics/LineLength:
+  Max: 100
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: no_space
+
+Metrics/MethodLength:
+  Description: Avoid methods longer than 25 lines of code.
+  Enabled: true
+  CountComments: false
+  Max: 25
+
+Metrics/ParameterLists:
+  CountKeywordArgs: false
+
+
+AllCops:
+  Exclude:
+    - 'spec/**/*'
+    - 'db/**/*'
