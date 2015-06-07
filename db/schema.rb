@@ -11,10 +11,64 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150607195749) do
+ActiveRecord::Schema.define(version: 20150607211127) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "memberships", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "repository_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "memberships", ["repository_id"], name: "index_memberships_on_repository_id", using: :btree
+  add_index "memberships", ["user_id"], name: "index_memberships_on_user_id", using: :btree
+
+  create_table "offenses", force: :cascade do |t|
+    t.integer  "file_id"
+    t.string   "message"
+    t.integer  "line"
+    t.integer  "column"
+    t.integer  "length"
+    t.integer  "severity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "offenses", ["file_id"], name: "index_offenses_on_file_id", using: :btree
+
+  create_table "repositories", force: :cascade do |t|
+    t.string   "name"
+    t.string   "url"
+    t.boolean  "enable"
+    t.datetime "last_sync_at"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "revision_files", force: :cascade do |t|
+    t.integer  "revision_id"
+    t.string   "path"
+    t.integer  "offense_count"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "revision_files", ["revision_id"], name: "index_revision_files_on_revision_id", using: :btree
+
+  create_table "revisions", force: :cascade do |t|
+    t.integer  "repository_id"
+    t.string   "sha"
+    t.integer  "order"
+    t.string   "message"
+    t.datetime "date"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "revisions", ["repository_id"], name: "index_revisions_on_repository_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -37,4 +91,8 @@ ActiveRecord::Schema.define(version: 20150607195749) do
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
+  add_foreign_key "memberships", "repositories"
+  add_foreign_key "memberships", "users"
+  add_foreign_key "revision_files", "revisions"
+  add_foreign_key "revisions", "repositories"
 end
