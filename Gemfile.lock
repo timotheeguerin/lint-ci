@@ -20,6 +20,8 @@ GEM
       erubis (~> 2.7.0)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.1)
+    active_model_serializers (0.9.3)
+      activemodel (>= 3.2)
     activejob (4.2.1)
       activesupport (= 4.2.1)
       globalid (>= 0.3.0)
@@ -95,6 +97,9 @@ GEM
       thor (>= 0.14, < 2.0)
     json (1.8.3)
     jwt (1.5.0)
+    kaminari (0.16.3)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     loofah (2.0.2)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
@@ -254,14 +259,16 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_model_serializers
   byebug
   cancancan
   coffee-rails (~> 4.1.0)
   devise
   factory_girl_rails
   figaro
-  jbuilder (~> 2.0)
+  jbuilder
   jquery-rails
+  kaminari
   octokit
   omniauth-github
   pg

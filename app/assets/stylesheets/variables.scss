@@ -1,0 +1,11 @@
+@import 'colors';
+@import 'mixins';
+
+$border-color: rgba(0, 0, 0, 0.1);
+$thin-border: 1px solid $border-color;
+$border-radius: .3rem;
+
+$header-height: 5rem;
+$sidebar-width: 285px;
+$sidebar-hidden-width: 50px;
+$placeholder-color: rgba(255, 255, 255, 0.7);

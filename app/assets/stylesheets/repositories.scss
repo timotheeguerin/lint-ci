@@ -1,0 +1,6 @@
+@import 'variables';
+
+.repositories-settings {
+  @extend .shadow-box;
+  @extend .container;
+}

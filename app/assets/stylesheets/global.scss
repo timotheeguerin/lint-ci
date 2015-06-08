@@ -1,0 +1,41 @@
+@import 'variables';
+
+body {
+  background-color: $grey_lightest;
+}
+.row {
+  @include flex;
+}
+
+.half {
+  flex: 1;
+}
+
+.card-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card-container .card {
+  margin: 2rem 0;
+}
+
+.container {
+  width: 1024px;
+  margin: auto;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+}
+
+
+
+.flex-fill {
+  flex: 1 0 auto;
+}

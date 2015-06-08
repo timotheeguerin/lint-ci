@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.new_with_session(params, session)
+  def self.new_with_session(_params, session)
     super.tap do |user|
       if (data = session['devise.github_data']) && session['devise.github_data']['extra']['raw_info']
         user.email = data['email'] if user.email.blank?
@@ -26,11 +26,10 @@ class User < ActiveRecord::Base
   def sync_repositories
     Github.octokit.repos(username, type: :all).each do |github_repo|
       next unless Repository.find_by_name(github_repo.name).nil?
-      repository = Repository.new
+      repository = repositories.build
       repository.name = github_repo.name
       repository.url = github_repo.html_url
-      repository.user = self
-      repository.save
     end
+    save
   end
 end
