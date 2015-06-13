@@ -3,8 +3,8 @@ class CreateRevisions < ActiveRecord::Migration
     create_table :revisions do |t|
       t.references :repository, index: true, foreign_key: true
       t.string :sha
-      t.integer :order
       t.string :message
+      t.string :error_count, default: 0
       t.datetime :date
 
       t.timestamps null: false

@@ -9,7 +9,20 @@ class LintCI::Builder
   def run
     clone_repository
     config = load_config
-    Linter::Base.linters(config.languages)
+    linters = Linter::Base.linters(config.languages)
+    revision = new_revision
+    linters.each do |cls|
+      linter = cls.new(revision, repository_path, config)
+      linter.review
+      revision.save
+    end
+  end
+
+  def new_revision
+    revision = Revision.new
+    revision.sha = nil
+    revision.repository = @repository
+    revision
   end
 
   def load_config
