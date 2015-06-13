@@ -1,13 +1,8 @@
 # Repository serializer
 # @see Repository
 class RepositorySerializer < ApplicationSerializer
-  attributes :id, :name, :enabled
+  attributes :id, :name, :enabled,  :github_url
 
-  def github_url
-    object.url
-  end
 
-  def url
-    repository_url(object)
-  end
+  url :repository
 end

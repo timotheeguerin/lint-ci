@@ -18,9 +18,8 @@ gem 'turbolinks'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
-gem 'jbuilder'
-
-gem 'active_model_serializers'
+gem 'active_model_serializers',
+    git: 'https://github.com/rails-api/active_model_serializers.git', tag: 'v0.10.0.rc1'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
@@ -32,6 +31,8 @@ gem 'quiet_assets'
 gem 'sidekiq'
 gem 'kaminari'
 gem 'octokit'
+gem 'git'
+
 # For ruby lint
 gem 'rubocop'
 

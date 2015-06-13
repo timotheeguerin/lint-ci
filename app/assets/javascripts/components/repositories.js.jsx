@@ -4,7 +4,7 @@ var RepositoriesSettings = React.createClass({
     loadCommentsFromServer: function () {
         var url = '/repositories';
         Rest.get(url).success(function (data) {
-            console.log(data)
+            console.log(data[0]);
             this.setState({data: data});
         }.bind(this)).fail(function (xhr, status, err) {
             console.error(this.props.url, status, err.toString());
@@ -83,7 +83,7 @@ var RepositorySetting = React.createClass({
             );
         }
         return (
-            <li className="item flex">
+            <Link className="item flex" href={'/repositories/' + this.state.repository.id}>
                 <div className='refresh-button'>
                     {refresh_button}
                 </div>
@@ -104,7 +104,7 @@ var RepositorySetting = React.createClass({
                         {checked}
                     </div>
                 </div>
-            </li>
+            </Link>
         );
     }
 });

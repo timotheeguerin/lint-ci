@@ -7,7 +7,7 @@ class RepositoriesController < ApplicationController
       format.html
 
       format.json do
-        render 'index.jbuilder'
+        render json: @repositories, each_serializer: RepositorySerializer
       end
     end
   end
@@ -18,19 +18,21 @@ class RepositoriesController < ApplicationController
 
   def sync
     current_user.sync_repositories
-    render 'index.jbuilder'
+    render json: @repositories
   end
 
   def enable
+    create_webhook
     @repository.enabled = true
     @repository.save
-    render 'show.jbuilder'
+    render json: @repository
   end
 
   def disable
+    delete_webhook
     @repository.enabled = false
     @repository.save
-    render 'show.jbuilder'
+    render json: @repository
   end
 
   private
@@ -41,6 +43,18 @@ class RepositoriesController < ApplicationController
 
   def init
     @repository = Repository.new
-    @repositories  = Repository.empty
+    @repositories = Repository.empty
+  end
+
+  def create_webhook
+    github.create_hook(@repository, revisions_url) do |hook|
+      repo.update(hook_id: hook.id)
+    end
+  end
+
+  def delete_webhook
+    github.remove_hook(@repository, repo.hook_id) do
+      repo.update(hook_id: nil)
+    end
   end
 end

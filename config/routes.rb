@@ -12,4 +12,6 @@ Rails.application.routes.draw do
       post :disable
     end
   end
+
+  resources :revisions
 end
