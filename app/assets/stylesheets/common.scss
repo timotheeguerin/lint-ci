@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+.link {
+  @extend a
+}
+
 .shadow-box {
   display: block;
   color: $grey_darkest;

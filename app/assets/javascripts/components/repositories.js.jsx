@@ -2,22 +2,27 @@
 
 var RepositoriesSettings = React.createClass({
     loadCommentsFromServer: function () {
-        var url = '/repositories';
+        var url = '/api/v1/repositories';
         Rest.get(url).success(function (data) {
-            console.log(data[0]);
-            this.setState({data: data});
+            this.setState({repositories: data});
         }.bind(this)).fail(function (xhr, status, err) {
             console.error(this.props.url, status, err.toString());
         }.bind(this));
     },
     getInitialState: function () {
-        return {data: []};
+        return {repositories: []};
     },
     componentDidMount: function () {
         this.loadCommentsFromServer();
     },
+    onSync: function (e) {
+        e.preventDefault();
+        Rest.post('/api/v1/repositories/sync').done(function (data) {
+            this.setState({repositories: data})
+        }.bind(this));
+    },
     render: function () {
-        var repositoryNodes = this.state.data.map(function (repository) {
+        var repositoryNodes = this.state.repositories.map(function (repository) {
             return (
                 <RepositorySetting repository={repository}>
                 </RepositorySetting>
@@ -25,8 +30,12 @@ var RepositoriesSettings = React.createClass({
         });
         return (
             <div className="repositories-settings">
-                <div className="box-title">
-                    <h2>Repositories</h2>
+                <div className="box-title flex-center">
+                    <h2 className='flex-fill'>Repositories</h2>
+                    <a href='#'>
+                        <i className='fa fa-refresh' onClick={this.onSync}></i>
+                        Sync
+                    </a>
                 </div>
                 <ol className="list">
                     {repositoryNodes}

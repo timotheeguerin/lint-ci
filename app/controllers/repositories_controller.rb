@@ -16,24 +16,6 @@ class RepositoriesController < ApplicationController
 
   end
 
-  def sync
-    current_user.sync_repositories
-    render json: @repositories
-  end
-
-  def enable
-    create_webhook
-    @repository.enabled = true
-    @repository.save
-    render json: @repository
-  end
-
-  def disable
-    delete_webhook
-    @repository.enabled = false
-    @repository.save
-    render json: @repository
-  end
 
   private
 

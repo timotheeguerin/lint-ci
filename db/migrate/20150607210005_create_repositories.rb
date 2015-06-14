@@ -2,6 +2,7 @@ class CreateRepositories < ActiveRecord::Migration
   def change
     create_table :repositories do |t|
       t.string :name
+      t.string :owner
       t.string :full_name
       t.string :github_url
       t.string :hook_id

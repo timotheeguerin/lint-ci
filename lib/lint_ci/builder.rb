@@ -3,42 +3,52 @@ class LintCI::Builder
   # @param repository [Repository]
   def initialize(repository)
     @repository = repository
-    @dir = Dir.mktmpdir(@repository.name)
+    @git = @repository.git
+    @dir = @repository.local_path
   end
 
   def run
-    clone_repository
+    Dir.chdir @dir do
+      run_in_repo_dir
+    end
+  end
+
+  def run_in_repo_dir
     config = load_config
     linters = Linter::Base.linters(config.languages)
+    cleanup_existing
     revision = new_revision
-    linters.each do |cls|
-      linter = cls.new(revision, repository_path, config)
+    linters.each do |_, cls|
+      linter = cls.new(revision, @dir, config)
       linter.review
-      revision.save
     end
+    revision.save
+  end
+
+  def cleanup_existing
+    revision = Revision.find_by_sha(commit.sha)
+    revision.destroy unless revision.nil?
   end
 
   def new_revision
     revision = Revision.new
-    revision.sha = nil
+    revision.sha = commit.sha
     revision.repository = @repository
+    revision.message = commit.message
+    revision.date = commit.date
     revision
   end
 
   def load_config
-    config_path = File.join(repository_path, '.lint-ci.yml')
-    LintCi::Config.load_yml(config_path)
+    config_path = File.join(@dir, '.lint-ci.yml')
+    LintCI::Config.load_yml(config_path)
   end
 
   def cleanup
     FileUtils.remove_entry_secure @dir
   end
 
-  protected def clone_repository
-    Git.clone(@repository.github_url, @repository.name, path: repo.user.local_path)
-  end
-
-  protected def repository_path
-    File.join(@dir, @repository.name)
+  def commit
+    @commit ||= @git.object('HEAD^')
   end
 end

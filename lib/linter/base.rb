@@ -15,8 +15,10 @@ class Linter::Base
   end
 
   # Get the list of linters
-  def linters(*languages)
-    {ruby: Linter::Rubocop}.slice(*languages)
+  def self.linters(*languages)
+    {ruby: Linter::Rubocop,
+     rubocop: Linter::Rubocop
+    }.slice(*languages.flatten)
   end
 
   def exec(command, *args)

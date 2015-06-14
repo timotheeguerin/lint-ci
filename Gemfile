@@ -32,6 +32,7 @@ gem 'sidekiq'
 gem 'kaminari'
 gem 'octokit'
 gem 'git'
+gem 'font-awesome-rails'
 
 # For ruby lint
 gem 'rubocop'

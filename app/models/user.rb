@@ -25,10 +25,13 @@ class User < ActiveRecord::Base
   # Sync the user project with github
   def sync_repositories
     GithubApi.octokit.repos(username, type: :all).each do |github_repo|
-      next unless Repository.find_by_name(github_repo.name).nil?
-      repository = repositories.build
+      repository = repositories.find_by_full_name(github_repo.full_name)
+      repository = repositories.build if repositories.nil?
       repository.name = github_repo.name
-      repository.url = github_repo.html_url
+      repository.full_name = github_repo.full_name
+      repository.owner = github_repo.owner.login
+      repository.github_url = github_repo.html_url
+      repository.save
     end
     save
   end

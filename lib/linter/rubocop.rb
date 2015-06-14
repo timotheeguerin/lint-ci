@@ -10,6 +10,7 @@ class Linter::Rubocop < Linter::Base
     json['files'].each do |file_hash|
       @revision.files << parse_file(file_hash)
     end
+    @revision.offense_count = json['summary']['offense_count']
   end
 
   def parse_file(json)
@@ -18,6 +19,7 @@ class Linter::Rubocop < Linter::Base
     json['offenses'].each do |offense_hash|
       file.offenses << parse_offense(offense_hash)
     end
+    file.offense_count = file.offenses.size
     file
   end
 

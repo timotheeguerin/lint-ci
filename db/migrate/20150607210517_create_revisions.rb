@@ -4,7 +4,7 @@ class CreateRevisions < ActiveRecord::Migration
       t.references :repository, index: true, foreign_key: true
       t.string :sha
       t.string :message
-      t.string :error_count, default: 0
+      t.string :offense_count, default: 0
       t.datetime :date
 
       t.timestamps null: false

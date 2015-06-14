@@ -6,6 +6,6 @@ class Ability
     can :read, :all
     return if user.nil?
     can :sync, Repository
-    can [:enable, :disable], Repository, memberships: {user_id: user.id}
+    can [:enable, :disable, :refresh], Repository, memberships: {user_id: user.id}
   end
 end
