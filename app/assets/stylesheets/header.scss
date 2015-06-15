@@ -1,0 +1,34 @@
+@import 'variables';
+
+header {
+  @extend .flex-center;
+  background-color: $primary-color;
+  color: white;
+  padding: 0 2rem;
+
+  .header-left {
+    @extend .flex-fill;
+  }
+
+  .header-right {
+    @extend .flex-center
+  }
+
+  .nav-item {
+    margin: 0 1rem;
+  }
+
+  h1 {
+    margin: 0;
+    font-weight: 100;
+  }
+
+  a {
+    color: white;
+
+    &:hover {
+      color: $grey_medium_light
+    }
+  }
+}
+

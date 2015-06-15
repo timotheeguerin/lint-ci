@@ -41,15 +41,17 @@ ActiveRecord::Schema.define(version: 20150607211127) do
 
   create_table "repositories", force: :cascade do |t|
     t.string   "name"
-    t.string   "owner"
     t.string   "full_name"
     t.string   "github_url"
     t.string   "hook_id"
+    t.integer  "owner_id"
     t.boolean  "enabled",      default: false
     t.datetime "last_sync_at"
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
   end
+
+  add_index "repositories", ["owner_id"], name: "index_repositories_on_owner_id", using: :btree
 
   create_table "revision_files", force: :cascade do |t|
     t.integer  "revision_id"
@@ -65,24 +67,25 @@ ActiveRecord::Schema.define(version: 20150607211127) do
     t.integer  "repository_id"
     t.string   "sha"
     t.string   "message"
-    t.string   "offense_count", default: "0"
+    t.integer  "offense_count", default: 0
     t.datetime "date"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   add_index "revisions", ["repository_id"], name: "index_revisions_on_repository_id", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "email",                  default: "",   null: false
+    t.string   "encrypted_password",     default: "",   null: false
     t.string   "uid"
     t.string   "username"
     t.string   "provider"
+    t.boolean  "active",                 default: true
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",          default: 0,    null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
@@ -96,6 +99,7 @@ ActiveRecord::Schema.define(version: 20150607211127) do
 
   add_foreign_key "memberships", "repositories"
   add_foreign_key "memberships", "users"
+  add_foreign_key "repositories", "users", column: "owner_id"
   add_foreign_key "revision_files", "revisions"
   add_foreign_key "revisions", "repositories"
 end

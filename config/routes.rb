@@ -3,7 +3,11 @@ Rails.application.routes.draw do
 
   root 'welcome#index'
 
-  resources :repositories, only: [:index, :show]
+  resources :repositories, only: [:index, :show] do
+    member do
+      get 'badge.svg', action: :badge
+    end
+  end
   resources :revisions
 
 

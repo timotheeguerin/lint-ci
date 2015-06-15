@@ -33,7 +33,7 @@ gem 'kaminari'
 gem 'octokit'
 gem 'git'
 gem 'font-awesome-rails'
-
+gem 'friendly_id'
 # For ruby lint
 gem 'rubocop'
 
@@ -42,17 +42,12 @@ gem 'react-rails'
 group :development, :test do
   gem 'thin'
 
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug'
-
-  # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '~> 2.0'
-
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 
   gem 'rspec-rails', '~> 3.0'
   gem 'factory_girl_rails'
+
 end
 
 group :production do

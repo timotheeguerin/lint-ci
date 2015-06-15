@@ -3,19 +3,18 @@ class RepositoriesController < ApplicationController
   load_and_authorize_resource
 
   def index
-    respond_to do |format|
-      format.html
-
-      format.json do
-        render json: @repositories, each_serializer: RepositorySerializer
-      end
-    end
   end
 
   def show
 
   end
 
+  def badge
+    badge = LintCI::Badge.new('Style', @repository.badge_message,
+                              @repository.badge_color,
+                              params.except(:action))
+    send_file badge.file, disposition: 'inline'
+  end
 
   private
 
@@ -29,7 +28,7 @@ class RepositoriesController < ApplicationController
   end
 
   def create_webhook
-    github.create_hook(@repository, revisions_url) do |hook|
+    github.create_hook(@repository, api_v1_revisions_url) do |hook|
       repo.update(hook_id: hook.id)
     end
   end
@@ -39,4 +38,5 @@ class RepositoriesController < ApplicationController
       repo.update(hook_id: nil)
     end
   end
+
 end

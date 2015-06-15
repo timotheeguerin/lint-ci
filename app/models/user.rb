@@ -6,12 +6,26 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
+  validates :username, presence: true, uniqueness: true
+
+  def password_required?
+    active? && (!persisted? || !password.nil? || !password_confirmation.nil?)
+  end
+
+  def email_required?
+    active?
+  end
+
   def self.from_omniauth(auth)
-    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
-      user.email = auth.info.email
-      user.password = Devise.friendly_token[0, 20]
-      user.username = auth.info.nickname
-    end
+    user = where(provider: auth.provider, uid: auth.uid).first
+    return user unless user.nil?
+    user = User.find_or_create_by(username: auth.info.nickname)
+    user.provider = auth.provider
+    user.uid = auth.uid
+    user.email = auth.info.email
+    user.password = Devise.friendly_token[0, 20]
+    user.save
+    user
   end
 
   def self.new_with_session(_params, session)
@@ -25,14 +39,19 @@ class User < ActiveRecord::Base
   # Sync the user project with github
   def sync_repositories
     GithubApi.octokit.repos(username, type: :all).each do |github_repo|
-      repository = repositories.find_by_full_name(github_repo.full_name)
-      repository = repositories.build if repositories.nil?
+      unless (repository = repositories.find_by_full_name(github_repo.full_name))
+        repository = repositories.build
+      end
       repository.name = github_repo.name
       repository.full_name = github_repo.full_name
-      repository.owner = github_repo.owner.login
+      repository.owner = User.find_or_create_by(username: github_repo.owner.login)
       repository.github_url = github_repo.html_url
       repository.save
     end
     save
+  end
+
+  def to_s
+    username
   end
 end

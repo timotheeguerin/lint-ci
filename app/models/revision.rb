@@ -5,4 +5,23 @@ class Revision < ActiveRecord::Base
   has_many :files, class_name: 'RevisionFile', dependent: :destroy
 
   validates :sha, presence: true, uniqueness: true
+
+  def status
+    case offense_count
+    when 0
+      :perfect
+    when 1..5
+      :great
+    when 6..10
+      :good
+    when 11..15
+      :acceptable
+    when 16..20
+      :warning
+    when 21..30
+      :dirty
+    else
+      :bad
+    end
+  end
 end
