@@ -1,12 +1,10 @@
-var Api = function () {
-};
+class Api {
+    constructor() {
+        this.root = '/api/v1'
+    }
 
-Api.root = '/api/v1';
+    get user() {
 
-Api.get = function (url, data) {
-    return Rest.get(Api.root + url, data)
-};
+    }
+}
 
-Api.post = function (url, data) {
-    return Rest.post(Api.root + url, data)
-};

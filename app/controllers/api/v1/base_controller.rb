@@ -1,6 +1,7 @@
 module Api::V1
   class BaseController < Api::BaseController
     helper_method :get_resource, :get_resources, :resource_name, :resources_name
+
     # GET /api/v1/{plural_resource_name}
     def index
       set_resources get_resources.page(params[:page]).per(params[:per_page])

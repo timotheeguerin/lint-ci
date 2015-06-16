@@ -26,7 +26,6 @@ module LintCi
 
     config.active_job.queue_adapter = :sidekiq
 
-    config.autoload_paths << "#{Rails.root}/lib/"
-
+    config.autoload_paths << "#{Rails.root}/lib/" << "#{Rails.root}/config/routes"
   end
 end

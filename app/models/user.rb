@@ -1,5 +1,9 @@
 # User model
 class User < ActiveRecord::Base
+  include FriendlyId
+
+  friendly_id :username, use: [:finders]
+
   has_many :memberships, dependent: :destroy
   has_many :repositories, through: :memberships
 
@@ -24,6 +28,7 @@ class User < ActiveRecord::Base
     user.uid = auth.uid
     user.email = auth.info.email
     user.password = Devise.friendly_token[0, 20]
+    user.active = true
     user.save
     user
   end

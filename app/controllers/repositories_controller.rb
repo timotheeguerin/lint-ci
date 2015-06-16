@@ -1,16 +1,22 @@
 # Repositories Api controller
 class RepositoriesController < ApplicationController
-  load_and_authorize_resource
+  resource [:user, :repository]
 
   def index
   end
 
   def show
-
   end
 
   def badge
     badge = LintCI::Badge.new('Style', @repository.badge_message,
+                              @repository.badge_color,
+                              params.except(:action))
+    send_file badge.file, disposition: 'inline'
+  end
+
+  def offense_badge
+    badge = LintCI::Badge.new('Offenses', @repository.offense_count,
                               @repository.badge_color,
                               params.except(:action))
     send_file badge.file, disposition: 'inline'

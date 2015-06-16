@@ -5,9 +5,21 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   helper_method :get_resource, :get_resources, :resource_name, :resources_name
-  
+
   alias_method :devise_user, :current_user
   helper_method :current_user
+
+  def self.resource(resources = [])
+    return load_and_authorize_resource if resources.empty?
+    resources.each_with_index do |arg, i|
+      if i == 0
+        load_and_authorize_resource arg
+      else
+        load_and_authorize_resource arg, through: resources[i - 1]
+      end
+
+    end
+  end
 
   def current_user
     devise_user
@@ -40,12 +52,12 @@ class ApplicationController < ActionController::Base
   # The singular name for the resource class based on the controller
   # @return [String]
   def resource_name
-    @resource_name ||= self.controller_name.singularize
+    @resource_name ||= controller_name.singularize
   end
 
   # The plural name for the resource class based on the controller
   # @return [String]
   def resources_name
-    @resources_name ||= self.controller_name.pluralize
+    @resources_name ||= controller_name.pluralize
   end
 end

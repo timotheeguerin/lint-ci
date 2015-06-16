@@ -33,6 +33,11 @@ class Repository < ActiveRecord::Base
     revision ? revision.status : :unavailable
   end
 
+  def offense_count
+    revision = revisions.last
+    revision ? revision.offense_count : :unavailable
+  end
+
   def badge_message
     status.to_s.capitalize
   end
@@ -49,7 +54,6 @@ class Repository < ActiveRecord::Base
      warning: 'yellow',
      dirty: 'orange',
      bad: 'red',
-     unavailable: 'lightgray'
-    }
+     unavailable: 'lightgray'}
   end
 end

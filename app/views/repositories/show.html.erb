@@ -1,5 +1,6 @@
 <div class="container">
   <div class="shadow-box">
     <h1 class="box-title"><%= @repository.full_name %></h1>
+    <%= image_tag repository_badge_path(@user, @repository) %>
   </div>
 </div>

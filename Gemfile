@@ -23,6 +23,9 @@ gem 'active_model_serializers',
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'sprockets'
+gem 'sprockets-es6'
+
 gem 'figaro'
 gem 'devise'
 gem 'cancancan'
