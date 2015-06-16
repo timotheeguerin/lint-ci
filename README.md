@@ -1,6 +1,6 @@
-== Lint-CI
+# Lint-CI
 
-**IN DEV**
+****IN DEV****
 
 Lint-CI is a web app that check for style error in your repositories.
 * Automated: Active the repository and then on every pull request the style will be checked
