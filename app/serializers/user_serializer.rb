@@ -8,8 +8,5 @@ class UserSerializer < ApplicationSerializer
     api_user_repos_url(object)
   end
 
-  def url_options
-    @options[:url_options] || {}
-  end
   url [:user]
 end

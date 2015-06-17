@@ -4,15 +4,22 @@ class Api::V1::CurrentUserController < Api::V1::BaseController
     authorize! :current, current_user
   end
 
-  # /api/v1/user
+  # GET /api/v1/user
   # render the current user
   def show
     render json: current_user
   end
 
-  # /api/v1/user/repos
+  # GET /api/v1/user/repos
   # render the current user repositories
   def current_repos
+    render json: current_user.repositories
+  end
+
+  # POST /api/v1/user/repos/sync
+  # Sync all the user repositories
+  def sync_repos
+    current_user.sync_repositories
     render json: current_user.repositories
   end
 end

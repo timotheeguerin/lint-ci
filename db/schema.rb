@@ -76,8 +76,8 @@ ActiveRecord::Schema.define(version: 20150607211127) do
   add_index "revisions", ["repository_id"], name: "index_revisions_on_repository_id", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "",   null: false
-    t.string   "encrypted_password",     default: "",   null: false
+    t.string   "email"
+    t.string   "encrypted_password"
     t.string   "uid"
     t.string   "username"
     t.string   "provider"

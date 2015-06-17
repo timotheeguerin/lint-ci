@@ -8,7 +8,10 @@ class Repository < ActiveRecord::Base
   has_many :memberships, dependent: :destroy
   has_many :users, through: :memberships
 
-  has_many :revisions
+  has_many :revisions, dependent: :destroy
+
+  validates :owner_id, presence: true
+  validates :name, uniqueness: {scope: :owner_id}
 
   def owner_path
     File.join(LintCI.repositories_path, owner.username)

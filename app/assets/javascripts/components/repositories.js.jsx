@@ -2,8 +2,8 @@
 
 var RepositoriesSettings = React.createClass({
     loadCommentsFromServer: function () {
-        var url = '/repositories';
-        Api.get(url).success(function (data) {
+        var url = '/api/v1/user/repos';
+        Rest.get(url).success(function (data) {
             this.setState({repositories: data});
         }.bind(this)).fail(function (xhr, status, err) {
             console.error(this.props.url, status, err.toString());
@@ -17,7 +17,7 @@ var RepositoriesSettings = React.createClass({
     },
     onSync: function (e) {
         e.preventDefault();
-        Api.post('/repositories/sync').done(function (data) {
+        Rest.post('/api/v1/user/repos/sync').done(function (data) {
             this.setState({repositories: data})
         }.bind(this));
     },

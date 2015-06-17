@@ -31,3 +31,4 @@ module ActionController
     end
   end
 end
+# ActiveModel::Serializer.config.adapter = ActiveModel::Serializer::Adapter::JsonApi

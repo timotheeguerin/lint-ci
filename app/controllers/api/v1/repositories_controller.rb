@@ -2,12 +2,6 @@
 class Api::V1::RepositoriesController < Api::V1::BaseController
   load_and_authorize_resource
 
-  # Sync all the user repositories
-  def sync
-    current_user.sync_repositories
-    render json: @repositories
-  end
-
   def enable
     create_webhook
     @repository.enabled = true
