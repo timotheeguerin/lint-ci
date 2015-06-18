@@ -1,14 +1,16 @@
+get '' => 'welcome#index'
+
 #================================================================
 # Users
 #================================================================
 # Current user
-get 'user' => 'current_user#show'
+get 'user' => 'current_user#show', as: :current_user
 
 # List of all user
-get 'users' => 'users#index'
+get 'users' => 'users#index', as: :users
 
 # Get specific user
-get 'users/:id' => 'users#show'
+get 'users/:id' => 'users#show', as: :user
 
 #================================================================
 # Repositories

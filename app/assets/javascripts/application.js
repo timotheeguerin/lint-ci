@@ -16,4 +16,6 @@
 //= require react
 //= require react_ujs
 //= require components
+//= require vendor/uri
+//= require vendor/uri-template
 //= require_tree .
