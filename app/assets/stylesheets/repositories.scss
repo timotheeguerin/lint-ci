@@ -4,3 +4,13 @@
   @extend .shadow-box;
   @extend .container;
 }
+
+
+.badge-box {
+  background-color: #f5f5f5;
+  padding: 2rem;
+
+  .tab-panel {
+    padding: 0 2rem 1rem 2rem;
+  }
+}

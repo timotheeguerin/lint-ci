@@ -9,12 +9,14 @@
  * compiled file so the styles you add here take precedence over styles defined in any styles
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
- *=require font-awesome
+ *= require font-awesome
  *= require_self
  */
+@import "bourbon";
+@import "neat";
 
 @import 'variables';
-@import 'vendor/normalize';
+@import 'vendor/*';
 @import 'common';
 @import 'global';
 @import 'header';

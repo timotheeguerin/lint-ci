@@ -23,6 +23,8 @@ Rails.application.routes.draw do
 
   get ':id' => 'users#show', as: :user
   get ':user_id/:id' => 'repositories#show', as: :repository
+  # Page showing the available badges as well as their url.
+  get ':user_id/:id/badges' => 'repositories#badges', as: :repository_badges
   get ':user_id/:id/badge.svg' => 'repositories#badge', as: :repository_badge
   get ':user_id/:id/offense.svg' => 'repositories#badge_offense', as: :repository_offense_badge
 end
