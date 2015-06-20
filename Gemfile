@@ -41,6 +41,7 @@ gem 'friendly_id'
 gem 'rubocop'
 
 gem 'react-rails'
+gem 'zeroclipboard-rails'
 
 gem 'neat'
 gem 'bourbon'

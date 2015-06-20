@@ -34,10 +34,10 @@ get 'repos/:user_id/:id/refresh' => 'repositories#refresh', as: :refresh_repo
 # Repositories Revisions
 #================================================================
 # List of all user repositories
-get 'repos/:user_id/:repository_id/revisions' => 'revisions#index'
+get 'repos/:user_id/:repository_id/revisions' => 'revisions#index', as: :revisions
 
 # List of all user repositories
-get 'repos/:user_id/:repository_id/:id' => 'revisions#show'
+get 'repos/:user_id/:repository_id/:id' => 'revisions#show', as: :revision
 
 
 #================================================================

@@ -18,4 +18,5 @@
 //= require components
 //= require vendor/uri
 //= require vendor/uri-template
+//= require zeroclipboard
 //= require_tree .

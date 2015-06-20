@@ -128,6 +128,9 @@ class Model {
 
     get url() {
         if (this._url == undefined) {
+            if (this.api.urls == undefined) {
+                return '';
+            }
             return this.getUrl()
         } else {
             return this._url;
@@ -169,6 +172,18 @@ class Repository extends Model {
     getUrl() {
         var username = (this.owner == undefined) ? this.owner_id : this.owner.username;
         return this.api.urls.repo(username, this.name);
+    }
+
+    revisions() {
+        var proxy = new RelationshipProxy(this.api, this, Revision, 'revisions_url');
+        return proxy;
+    }
+}
+
+
+class Revision extends Model {
+    getUrl() {
+        return '';
     }
 }
 

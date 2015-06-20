@@ -44,3 +44,107 @@ input[type="checkbox"]:checked:after {
   right: 0;
   transition: border .25s, left .15s .25s, right .25s .175s;
 }
+
+.form-section {
+  margin: 1rem 0;
+}
+
+label {
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  border: 0;
+  padding: .5rem 1.5rem;
+  outline: none;
+  background-color: #F0F0F0;
+  text-align: left;
+  display: inline-block;
+}
+
+.field .search-button {
+  display: block;
+  padding: .5rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 5rem;
+  position: relative;
+  left: -2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  background: #FFFFFF;
+  opacity: .9;
+
+  i {
+    color: #BBB;
+  }
+
+  &:hover {
+    opacity: 1;
+
+    transform: scale(1.1);
+    transition: all .2s;
+
+    i {
+      color: $dark-blue;
+    }
+  }
+}
+
+::-webkit-input-placeholder {
+  color: $placeholder-color;
+}
+
+:-moz-placeholder {
+  /* Firefox 18- */
+  color: $placeholder-color;
+}
+
+::-moz-placeholder {
+  /* Firefox 19+ */
+  color: $placeholder-color;
+}
+
+:-ms-input-placeholder {
+  color: $placeholder-color;
+}
+
+.select {
+  @include flex;
+}
+
+.select span {
+  margin: 0 .2rem;
+  padding: .6rem .4rem;
+  text-align: center;
+  border-radius: 10rem;
+  cursor: pointer;
+  width: 2.7rem;
+  height: 2.7rem;
+  display: none;
+}
+
+.select span i {
+  color: #FFFFFF;
+}
+
+.select span:hover {
+  background: rgba(0, 0, 0, 0.1);
+  transform: scale(1.1);
+  transition: all .1s;
+}
+
+.select span:active {
+  background: rgba(0, 0, 0, 0.2);
+  transition: all .1s;
+}
+
+.select span.selected {
+  background: #FFFFFF;
+  color: $primary-color;
+  display: block;
+}
+
+.select span.selected i {
+  color: $primary-color;
+}

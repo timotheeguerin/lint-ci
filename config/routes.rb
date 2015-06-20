@@ -27,5 +27,7 @@ Rails.application.routes.draw do
   get ':user_id/:id/badges' => 'repositories#badges', as: :repository_badges
   get ':user_id/:id/badge.svg' => 'repositories#badge', as: :repository_badge
   get ':user_id/:id/offense.svg' => 'repositories#badge_offense', as: :repository_offense_badge
+
+  get ':user_id/:repository_id/:id' => 'revisions#show', as: :revision
 end
 
