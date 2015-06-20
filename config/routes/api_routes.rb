@@ -43,10 +43,18 @@ get 'repos/:user_id/:repository_id/:id' => 'revisions#show', as: :revision
 #================================================================
 # Repositories Revisions Files
 #================================================================
-# List of all user repositories
-get 'repos/:user_id/:repository_id/:revision_id/files' => 'revision_files#index'
+# List of all files in revision
+get 'repos/:user_id/:repository_id/:revision_id/files' => 'revision_files#index', as: :files
 
 # List of all user repositories
-get 'repos/:user_id/:repository_id/:revision_id/:id' => 'revision_files#show'
+get 'repos/:user_id/:repository_id/:revision_id/:id' => 'revision_files#show', as: :file
+
+#================================================================
+# Repositories Revisions Files Offenses
+#================================================================
+get 'repos/:user_id/:repository_id/:revision_id/:file_id/offenses' => 'offenses#index',
+    as: :offenses
+get 'repos/:user_id/:repository_id/:revision_id/:file_id/offenses/:id' => 'offenses#index',
+    as: :offense
 
 

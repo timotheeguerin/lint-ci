@@ -14,13 +14,13 @@
   }
 }
 
-.revision-list {
+.revision-list, .revision-file-list {
   .item {
     &:hover {
       background-color: #f5f5f5;
     }
 
-    .offense {
+    .offense, .file {
       padding: 0 1rem;
       font-weight: bold;
       &.perfect {
@@ -53,3 +53,4 @@
     }
   }
 }
+

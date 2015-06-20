@@ -13,5 +13,7 @@ class RevisionSerializer < ApplicationSerializer
     revision_url(object.repository.owner, object.repository, object)
   end
 
-
+  link :files_url do
+    api_files_url(object.repository.owner, object.repository, object)
+  end
 end

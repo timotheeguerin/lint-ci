@@ -10,9 +10,6 @@ var RevisionList = React.createClass({
             this.setState({revisions: revisions})
         }.bind(this));
     },
-    renderLinks: function (url) {
-
-    },
     renderOffenseCount: function (count) {
         if (count == 0) {
             return <i className='fa fa-check' title='No offenses'></i>
@@ -23,7 +20,7 @@ var RevisionList = React.createClass({
     render: function () {
         var revisions = this.state.revisions.map(function (revision) {
             return (
-                <a className='item flex-center' href={revision.html_url}>
+                <a className='item flex-center' href={revision.html_url} key={revision.id}>
                     <div className={'offense ' + revision.status}>
                         {this.renderOffenseCount(revision.offense_count)}
                     </div>

@@ -1,0 +1,12 @@
+<div class="container">
+  <div class=" shadow-box">
+    <h1 class="box-title">
+      <a href="<%= repository_path(@repository.owner, @repository) %>">
+        <%= @repository.full_name %>
+      </a>
+      <%= @revision.message %>
+    </h1>
+
+    <%= react_component 'RevisionFileList', {revision: json_for(@revision)} %>
+  </div>
+</div>

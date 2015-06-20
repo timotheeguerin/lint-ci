@@ -4,6 +4,10 @@ module Api::V1
 
     # GET /api/v1/{plural_resource_name}
     def index
+      if params.key? :order_by
+        sens = params[:order_sens] || 'ASC'
+        set_resources get_resources.order(params[:order_by] => sens)
+      end
       set_resources get_resources.page(params[:page]).per(params[:per_page])
       render json: get_resources
     end

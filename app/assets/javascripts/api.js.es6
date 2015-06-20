@@ -81,20 +81,31 @@ class Deferred {
 }
 
 class RelationshipProxy {
-    constructor(api, record, cls, url_attr) {
+    constructor(api, record, relationship, cls, url_attr) {
         this.api = api;
         this.cls = cls;
         this.url_attr = url_attr;
         this.record = record;
+        this.relationship = relationship;
     }
 
     get url() {
         return URI(this.record[this.url_attr])
     }
 
+    relationShipValue() {
+        var key = `_${this.relationship}`;
+        return this.record[key];
+    }
+
     fetch() {
         var response = new Deferred();
         this.record.fetch().then(function () {
+            if (this.record)
+                if (this.relationShipValue() != undefined) {
+                    response.trigger(this.relationShipValue());
+                    return;
+                }
             Rest.get(this.url).done(function (data) {
                 var items = [];
                 for (let item of data) {
@@ -162,8 +173,8 @@ class User extends Model {
         this.api.urls.user(this.username);
     }
 
-    repositories() {
-        var proxy = new RelationshipProxy(this.api, this, Repository, 'repos_url');
+    repos() {
+        var proxy = new RelationshipProxy(this.api, this, 'repos', Repository, 'repos_url');
         return proxy;
     }
 }
@@ -175,7 +186,7 @@ class Repository extends Model {
     }
 
     revisions() {
-        var proxy = new RelationshipProxy(this.api, this, Revision, 'revisions_url');
+        var proxy = new RelationshipProxy(this.api, this, 'revisions', Revision, 'revisions_url');
         return proxy;
     }
 }
@@ -185,15 +196,22 @@ class Revision extends Model {
     getUrl() {
         return '';
     }
+
+    set files(ary) {
+        this._files = ary;
+    }
+
+    get files() {
+        var proxy = new RelationshipProxy(this.api, this, 'files', RevisionFile, 'files_url');
+        return proxy;
+    }
+}
+
+class RevisionFile extends Model {
+    getUrl() {
+        return '';
+    }
 }
 
 var api = new Api();
-api.onLoad(function () {
-    console.log('ready...');
-    console.log(api.urls);
-    var u = api.user('grahamludwinski');
-    u.repositories().fetch().then(function (repos) {
-        console.log(repos)
-    });
-});
 
