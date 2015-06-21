@@ -1,0 +1,11 @@
+<div class="container">
+  <div class="shadow-box">
+    <h1 class="box-title">
+      <%= @revision_file.path %>
+    </h1>
+
+    <div>
+      <%= react_component 'RevisionFileViewer', {file: json_for(@revision_file)} %>
+    </div>
+  </div>
+</div>

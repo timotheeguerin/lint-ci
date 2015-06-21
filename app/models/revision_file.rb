@@ -1,5 +1,8 @@
 # Revision File model
 class RevisionFile < ActiveRecord::Base
+  include FriendlyId
+  friendly_id :path, use: [:finders]
+
   belongs_to :revision
   has_many :offenses, foreign_key: 'file_id', dependent: :destroy
 
@@ -22,5 +25,9 @@ class RevisionFile < ActiveRecord::Base
     else
       :bad
     end
+  end
+
+  def content
+    repository.git.object("#{revision.sha}:#{path}").contents
   end
 end

@@ -4,6 +4,8 @@ class User < ActiveRecord::Base
 
   friendly_id :username, use: [:finders]
 
+  has_many :repos, class_name: 'Repository', dependent: :destroy, foreign_key: :owner_id
+
   has_many :memberships, dependent: :destroy
   has_many :repositories, through: :memberships
 

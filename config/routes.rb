@@ -29,7 +29,7 @@ Rails.application.routes.draw do
   get ':user_id/:id/offense.svg' => 'repositories#badge_offense', as: :repository_offense_badge
 
   get ':user_id/:repository_id/:id' => 'revisions#show', as: :revision
-  get ':user_id/:repository_id/:revision_id/:id/' => 'files#show',
-      as: :file, constraints: {id: /.*/}
+  get ':user_id/:repository_id/:revision_id/:id/' => 'revision_files#show',
+      as: :file, constraints: {id: /.+/}
 end
 

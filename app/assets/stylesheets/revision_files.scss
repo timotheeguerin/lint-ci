@@ -1,0 +1,26 @@
+@import 'variables';
+
+.editor, .highlight {
+  .offense {
+    background-color: $red;
+    cursor: pointer;
+  }
+
+  //.offense:before {
+  //  content: "~~~~~~~~~~~~";
+  //  font-size: 0.6em;
+  //  font-weight: 700;
+  //  font-family: Times New Roman, Serif;
+  //  color: red;
+  //  width: 100%;
+  //  position: absolute;
+  //  top: 12px;
+  //  left: -1px;
+  //  overflow: hidden;
+  //}
+}
+
+.ace_gutter-cell.ace_breakpoint{
+  background-color: $red;
+  border-radius: 1rem;
+}

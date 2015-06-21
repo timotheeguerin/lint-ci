@@ -43,6 +43,9 @@ gem 'rubocop'
 gem 'react-rails'
 gem 'zeroclipboard-rails'
 
+gem 'rouge'
+gem 'ace-rails-ap'
+
 gem 'neat'
 gem 'bourbon'
 gem 'refills'

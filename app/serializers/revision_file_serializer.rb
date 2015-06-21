@@ -17,4 +17,8 @@ class RevisionFileSerializer < ApplicationSerializer
   link :offenses_url do
     api_offenses_url(object.repository.owner, object.repository, object.revision, object)
   end
+
+  link :content_url do
+    api_file_content_url(object.repository.owner, object.repository, object.revision, object)
+  end
 end

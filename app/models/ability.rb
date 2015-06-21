@@ -3,7 +3,8 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    can [:read, :badge, :badges, :badge_offense], :all
+    can [:read, :badge, :badges, :badge_offense, :content], :all
+
     return if user.nil?
     can :current, :all
     can :sync, Repository

@@ -15,8 +15,11 @@
 //= require turbolinks
 //= require react
 //= require react_ujs
-//= require components
 //= require vendor/uri
 //= require vendor/uri-template
 //= require zeroclipboard
+//= require ace/ace
+//= require ace/theme-github
+//= require ace/mode-ruby
+//= require components
 //= require_tree .

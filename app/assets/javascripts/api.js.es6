@@ -81,40 +81,69 @@ class Deferred {
 }
 
 class RelationshipProxy {
-    constructor(api, record, relationship, cls, url_attr) {
+    constructor(api, record, relationship, cls) {
         this.api = api;
         this.cls = cls;
-        this.url_attr = url_attr;
         this.record = record;
         this.relationship = relationship;
+        this.response = new Deferred();
+
     }
 
     get url() {
-        return URI(this.record[this.url_attr])
+        return URI(this.record[`${this.relationship}_url`])
     }
 
-    relationShipValue() {
+    getRelationshipValue() {
         var key = `_${this.relationship}`;
         return this.record[key];
     }
 
+
+    setRelationshipValue(value) {
+        var key = `_${this.relationship}`;
+        this.record[key] = value;
+    }
+
+    getItem(item) {
+        if (this.cls == null) {
+            return item
+        } else {
+            return new this.cls(this.api, item)
+        }
+    }
+
+    computeRelationshipValue(data) {
+        if (Array.isArray(data)) {
+            var items = [];
+            for (let item of data) {
+                this.push(this.getItem(item))
+            }
+            return items;
+        } else {
+            return this.getItem(data);
+        }
+    }
+
     fetch() {
-        var response = new Deferred();
         this.record.fetch().then(function () {
-            if (this.record)
-                if (this.relationShipValue() != undefined) {
-                    response.trigger(this.relationShipValue());
-                    return;
-                }
-            Rest.get(this.url).done(function (data) {
-                var items = [];
-                for (let item of data) {
-                    items.push(new this.cls(this.api, item))
-                }
-                response.trigger(items);
-            }.bind(this));
+            if (this.getRelationshipValue() != undefined) {
+                this.response.trigger(this.getRelationshipValue());
+            } else {
+                this.loadRelationship()
+            }
         }.bind(this));
-        return response;
+        return this.response;
+    }
+
+    loadRelationship() {
+        Rest.get(this.url).done(function (data) {
+            var value = this.computeRelationshipValue(data);
+            this.setRelationshipValue(value);
+            this.response.trigger(this.getRelationshipValue());
+        }.bind(this)).fail(function (jqXHR, textStatus, errorThrown) {
+            console.error(jqXHR, textStatus, errorThrown);
+        });
     }
 }
 class Model {
@@ -152,7 +181,6 @@ class Model {
         var response = new Deferred();
         if (!this.cached || force) {
             this.api.onLoad(function () {
-                console.log('url: ' + this.url);
                 Rest.get(this.url).done(function (data) {
                     this.assign_attributes(data);
                     this.cached = true;
@@ -174,7 +202,7 @@ class User extends Model {
     }
 
     repos() {
-        var proxy = new RelationshipProxy(this.api, this, 'repos', Repository, 'repos_url');
+        var proxy = new RelationshipProxy(this.api, this, 'repos', Repository);
         return proxy;
     }
 }
@@ -186,7 +214,7 @@ class Repository extends Model {
     }
 
     revisions() {
-        var proxy = new RelationshipProxy(this.api, this, 'revisions', Revision, 'revisions_url');
+        var proxy = new RelationshipProxy(this.api, this, 'revisions', Revision);
         return proxy;
     }
 }
@@ -202,7 +230,7 @@ class Revision extends Model {
     }
 
     get files() {
-        var proxy = new RelationshipProxy(this.api, this, 'files', RevisionFile, 'files_url');
+        var proxy = new RelationshipProxy(this.api, this, 'files', RevisionFile);
         return proxy;
     }
 }
@@ -210,6 +238,15 @@ class Revision extends Model {
 class RevisionFile extends Model {
     getUrl() {
         return '';
+    }
+
+    set content(value) {
+        this._content = value;
+    }
+
+    get content() {
+        var proxy = new RelationshipProxy(this.api, this, 'content', null);
+        return proxy;
     }
 }
 

@@ -47,14 +47,20 @@ get 'repos/:user_id/:repository_id/:id' => 'revisions#show', as: :revision
 get 'repos/:user_id/:repository_id/:revision_id/files' => 'revision_files#index', as: :files
 
 # List of all user repositories
-get 'repos/:user_id/:repository_id/:revision_id/:id' => 'revision_files#show', as: :file
 
 #================================================================
 # Repositories Revisions Files Offenses
 #================================================================
-get 'repos/:user_id/:repository_id/:revision_id/:file_id/offenses' => 'offenses#index',
-    as: :offenses
-get 'repos/:user_id/:repository_id/:revision_id/:file_id/offenses/:id' => 'offenses#index',
-    as: :offense
+get 'repos/:user_id/:repository_id/:revision_id/:revision_file_id/offenses' => 'offenses#index',
+    as: :offenses, constraints: {revision_file_id: /.+/}
+get 'repos/:user_id/:repository_id/:revision_id/:revision_file_id/offenses/:id' => 'offenses#show',
+    as: :offense, constraints: {revision_file_id: /.+/}
+
+get 'repos/:user_id/:repository_id/:revision_id/:id/content' => 'revision_files#content',
+    as: :file_content, constraints: {id: /.+/}
+
+get 'repos/:user_id/:repository_id/:revision_id/:id' => 'revision_files#show',
+    as: :file, constraints: {id: /.+/}
+
 
 
