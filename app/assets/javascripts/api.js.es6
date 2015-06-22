@@ -1,5 +1,3 @@
-//= require vendor/uri
-//= require rest
 
 class Api {
     constructor(host = '') {

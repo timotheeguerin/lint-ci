@@ -1,4 +1,4 @@
-class UserComponent extends ReactComponent {
+class UserComponent extends React.Component {
     constructor(props) {
         this.state = {
             user: new User(api, props.user)

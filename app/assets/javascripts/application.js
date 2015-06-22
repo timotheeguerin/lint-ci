@@ -18,4 +18,5 @@
 //= require vendor/uri
 //= require vendor/uri-template
 //= require components
+//= require rest
 //= require_tree .
