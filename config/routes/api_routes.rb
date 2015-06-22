@@ -28,7 +28,7 @@ get 'users/:user_id/repos' => 'repositories#index', as: :user_repos
 get 'repos/:user_id/:id' => 'repositories#show', as: :repo
 
 # Refresh a repe(i.e trigger a new run to compute the style)
-get 'repos/:user_id/:id/refresh' => 'repositories#refresh', as: :refresh_repo
+post 'repos/:user_id/:id/refresh' => 'repositories#refresh', as: :refresh_repo
 
 #================================================================
 # Repositories Revisions

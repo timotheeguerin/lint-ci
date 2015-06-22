@@ -59,4 +59,8 @@ class Repository < ActiveRecord::Base
      bad: 'red',
      unavailable: 'lightgray'}
   end
+
+  def refreshing
+    !job_id.nil?
+  end
 end

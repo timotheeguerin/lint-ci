@@ -1,9 +1,14 @@
 # Linter
 class Linter::Rubocop < Linter::Base
   def review
-    out = `rubocop --format json`
-    json = JSON.parse(out)
-    parse_json(json)
+    json = nil
+    puts Benchmark.measure('Rubocop') {
+           out = `rubocop --format json`
+           json = JSON.parse(out)
+         }
+    puts Benchmark.measure('Save') {
+           parse_json(json)
+         }
   end
 
   def parse_json(json)

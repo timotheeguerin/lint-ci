@@ -19,8 +19,13 @@ class Api::V1::RepositoriesController < Api::V1::BaseController
 
   # Refresh to repo
   def refresh
-    builder = LintCI::Builder.new(@repository)
-    builder.run
+    @repository.transaction do
+      unless @repository.refreshing
+        job = ScanRepositoryJob.perform_later(@repository)
+        @repository.job_id = job.job_id
+        @repository.save
+      end
+    end
     render json: @repository
   end
 

@@ -12,6 +12,8 @@ class ActionDispatch::Routing::Mapper
 end
 
 Rails.application.routes.draw do
+  get 'settings/repositories'
+
   devise_for :users, controllers: {omniauth_callbacks: 'users/omniauth_callbacks'}
   root 'welcome#index'
 
@@ -20,6 +22,9 @@ Rails.application.routes.draw do
       draw :api_routes
     end
   end
+
+  get 'settings' => 'settings#index'
+  get 'settings/repositories' => 'settings#repositories'
 
   get ':id' => 'users#show', as: :user
   get ':user_id/:id' => 'repositories#show', as: :repository
@@ -31,5 +36,6 @@ Rails.application.routes.draw do
   get ':user_id/:repository_id/:id' => 'revisions#show', as: :revision
   get ':user_id/:repository_id/:revision_id/:id/' => 'revision_files#show',
       as: :file, constraints: {id: /.+/}
+
 end
 

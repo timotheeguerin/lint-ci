@@ -1,19 +1,24 @@
-var RevisionFileViewer = React.createClass({
-    getInitialState: function () {
-        return {
-            file: new RevisionFile(api, this.props.file),
+//= require components/tabs
+
+class RevisionFileViewer extends React.Component {
+    constructor(props) {
+        this.state = {
+            file: new RevisionFile(api, props.file),
             lines: [],
             annotations: {}
         }
 
-    },
-    keep: function (text) {
+    }
+
+    keep(text) {
         return '<span>' + text + '</span>'
-    },
-    highlightOffense: function (offense, text) {
+    }
+
+    highlightOffense(offense, text) {
         return '<span class="offense" data-id="' + offense.id + '" title="' + offense.message + '">' + text + '</span>'
-    },
-    handleContent: function (content) {
+    }
+
+    handleContent(content) {
         var dom = $(content);
         var pre = dom.find('code');
         var lines = pre.html().split('\n').map(function (x) {
@@ -55,8 +60,9 @@ var RevisionFileViewer = React.createClass({
         });
 
         return lines;
-    },
-    findOffense: function (id) {
+    }
+
+    findOffense(id) {
         id = parseInt(id);
         for (var i in this.state.file.offenses) {
             var offense = this.state.file.offenses[i];
@@ -65,10 +71,11 @@ var RevisionFileViewer = React.createClass({
             }
         }
         return null;
-    },
-    registerEvents: function () {
+    }
+
+    registerEvents() {
         var self = this;
-        $(this.getDOMNode()).on('click', '.offense', function () {
+        $(React.findDOMNode(this)).on('click', '.offense', function () {
             var id = $(this).data('id');
             var offense = self.findOffense(id);
             var annotations = self.state.annotations;
@@ -80,21 +87,23 @@ var RevisionFileViewer = React.createClass({
                 self.setState(annotations);
             }
         });
-    },
-    componentDidMount: function () {
-        this.state.file.content.fetch().then(function (content) {
+    }
+
+    componentDidMount() {
+        this.state.file.content.fetch().then((content) => {
             this.setState({lines: this.handleContent(content.raw)});
 
-        }.bind(this));
+        });
         this.registerEvents();
-    },
-    render: function () {
+    }
+
+    render() {
         return (
             <div style={{padding: '1rem'}}>
                 <Tabs tabActive={1}>
                     <Tabs.Panel title={'Preview'} active={true}>
-                        <RevisionFileViewer.Code lines={this.state.lines}
-                                                 annotations={this.state.annotations}/>
+                        <RevisionFileViewerCode lines={this.state.lines}
+                                                annotations={this.state.annotations}/>
                     </Tabs.Panel>
                     <Tabs.Panel title={'Offenses'}>
                         <div className='list'>
@@ -107,43 +116,50 @@ var RevisionFileViewer = React.createClass({
 
         )
     }
-});
+}
 
-
-RevisionFileViewer.Code = React.createClass({
-    render: function () {
-        var lines = this.props.lines.map(function (content, i) {
-            var box = '';
-            var line = i + 1;
-            if (line in this.props.annotations) {
-
-                box = <tr>
-                    <td></td>
-                    <td>
-                        <div className='offense-details'>
-                            {this.props.annotations[line]}
-                        </div>
-                    </td>
-                </tr>
-            }
-            return [
-                <RevisionFileViewer.Line line={line} content={content}/>,
-                box
-            ]
-        }.bind(this));
+RevisionFileViewerCode.defaultProps = { annotations: {} };
+class RevisionFileViewerCode extends React.Component {
+    render() {
         return (
             <pre className='highlight'>
                 <table>
-                    {lines}
+                    {this.renderLines()}
                 </table>
             </pre>
         )
     }
-});
 
+    renderLines() {
+        return this.props.lines.map((content, i) => {
+            var box = '';
+            var line = i + 1;
+            if (line in this.props.annotations) {
+                box = this.renderAnnotation(line)
+            }
+            return [
+                <RevisionFileViewerLine line={line} content={content}/>,
+                box
+            ]
+        });
+    }
 
-RevisionFileViewer.Line = React.createClass({
-    render: function () {
+    renderAnnotation(line) {
+        return (
+            <tr>
+                <td></td>
+                <td>
+                    <div className='offense-details'>
+                        {this.props.annotations[line]}
+                    </div>
+                </td>
+            </tr>
+        )
+    }
+}
+
+class RevisionFileViewerLine extends React.Component {
+    render() {
         return (
             <tr>
                 <td className='line-number'>{this.props.line}</td>
@@ -153,4 +169,4 @@ RevisionFileViewer.Line = React.createClass({
             </tr>
         )
     }
-});
+}

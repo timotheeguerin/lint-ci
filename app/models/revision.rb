@@ -7,7 +7,7 @@ class Revision < ActiveRecord::Base
 
   has_many :files, class_name: 'RevisionFile', dependent: :destroy
 
-  validates :sha, presence: true, uniqueness: true
+  validates :sha, presence: true, uniqueness: {scope: :repository_id}
 
   def status
     case offense_count

@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 
 var RepositoriesSettings = React.createClass({
     loadCommentsFromServer: function () {

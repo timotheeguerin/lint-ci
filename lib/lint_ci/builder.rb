@@ -8,6 +8,7 @@ class LintCI::Builder
   end
 
   def run
+    @git.pull
     Dir.chdir @dir do
       run_in_repo_dir
     end
@@ -22,7 +23,7 @@ class LintCI::Builder
       linter = cls.new(revision, @dir, config)
       linter.review
     end
-    revision.save
+    revision.save!
   end
 
   def cleanup_existing

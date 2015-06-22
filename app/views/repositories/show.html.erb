@@ -1,18 +1,3 @@
 <div class="container">
-  <div class="shadow-box">
-    <h1 class="box-title">
-      <%= @repository.full_name %>
-      <%= link_to  repository_badges_path do %>
-          <%= image_tag repository_badge_path(@user, @repository) %>
-      <% end %>
-
-      <%= link_to  repository_badges_path do %>
-          <%= image_tag repository_offense_badge_path(@user, @repository) %>
-      <% end %>
-    </h1>
-
-    <div>
-      <%= react_component 'RevisionList', {repository: json_for(@repository)} %>
-    </div>
-  </div>
+  <%= react_component 'component.Repository', {repository: json_for(@repository)} %>
 </div>

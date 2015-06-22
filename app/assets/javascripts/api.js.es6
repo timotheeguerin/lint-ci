@@ -63,22 +63,6 @@ class ApiUrl {
         return URI.expand(this.urls['repo'], {user_id: username, id: repo})
     }
 }
-class Deferred {
-    constructor() {
-        this.callbacks = []
-    }
-
-    then(callback) {
-        this.callbacks.push(callback);
-        return this;
-    }
-
-    trigger(value) {
-        for (let callback of this.callbacks) {
-            callback(value);
-        }
-    }
-}
 
 class RelationshipProxy {
     constructor(api, record, relationship, cls) {
@@ -86,8 +70,6 @@ class RelationshipProxy {
         this.cls = cls;
         this.record = record;
         this.relationship = relationship;
-        this.response = new Deferred();
-
     }
 
     get url() {
@@ -117,7 +99,7 @@ class RelationshipProxy {
         if (Array.isArray(data)) {
             var items = [];
             for (let item of data) {
-                this.push(this.getItem(item))
+                items.push(this.getItem(item))
             }
             return items;
         } else {
@@ -126,21 +108,23 @@ class RelationshipProxy {
     }
 
     fetch() {
-        this.record.fetch().then(function () {
-            if (this.getRelationshipValue() != undefined) {
-                this.response.trigger(this.getRelationshipValue());
-            } else {
-                this.loadRelationship()
-            }
-        }.bind(this));
-        return this.response;
+        var response = new Promise((resolve, reject) => {
+            this.record.fetch().then(() => {
+                if (this.getRelationshipValue() != undefined) {
+                    resolve(this.getRelationshipValue());
+                } else {
+                    this.loadRelationship(resolve, reject)
+                }
+            });
+        });
+        return response;
     }
 
-    loadRelationship() {
+    loadRelationship(resolve) {
         Rest.get(this.url).done(function (data) {
             var value = this.computeRelationshipValue(data);
             this.setRelationshipValue(value);
-            this.response.trigger(this.getRelationshipValue());
+            resolve(this.getRelationshipValue());
         }.bind(this)).fail(function (jqXHR, textStatus, errorThrown) {
             console.error(jqXHR, textStatus, errorThrown);
         });
@@ -178,22 +162,21 @@ class Model {
     }
 
     fetch(force = false) {
-        var response = new Deferred();
-        if (!this.cached || force) {
-            this.api.onLoad(function () {
-                Rest.get(this.url).done(function (data) {
-                    this.assign_attributes(data);
-                    this.cached = true;
-                    response.trigger(this);
-                }.bind(this));
-            }.bind(this))
-        }
-        else {
-            response.trigger(this);
-        }
-        return response;
+        return new Promise((resolve) => {
+            if (!this.cached || force) {
+                this.api.onLoad(function () {
+                    Rest.get(this.url).done(function (data) {
+                        this.assign_attributes(data);
+                        this.cached = true;
+                        resolve(this);
+                    }.bind(this));
+                }.bind(this))
+            }
+            else {
+                resolve(this);
+            }
+        });
     }
-
 }
 
 class User extends Model {

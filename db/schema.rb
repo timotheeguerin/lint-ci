@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150607211127) do
+ActiveRecord::Schema.define(version: 20150622191102) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 20150607211127) do
     t.datetime "last_sync_at"
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
+    t.string   "job_id"
   end
 
   add_index "repositories", ["owner_id"], name: "index_repositories_on_owner_id", using: :btree
