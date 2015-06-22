@@ -41,14 +41,11 @@ gem 'friendly_id'
 gem 'rubocop'
 
 gem 'react-rails'
-gem 'zeroclipboard-rails'
 
 gem 'rouge'
-gem 'ace-rails-ap'
 
-gem 'neat'
-gem 'bourbon'
-gem 'refills'
+gem 'bower-rails', '~> 0.9.2'
+
 group :development, :test do
   gem 'thin'
 

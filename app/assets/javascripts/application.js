@@ -17,9 +17,5 @@
 //= require react_ujs
 //= require vendor/uri
 //= require vendor/uri-template
-//= require zeroclipboard
-//= require ace/ace
-//= require ace/theme-github
-//= require ace/mode-ruby
 //= require components
 //= require_tree .

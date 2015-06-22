@@ -1,10 +1,9 @@
-var Range = ace.require('ace/range').Range;
-
 var RevisionFileViewer = React.createClass({
     getInitialState: function () {
         return {
             file: new RevisionFile(api, this.props.file),
-            content: ''
+            lines: [],
+            annotations: {}
         }
 
     },
@@ -12,11 +11,11 @@ var RevisionFileViewer = React.createClass({
         return '<span>' + text + '</span>'
     },
     highlightOffense: function (offense, text) {
-        return '<span class="offense" title="' + offense.message + '">' + text + '</span>'
+        return '<span class="offense" data-id="' + offense.id + '" title="' + offense.message + '">' + text + '</span>'
     },
     handleContent: function (content) {
         var dom = $(content);
-        var pre = dom.find('.code pre');
+        var pre = dom.find('code');
         var lines = pre.html().split('\n').map(function (x) {
             return $('<div>' + x + '</div>')
         });
@@ -24,7 +23,7 @@ var RevisionFileViewer = React.createClass({
         this.state.file.offenses.forEach(function (offense) {
             var row = offense.line - 1;
             var start = offense.column - 1;
-            var end = start + offense.length + 4;
+            var end = start + offense.length;
             var current = 0;
             console.log(lines[row].text());
 
@@ -42,8 +41,8 @@ var RevisionFileViewer = React.createClass({
                         $(this).html(that.keep(left) + that.highlightOffense(offense, right));
                     }
                 } else if (current < end) {
-                    var left = text.slice(0, end - current - 1);
-                    var right = text.slice(end - current - 1, text.length);
+                    var left = text.slice(0, end - current);
+                    var right = text.slice(end - current, text.length);
                     console.log('Not', left, right);
                     $(this).html(that.highlightOffense(offense, left) + that.keep(right));
                 }
@@ -54,35 +53,48 @@ var RevisionFileViewer = React.createClass({
         lines = lines.map(function (x) {
             return x.html()
         });
-        pre.html(lines.join('\n'));
 
-        return dom[0].outerHTML;
+        return lines;
+    },
+    findOffense: function (id) {
+        id = parseInt(id);
+        for (var i in this.state.file.offenses) {
+            var offense = this.state.file.offenses[i];
+            if (offense.id == id) {
+                return offense;
+            }
+        }
+        return null;
     },
     registerEvents: function () {
-        $(this.getDOMNode()).on('mouseenter', '.offense', function () {
-            console.log('enter')
-        });
-
-        $(this.getDOMNode()).on('mouseleave', '.offense', function () {
-            console.log('leave')
+        var self = this;
+        $(this.getDOMNode()).on('click', '.offense', function () {
+            var id = $(this).data('id');
+            var offense = self.findOffense(id);
+            var annotations = self.state.annotations;
+            if (offense.line in annotations) {
+                delete annotations[offense.line];
+                self.setState(annotations);
+            } else {
+                annotations[offense.line] = offense.message;
+                self.setState(annotations);
+            }
         });
     },
     componentDidMount: function () {
         this.state.file.content.fetch().then(function (content) {
-            this.setState({content: this.handleContent(content.raw)});
+            this.setState({lines: this.handleContent(content.raw)});
 
         }.bind(this));
         this.registerEvents();
     },
     render: function () {
-        console.log(this.state.file);
         return (
             <div style={{padding: '1rem'}}>
                 <Tabs tabActive={1}>
                     <Tabs.Panel title={'Preview'} active={true}>
-                        <div dangerouslySetInnerHTML={{__html: this.state.content}}>
-
-                        </div>
+                        <RevisionFileViewer.Code lines={this.state.lines}
+                                                 annotations={this.state.annotations}/>
                     </Tabs.Panel>
                     <Tabs.Panel title={'Offenses'}>
                         <div className='list'>
@@ -98,72 +110,47 @@ var RevisionFileViewer = React.createClass({
 });
 
 
-var Range = ace.require('ace/range').Range;
-
-var RevisionFileViewer2 = React.createClass({
-    getInitialState: function () {
-        return {
-            file: new RevisionFile(api, this.props.file),
-            content: {}
-        }
-    },
-    loadEditor: function () {
-        this.editor = ace.edit(this.refs.editor.getDOMNode());
-        this.editor.setTheme("ace/theme/github");
-        this.editor.getSession().setMode("ace/mode/ruby");
-        this.editor.setOptions({
-            maxLines: Infinity
-        });
-        this.editor.setHighlightActiveLine(false);
-        this.editor.setReadOnly(true);
-        this.editor.setShowPrintMargin(false);
-        this.editor.on("change", function () {
-            this.markOffenses();
-        }.bind(this))
-    },
-    markOffenses: function () {
-        this.editor.getSession().clearBreakpoint();
-        Object.keys(this.markers).forEach(function (key) {
-            this.editor.getSession().removeMarker(key);
-            delete this.markers[i];
-        }.bind(this));
-        for (var i in this.state.file.offenses) {
-            var offense = this.state.file.offenses[i];
-            var row = offense.line - 1;
-            var range = new Range(row, offense.column - 1,
-                row, offense.column + offense.length - 1);
-            var marker = this.editor.getSession().addMarker(range, "offense", "text");
-            this.editor.getSession().setBreakpoint(row);
-            this.markers[marker] = offense;
-        }
-    },
-    componentDidMount: function () {
-        this.markers = {};
-        this.loadEditor();
-        this.state.file.content.fetch().then(function (content) {
-            this.editor.setValue(content.raw, -1);
-        }.bind(this));
-    },
+RevisionFileViewer.Code = React.createClass({
     render: function () {
-        console.log(this.state.file);
+        var lines = this.props.lines.map(function (content, i) {
+            var box = '';
+            var line = i + 1;
+            if (line in this.props.annotations) {
+
+                box = <tr>
+                    <td></td>
+                    <td>
+                        <div className='offense-details'>
+                            {this.props.annotations[line]}
+                        </div>
+                    </td>
+                </tr>
+            }
+            return [
+                <RevisionFileViewer.Line line={line} content={content}/>,
+                box
+            ]
+        }.bind(this));
         return (
-            <div>
-                <Tabs tabActive={1}>
-                    <Tabs.Panel title={'Preview'} active={true}>
-                        <div>
-                            <div className='editor' ref='editor'>
-                            </div>
-                        </div>
-                    </Tabs.Panel>
-                    <Tabs.Panel title={'Offenses'}>
-                        <div className='list'>
-                        </div>
-                    </Tabs.Panel>
-                </Tabs>
-
-            </div>
+            <pre className='highlight'>
+                <table>
+                    {lines}
+                </table>
+            </pre>
+        )
+    }
+});
 
 
+RevisionFileViewer.Line = React.createClass({
+    render: function () {
+        return (
+            <tr>
+                <td className='line-number'>{this.props.line}</td>
+                <td className='line'
+                    dangerouslySetInnerHTML={{__html: this.props.content}}>
+                </td>
+            </tr>
         )
     }
 });

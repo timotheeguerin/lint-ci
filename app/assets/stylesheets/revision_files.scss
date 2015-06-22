@@ -1,9 +1,35 @@
 @import 'variables';
 
-.editor, .highlight {
+.highlight {
+  counter-reset: line-numbering;
+  border: 1px solid #e5e5e5;
+
+  tr {
+    width: 100%;
+    td.line-number {
+      display: inline-block;
+      text-align: right;
+      min-width: 40px;
+      cursor: pointer;
+      text-decoration: none;
+      padding-right: 0.5rem;
+    }
+
+    td.line {
+      padding-left: 0.5rem;
+      border-left: 1px solid #e5e5e5;
+    }
+  }
   .offense {
     background-color: $red;
     cursor: pointer;
+  }
+
+  .offense-details {
+    background-color: cornflowerblue;
+    height: 5rem;
+    padding-left: 0.5rem;
+    width: 100%
   }
 
   //.offense:before {
@@ -20,7 +46,7 @@
   //}
 }
 
-.ace_gutter-cell.ace_breakpoint{
+.ace_gutter-cell.ace_breakpoint {
   background-color: $red;
   border-radius: 1rem;
 }
