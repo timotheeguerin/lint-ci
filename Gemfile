@@ -46,6 +46,8 @@ gem 'rouge'
 
 gem 'bower-rails', '~> 0.9.2'
 
+gem 'sinatra'
+
 group :development, :test do
   gem 'thin'
 

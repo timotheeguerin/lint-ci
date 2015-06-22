@@ -20,7 +20,9 @@ class Api::V1::RepositoriesController < Api::V1::BaseController
   # Refresh to repo
   def refresh
     @repository.transaction do
-      unless @repository.refreshing
+      if @repository.refreshing
+        status = Sidekiq::Status.status(@repository.job_id)
+      else
         job = ScanRepositoryJob.perform_later(@repository)
         @repository.job_id = job.job_id
         @repository.save

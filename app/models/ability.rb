@@ -9,5 +9,7 @@ class Ability
     can :current, :all
     can :sync, Repository
     can [:enable, :disable, :refresh], Repository, memberships: {user_id: user.id}
+
+    can :manage, :sidekiq
   end
 end

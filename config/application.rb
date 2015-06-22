@@ -30,7 +30,6 @@ module LintCi
 
     config.react.jsx_transform_options = {
       harmony: true
-
     }
   end
 end

@@ -10,12 +10,34 @@ class ActionDispatch::Routing::Mapper
     instance_eval(File.read(filename))
   end
 end
+# Sidekiq cancan auth
+class CanCanConstraint
+  def initialize(action, resource)
+    @action = action
+    @resource = resource
+  end
+
+  def matches?(request)
+    return false if request.env['warden'].nil?
+    current_user = request.env['warden'].user
+    ability = Ability.new(current_user)
+    ability.can?(@action, @resource)
+  end
+end
+
+require 'sidekiq/web'
 
 Rails.application.routes.draw do
   get 'settings/repositories'
 
   devise_for :users, controllers: {omniauth_callbacks: 'users/omniauth_callbacks'}
+
+  scope path: '/admin' do
+    mount Sidekiq::Web => '/sidekiq', constraints: CanCanConstraint.new(:manage, :sidekiq)
+  end
+
   root 'welcome#index'
+
 
   namespace :api do
     scope path: :v1, module: :v1 do
