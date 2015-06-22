@@ -1,2 +1,2 @@
-web: bundle exec puma -p $PORT -c ./config/unicorn.rb
+web: bundle exec rails server -p $PORT
 sidekiq: bundle exec sidekiq
