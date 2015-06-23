@@ -24,8 +24,10 @@ class Repository < ActiveRecord::Base
   # @return Git object
   def git
     if File.directory?(File.join(local_path, '.git'))
+      logger.info "#{full_name} repository already cloned."
       Git.open(local_path)
     else
+      logger.info "Cloning repository #{full_name}"
       FileUtils.mkdir_p(owner_path)
       Git.clone(github_url, name, path: owner_path)
     end

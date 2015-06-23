@@ -1,14 +1,18 @@
+# Api V1 Base
 module Api::V1
   class BaseController < Api::BaseController
     helper_method :get_resource, :get_resources, :resource_name, :resources_name
 
     # GET /api/v1/{plural_resource_name}
     def index
+      resource = get_resources
       if params.key? :order_by
         sens = params[:order_sens] || 'ASC'
-        set_resources get_resources.order(params[:order_by] => sens)
+        resource = resource.order(params[:order_by] => sens)
       end
-      set_resources get_resources.page(params[:page]).per(params[:per_page])
+      resource = resource.page(params[:page]).per(params[:per_page])
+      resource = resource.where(query_params)
+      set_resources resource
       render json: get_resources
     end
 
@@ -108,6 +112,5 @@ module Api::V1
     def set_resources(resources)
       instance_variable_set("@#{resource_name.pluralize}", resources)
     end
-
   end
 end

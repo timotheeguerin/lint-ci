@@ -36,17 +36,4 @@ class RepositoriesController < ApplicationController
     @repository = Repository.new
     @repositories = Repository.empty
   end
-
-  def create_webhook
-    github.create_hook(@repository, api_v1_revisions_url) do |hook|
-      repo.update(hook_id: hook.id)
-    end
-  end
-
-  def delete_webhook
-    github.remove_hook(@repository, repo.hook_id) do
-      repo.update(hook_id: nil)
-    end
-  end
-
 end
