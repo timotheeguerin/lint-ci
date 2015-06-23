@@ -21,4 +21,11 @@
 @import 'form';
 @import 'repositories';
 @import 'revision_files';
+@import 'spinner';
 
+html.turbolinks-progress-bar::before {
+  background: #2299dd !important;
+  position: fixed;
+  height: 2px;
+  z-index: 1000;
+}

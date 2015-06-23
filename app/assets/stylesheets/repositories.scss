@@ -54,3 +54,15 @@
   }
 }
 
+.repository-list {
+  .no-repository {
+    padding: 2rem 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    font-weight: bold;
+    font-size: 3rem;
+    color: #454545
+  }
+}
+

@@ -36,7 +36,7 @@
     width: 100%;
     margin: 0;
     padding: 0;
-    > .item {
+    .item {
       padding: 1rem;
       width: 100%;
       &:not(:last-child) {
@@ -44,7 +44,7 @@
       }
     }
 
-    > a.item {
+    a.item {
       &:hover {
         background-color: #e5e5e5;
       }
@@ -105,4 +105,8 @@ a {
 button {
   @extend .simple-button;
 
+}
+
+.block {
+  display: block;
 }

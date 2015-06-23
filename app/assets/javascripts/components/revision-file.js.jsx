@@ -5,7 +5,8 @@ class RevisionFileViewer extends React.Component {
         this.state = {
             file: new RevisionFile(api, props.file),
             lines: [],
-            annotations: {}
+            annotations: {},
+            loading: true
         }
 
     }
@@ -30,7 +31,6 @@ class RevisionFileViewer extends React.Component {
             var start = offense.column - 1;
             var end = start + offense.length;
             var current = 0;
-            console.log(lines[row].text());
 
             lines[row].contents().filter(function () {
                 return this.nodeType === 3
@@ -91,7 +91,7 @@ class RevisionFileViewer extends React.Component {
 
     componentDidMount() {
         this.state.file.content.fetch().then((content) => {
-            this.setState({lines: this.handleContent(content.raw)});
+            this.setState({lines: this.handleContent(content.raw), loading: false});
 
         });
         this.registerEvents();
@@ -102,8 +102,10 @@ class RevisionFileViewer extends React.Component {
             <div style={{padding: '1rem'}}>
                 <Tabs tabActive={1}>
                     <Tabs.Panel title={'Preview'} active={true}>
-                        <RevisionFileViewerCode lines={this.state.lines}
-                                                annotations={this.state.annotations}/>
+                        <Loader loading={this.state.loading} size={4} message="Loading content...">
+                            <RevisionFileViewerCode lines={this.state.lines}
+                                                    annotations={this.state.annotations}/>
+                        </Loader>
                     </Tabs.Panel>
                     <Tabs.Panel title={'Offenses'}>
                         <div className='list'>
@@ -118,7 +120,7 @@ class RevisionFileViewer extends React.Component {
     }
 }
 
-RevisionFileViewerCode.defaultProps = { annotations: {} };
+RevisionFileViewerCode.defaultProps = {annotations: {}};
 class RevisionFileViewerCode extends React.Component {
     render() {
         return (

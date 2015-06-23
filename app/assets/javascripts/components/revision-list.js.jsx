@@ -2,12 +2,13 @@ var RevisionList = React.createClass({
     getInitialState: function () {
         return {
             repository: new Repository(api, this.props.repository),
-            revisions: []
+            revisions: [],
+            loading: true
         }
     },
     componentDidMount: function () {
         this.state.repository.revisions().fetch().then(function (revisions) {
-            this.setState({revisions: revisions})
+            this.setState({revisions: revisions, loading: false})
         }.bind(this));
     },
     renderOffenseCount: function (count) {
@@ -36,7 +37,9 @@ var RevisionList = React.createClass({
 
         return (
             <div className='list revision-list'>
-                {revisions}
+                <Loader loading={this.state.loading} size={4} message="Loading revisions...">
+                    {revisions}
+                </Loader>
             </div>
         )
     }

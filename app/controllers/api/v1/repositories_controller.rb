@@ -4,14 +4,14 @@ class Api::V1::RepositoriesController < Api::V1::BaseController
   load_and_authorize_resource through: :user, through_association: :repos
 
   def enable
-    create_webhook
+    # create_webhook
     @repository.enabled = true
     @repository.save
     render json: @repository
   end
 
   def disable
-    delete_webhook
+    # delete_webhook
     @repository.enabled = false
     @repository.save
     render json: @repository
@@ -39,14 +39,15 @@ class Api::V1::RepositoriesController < Api::V1::BaseController
   end
 
   protected def create_webhook
-    github.create_hook(@repository, api_v1_revisions_url) do |hook|
-      repo.update(hook_id: hook.id)
+    url = api_revisions_url(@repository.owner, @repository)
+    GithubApi.create_hook(@repository, url) do |hook|
+      @repository.update(hook_id: hook.id)
     end
   end
 
   protected def delete_webhook
-    github.remove_hook(@repository, repo.hook_id) do
-      repo.update(hook_id: nil)
+    GithubApi.remove_hook(@repository) do
+      @repository.update(hook_id: nil)
     end
   end
 end

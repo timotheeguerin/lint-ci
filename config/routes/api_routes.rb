@@ -27,6 +27,12 @@ get 'users/:user_id/repos' => 'repositories#index', as: :user_repos
 # List of all user repositories
 get 'repos/:user_id/:id' => 'repositories#show', as: :repo
 
+# Enable a specific repository
+post 'repos/:user_id/:id/enable' => 'repositories#enable', as: :enable_repo
+
+# Disable a specific repository
+post 'repos/:user_id/:id/disable' => 'repositories#disable', as: :disable_repo
+
 # Refresh a repe(i.e trigger a new run to compute the style)
 post 'repos/:user_id/:id/refresh' => 'repositories#refresh', as: :refresh_repo
 

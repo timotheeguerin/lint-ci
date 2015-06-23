@@ -22,13 +22,11 @@ class UserComponent extends React.Component {
                 </div>
 
                 <div>
-                    <RepositoryList repositories={user.repos}/>
+                    <RepositoryList repositories={user.repos.where({enabled: true})}/>
                 </div>
             </div>
         )
     }
 }
-
-component.User = UserComponent;
 
 component.User = UserComponent;

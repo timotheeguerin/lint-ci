@@ -2,12 +2,13 @@ var RevisionFileList = React.createClass({
     getInitialState: function () {
         return {
             revision: new Revision(api, this.props.revision),
-            files: []
+            files: [],
+            loading: true
         }
     },
     componentDidMount: function () {
         this.state.revision.files.fetch().then(function (files) {
-            this.setState({files: files})
+            this.setState({files: files, loading: false})
         }.bind(this));
     },
     renderOffenseCount: function (count) {
@@ -20,7 +21,7 @@ var RevisionFileList = React.createClass({
     render: function () {
         var files = this.state.files.map(function (file) {
             return (
-                <a className='item flex-center' href={file.html_url}  key={file.id}>
+                <a className='item flex-center' href={file.html_url} key={file.id}>
                     <div className={'file ' + file.status}>
                         {this.renderOffenseCount(file.offense_count)}
                     </div>
@@ -33,7 +34,10 @@ var RevisionFileList = React.createClass({
 
         return (
             <div className='list revision-file-list'>
-                {files}
+                <Loader loading={this.state.loading} size={4} message="Loading files...">
+
+                    {files}
+                </Loader>
             </div>
         )
     }

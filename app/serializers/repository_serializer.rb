@@ -33,4 +33,13 @@ class RepositorySerializer < ApplicationSerializer
   link :refresh_url do
     api_refresh_repo_url(object.owner, object)
   end
+
+  link :enable_url do
+    api_enable_repo_url(object.owner, object)
+  end
+
+
+  link :disable_url do
+    api_disable_repo_url(object.owner, object)
+  end
 end

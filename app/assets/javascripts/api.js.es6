@@ -67,10 +67,12 @@ class RelationshipProxy {
         this.cls = cls;
         this.record = record;
         this.relationship = relationship;
+        this.filter = {}
     }
 
     get url() {
-        return URI(this.record[`${this.relationship}_url`])
+        let url = URI(this.record[`${this.relationship}_url`]);
+        return url.query(this.filter);
     }
 
     getRelationshipValue() {
@@ -102,6 +104,11 @@ class RelationshipProxy {
         } else {
             return this.getItem(data);
         }
+    }
+
+    where(filter) {
+        this.filter = filter;
+        return this;
     }
 
     fetch() {

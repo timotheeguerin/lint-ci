@@ -20,3 +20,5 @@
 //= require components
 //= require rest
 //= require_tree .
+
+Turbolinks.enableProgressBar();
