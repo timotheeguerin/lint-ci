@@ -45,8 +45,8 @@ Rails.application.routes.draw do
     end
   end
 
-  get 'settings' => 'settings#index'
-  get 'settings/repositories' => 'settings#repositories'
+  get 'settings' => 'settings#index', as: :user_settings
+  get 'settings/repositories' => 'settings#repositories', as: :user_repo_settings
 
   get ':id' => 'users#show', as: :user
   get ':user_id/:id' => 'repositories#show', as: :repository

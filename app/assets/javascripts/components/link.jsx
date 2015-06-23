@@ -19,8 +19,9 @@ var Link = React.createClass({
     },
     render: function () {
         return (
-            <div ref='link' onMouseDown={this.handleMouseDown} onMouseUp={this.handleMouseUp} className={this.props.className + ' link'}>
-                            {this.props.children}
+            <div ref='link' onMouseDown={this.handleMouseDown} onMouseUp={this.handleMouseUp}
+                 className={'link ' + this.props.className }>
+                {this.props.children}
             </div>
         )
     }

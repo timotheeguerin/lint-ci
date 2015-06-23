@@ -1,4 +1,3 @@
-
 class Api {
     constructor(host = '') {
         this.root = URI(host + '/api/v1');
@@ -106,7 +105,7 @@ class RelationshipProxy {
     }
 
     fetch() {
-        var response = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             this.record.fetch().then(() => {
                 if (this.getRelationshipValue() != undefined) {
                     resolve(this.getRelationshipValue());
@@ -115,7 +114,6 @@ class RelationshipProxy {
                 }
             });
         });
-        return response;
     }
 
     loadRelationship(resolve) {
@@ -163,11 +161,15 @@ class Model {
         return new Promise((resolve) => {
             if (!this.cached || force) {
                 this.api.onLoad(function () {
-                    Rest.get(this.url).done(function (data) {
+                    Rest.get(this.url).done((data) => {
+                        console.log('Assign', data);
                         this.assign_attributes(data);
                         this.cached = true;
                         resolve(this);
-                    }.bind(this));
+                    }).fail((jqXHR, textStatus, errorThrown) => {
+                        console.log('url: ', this.url);
+                        console.error(jqXHR, textStatus, errorThrown);
+                    });
                 }.bind(this))
             }
             else {
@@ -179,12 +181,11 @@ class Model {
 
 class User extends Model {
     getUrl() {
-        this.api.urls.user(this.username);
+        return this.api.urls.user(this.username);
     }
 
-    repos() {
-        var proxy = new RelationshipProxy(this.api, this, 'repos', Repository);
-        return proxy;
+    get repos() {
+        return new RelationshipProxy(this.api, this, 'repos', Repository);
     }
 }
 

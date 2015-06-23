@@ -5,7 +5,9 @@
   <div class="header-right">
     <% if user_signed_in? %>
         <div class="nav-item">
-          <h3 class="username"><%= current_user.username %></h3>
+          <h3 class="username">
+            <%= link_to current_user.username, user_settings_path %>
+          </h3>
         </div>
         <div class="nav-item">
           <%= link_to 'Logout', destroy_user_session_path, method: :delete, class: 'button secondary-button' %>

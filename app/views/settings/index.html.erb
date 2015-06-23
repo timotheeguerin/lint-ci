@@ -1,0 +1,13 @@
+<div class="container">
+  <div class="shadow-box">
+    <h1 class="box-title">
+      <%= link_to current_user.username, user_path(current_user) %> Settings
+    </h1>
+
+    <div class="list">
+      <a class="item" href="<%= user_repo_settings_path %>">
+        Repositories
+      </a>
+    </div>
+  </div>
+</div>

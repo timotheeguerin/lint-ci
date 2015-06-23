@@ -43,6 +43,12 @@
         border-bottom: 1px solid $grey_medium_light;
       }
     }
+
+    > a.item {
+      &:hover {
+        background-color: #e5e5e5;
+      }
+    }
   }
 }
 
@@ -57,8 +63,6 @@ a {
     color: $blue;
   }
 }
-
-
 
 .button {
   background: limegreen;

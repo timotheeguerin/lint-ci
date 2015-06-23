@@ -10,3 +10,20 @@ Lint-CI is a web app that check for style error in your repositories.
 Supported style checked:
 * Rubocop(Ruby)
 
+
+Installation:
+```
+git clone https://github.com/timcolonel/lint-ci
+
+# Install dependencies
+bundle install
+
+# Setup config(See .sample.env for key to define)
+rails g figaro:install # Create a config/application.yml file
+
+# Run sidekiq(Must have a running redis instance)
+sidekiq
+
+# Run server
+rails 
+```
