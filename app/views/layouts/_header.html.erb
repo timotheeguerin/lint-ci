@@ -10,11 +10,12 @@
           </h3>
         </div>
         <div class="nav-item">
-          <%= link_to 'Logout', destroy_user_session_path, method: :delete, class: 'button secondary-button' %>
+          <%= link_to 'Logout', destroy_user_session_path, method: :delete, class: 'logout' %>
         </div>
     <% else %>
-
-        <%= link_to 'Sign in with Github', user_omniauth_authorize_path(:github), class: 'primary-button' %>
+        <a class="github-sign-in" href="<%= user_omniauth_authorize_path(:github) %>">
+            Sign in with Github <%= fa_icon 'github' %>
+        </a>
     <% end %>
   </div>
 </header>

@@ -28,10 +28,11 @@ class RepositoryComponent extends React.Component {
         return (
             <div className="shadow-box">
                 <div className="box-title flex-center">
-                    <div className='flex-fill'>
-                        {repository.full_name}
-                        <a href={repository.badges_url}><img src={repository.badge_url}/></a>
-                        <a href={repository.badges_url}><img
+                    <div className='repository-title flex-fill'>
+                        {this.renderName()}
+                        <a className='badge' href={repository.badges_url}><img
+                            src={repository.badge_url}/></a>
+                        <a className='badge' href={repository.badges_url}><img
                             src={repository.offense_badge_url}/></a>
                     </div>
 
@@ -44,6 +45,16 @@ class RepositoryComponent extends React.Component {
                     <RevisionList repository={repository}/>
                 </div>
             </div>
+        )
+    }
+
+    renderName() {
+        var repository = this.state.repository;
+        return (
+            <span>
+                <a href={repository.owner.html_url}>{repository.owner.username}</a>
+                     /{repository.name}
+                </span>
         )
     }
 }

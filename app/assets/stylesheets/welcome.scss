@@ -1,0 +1,22 @@
+@import 'variables';
+
+.welcome-page {
+  .title {
+    color: $blue;
+    font-weight: 100;
+    font-size: 4rem;
+    text-align: center;
+  }
+
+  .subtitle {
+    color: #a0a8a8;
+    font-weight: 200;
+    text-align: center;
+  }
+
+  .sign-up-links {
+    margin: 4rem auto;
+    text-align: center;
+    font-size: 2rem;
+  }
+}

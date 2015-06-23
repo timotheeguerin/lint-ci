@@ -28,26 +28,35 @@ gem 'sprockets'
 gem 'sprockets-es6'
 
 gem 'figaro'
+
+# Authentication
 gem 'devise'
 gem 'cancancan'
 gem 'omniauth-github'
+
 gem 'quiet_assets'
 gem 'sidekiq'
+
+# Paging
 gem 'kaminari'
+
+# Git api
 gem 'octokit'
 gem 'git'
-gem 'font-awesome-rails'
+
 gem 'friendly_id'
 # For ruby lint
 gem 'rubocop'
 
-gem 'react-rails'
 
 gem 'rouge'
 
+gem 'react-rails'
+gem 'font-awesome-rails'
 gem 'bower-rails', '~> 0.9.2'
 
-gem 'sinatra'
+# For Sidekiq monitor
+gem 'sinatra', require: nil
 
 group :development, :test do
   gem 'thin'

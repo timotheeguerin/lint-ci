@@ -4,14 +4,14 @@ class Api::V1::RepositoriesController < Api::V1::BaseController
   load_and_authorize_resource through: :user, through_association: :repos
 
   def enable
-    # create_webhook
+    create_webhook
     @repository.enabled = true
     @repository.save
     render json: @repository
   end
 
   def disable
-    # delete_webhook
+    delete_webhook
     @repository.enabled = false
     @repository.save
     render json: @repository

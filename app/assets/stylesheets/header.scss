@@ -1,10 +1,13 @@
 @import 'variables';
 
+$header-text-color: #a0a8a8;
+
 header {
   @extend .flex-center;
-  background-color: $primary-color;
-  color: white;
+  background-color: white;
+  color: $header-text-color;
   padding: 0 2rem;
+  box-shadow: 1px 1px 5px 0 $grey_medium_light;
 
   .header-left {
     @extend .flex-fill;
@@ -24,11 +27,33 @@ header {
   }
 
   a {
-    color: white;
+    color: $header-text-color;
 
     &:hover {
       color: $grey_medium_light
     }
   }
+}
+
+.github-sign-in, .logout {
+  border: 2px solid #e4e7e7;
+  color: $header-text-color;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+
+  &:hover {
+    color: $grey_medium_light;
+  }
+}
+
+
+.github-sign-in:hover {
+  background-color: $red;
+  border-color: $red;
+}
+
+.logout:hover {
+  background-color: $red;
+  border-color: $red;
 }
 

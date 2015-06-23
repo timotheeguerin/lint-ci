@@ -1,8 +1,20 @@
-<div class="sm-container">
-  <% if user_signed_in? %>
+<% if user_signed_in? %>
+    <div class="sm-container">
       <%= react_component 'component.User', {user: json_for(current_user)} %>
-  <% else %>
-      <h1>Lint-CI</h1>
-      <h2>Login</h2>
-  <% end %>
+    </div>
+<% else %>
+    <div class="container">
+      <div class="welcome-page">
+        <h1 class="title">Automated code review</h1>
+
+        <h2 class="subtitle">Lint-CI provide simple and automated ways to keep a great style in your
+          code. </h2>
+
+        <div class="sign-up-links">
+          <a class="github-sign-in" href="<%= user_omniauth_authorize_path(:github) %>">
+            Sign up with Github <%= fa_icon 'github' %>
+          </a>
+        </div>
+      </div>
+<% end %>
 </div>

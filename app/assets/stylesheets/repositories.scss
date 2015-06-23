@@ -2,7 +2,6 @@
 
 .repositories-settings {
   @extend .shadow-box;
-  @extend .container;
 }
 
 .badge-box {
@@ -66,3 +65,8 @@
   }
 }
 
+.repository-title {
+  a.badge {
+    margin-left:1rem;
+  }
+}
