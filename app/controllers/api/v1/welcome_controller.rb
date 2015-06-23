@@ -1,12 +1,10 @@
 # Repositories user controller
 class Api::V1::WelcomeController < Api::V1::BaseController
-  before_action do
-    authorize! :current, current_user
-  end
 
   # GET /api/v1/
   # render a list of urls to be used
   def index
+    authorize! :read, :urls
     render json: routes
   end
 
