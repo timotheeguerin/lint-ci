@@ -8,7 +8,7 @@ RSpec.describe Api::V1::UsersController do
     it_behaves_like 'successful api request'
 
     it_has_behavior 'Pagination API', :index do
-      let(:records) { FactoryGirl.create_list(:repository, 3, owner: owner) }
+      let(:records) { FactoryGirl.create_list(:user, 3) }
     end
   end
 

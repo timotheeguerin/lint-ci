@@ -32,6 +32,8 @@ module LintCI
 
           after do
             sign_out @user
+            @ability = nil
+            allow(controller).to receive(:current_ability).and_return(nil)
             @user = nil
           end
         end

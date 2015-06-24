@@ -98,6 +98,7 @@ RSpec.describe Api::V1::RepositoriesController do
       before do
         allow(ScanRepositoryJob).to receive(:perform_later).and_return(job)
         get :refresh, id: repository.name, user_id: owner.username
+        repository.reload
       end
 
       context 'when repository is not refreshing' do
@@ -105,7 +106,7 @@ RSpec.describe Api::V1::RepositoriesController do
 
         it_behaves_like 'accepted api request'
         it { expect(ScanRepositoryJob).to receive(:perform_later).with(repository) }
-        it { expect(repository.reload.hook_id).to eq(hook_id) }
+        it { expect(repository.hook_id).to eq(hook_id) }
         it { expect(json_response[:refreshing]).to be true }
       end
 
