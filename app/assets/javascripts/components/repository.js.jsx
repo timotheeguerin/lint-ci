@@ -13,7 +13,6 @@ class RepositoryComponent extends React.Component {
 
     refresh(e) {
         e.preventDefault();
-        console.log(this);
         Rest.post(this.state.repository.refresh_url).done((repository) => {
             this.setState({repository: repository})
         });

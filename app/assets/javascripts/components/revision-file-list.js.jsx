@@ -7,7 +7,7 @@ var RevisionFileList = React.createClass({
         }
     },
     componentDidMount: function () {
-        this.state.revision.files.fetch().then(function (files) {
+        this.state.revision.files.fetchAll().then(function (files) {
             this.setState({files: files, loading: false})
         }.bind(this));
     },

@@ -10,10 +10,14 @@ Rest.post = function (url, data) {
 
 Rest.request = function (method, url, data) {
     return $.ajax({
-        type: method,
-        url: url,
-        dataType: 'json',
-        contentType: 'application/json',
-        data: JSON.stringify(data)
-    })
+            type: method,
+            url: url,
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify(data)
+        }
+    ).fail(function (jqXHR, textStatus, errorThrown) {
+            console.error('Fail to load url: ', this.url);
+            console.error(jqXHR, textStatus, errorThrown);
+        })
 };

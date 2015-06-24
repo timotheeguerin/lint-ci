@@ -14,7 +14,7 @@ module Api::V1
       resource = resource.page(params[:page]).per(params[:per_page])
       resource = resource.where(query_params)
       set_resources resource
-      render json: get_resources
+      paginate json: get_resources
     end
 
     # GET /api/v1/{plural_resource_name}/:id

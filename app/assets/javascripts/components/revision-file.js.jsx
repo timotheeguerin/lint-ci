@@ -40,15 +40,13 @@ class RevisionFileViewer extends React.Component {
                 var text = $(this).text();
                 if (current < start) {
                     if (current + text.length >= start) {
-                        var left = text.slice(0, start - current);
-                        var right = text.slice(start - current, text.length);
-                        console.log('First', left, right);
+                        let left = text.slice(0, start - current);
+                        let right = text.slice(start - current, text.length);
                         $(this).html(that.keep(left) + that.highlightOffense(offense, right));
                     }
                 } else if (current < end) {
-                    var left = text.slice(0, end - current);
-                    var right = text.slice(end - current, text.length);
-                    console.log('Not', left, right);
+                    let left = text.slice(0, end - current);
+                    let right = text.slice(end - current, text.length);
                     $(this).html(that.highlightOffense(offense, left) + that.keep(right));
                 }
                 current += text.length;

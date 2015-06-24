@@ -18,7 +18,7 @@ class Loader extends React.Component {
             //classes += size_class + 'x';
         }
         return (
-            <div className='spinner' style={{'font-size': this.props.size + 'rem'}}>
+            <div className='spinner' style={{'fontSize': this.props.size + 'rem'}}>
                 <i className={classes}></i>
 
                 <div className='message'>

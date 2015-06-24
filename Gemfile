@@ -39,6 +39,7 @@ gem 'sidekiq'
 
 # Paging
 gem 'kaminari'
+gem 'api-pagination'
 
 # Git api
 gem 'octokit'

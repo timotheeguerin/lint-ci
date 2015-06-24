@@ -61,84 +61,13 @@ class ApiUrl {
     }
 }
 
-class RelationshipProxy {
-    constructor(api, record, relationship, cls) {
-        this.api = api;
-        this.cls = cls;
-        this.record = record;
-        this.relationship = relationship;
-        this.filter = {}
-    }
-
-    get url() {
-        let url = URI(this.record[`${this.relationship}_url`]);
-        return url.query(this.filter);
-    }
-
-    getRelationshipValue() {
-        var key = `_${this.relationship}`;
-        return this.record[key];
-    }
-
-
-    setRelationshipValue(value) {
-        var key = `_${this.relationship}`;
-        this.record[key] = value;
-    }
-
-    getItem(item) {
-        if (this.cls == null) {
-            return item
-        } else {
-            return new this.cls(this.api, item)
-        }
-    }
-
-    computeRelationshipValue(data) {
-        if (Array.isArray(data)) {
-            var items = [];
-            for (let item of data) {
-                items.push(this.getItem(item))
-            }
-            return items;
-        } else {
-            return this.getItem(data);
-        }
-    }
-
-    where(filter) {
-        this.filter = filter;
-        return this;
-    }
-
-    fetch() {
-        return new Promise((resolve, reject) => {
-            this.record.fetch().then(() => {
-                if (this.getRelationshipValue() != undefined) {
-                    resolve(this.getRelationshipValue());
-                } else {
-                    this.loadRelationship(resolve, reject)
-                }
-            });
-        });
-    }
-
-    loadRelationship(resolve) {
-        Rest.get(this.url).done(function (data) {
-            var value = this.computeRelationshipValue(data);
-            this.setRelationshipValue(value);
-            resolve(this.getRelationshipValue());
-        }.bind(this)).fail(function (jqXHR, textStatus, errorThrown) {
-            console.error(jqXHR, textStatus, errorThrown);
-        });
-    }
-}
 class Model {
     constructor(api, attributes) {
         this.api = api;
         this.assign_attributes(attributes);
         this.cached = (this.id != undefined);
         this.cached = false;
+        this._proxy = {}
     }
 
     assign_attributes(attrs) {
@@ -169,13 +98,9 @@ class Model {
             if (!this.cached || force) {
                 this.api.onLoad(function () {
                     Rest.get(this.url).done((data) => {
-                        console.log('Assign', data);
                         this.assign_attributes(data);
                         this.cached = true;
                         resolve(this);
-                    }).fail((jqXHR, textStatus, errorThrown) => {
-                        console.log('url: ', this.url);
-                        console.error(jqXHR, textStatus, errorThrown);
                     });
                 }.bind(this))
             }
@@ -183,6 +108,22 @@ class Model {
                 resolve(this);
             }
         });
+    }
+
+
+    hasOne(relation, cls) {
+        if (!(relation in this._proxy)) {
+            this._proxy[relation] = new HasOneRelationship(this.api, this, relation, cls);
+        }
+        return this._proxy[relation];
+    }
+
+    hasMany(relation, cls) {
+        if (!(relation in this._proxy)) {
+            this._proxy[relation] = new HasManyRelationship(this.api, this, relation, cls);
+        }
+        return this._proxy[relation];
+
     }
 }
 
@@ -192,7 +133,7 @@ class User extends Model {
     }
 
     get repos() {
-        return new RelationshipProxy(this.api, this, 'repos', Repository);
+        return this.hasMany('repos', Repository);
     }
 }
 
@@ -203,8 +144,7 @@ class Repository extends Model {
     }
 
     revisions() {
-        var proxy = new RelationshipProxy(this.api, this, 'revisions', Revision);
-        return proxy;
+        return this.hasMany('revisions', Revision);
     }
 }
 
@@ -219,8 +159,7 @@ class Revision extends Model {
     }
 
     get files() {
-        var proxy = new RelationshipProxy(this.api, this, 'files', RevisionFile);
-        return proxy;
+        return this.hasMany('files', RevisionFile);
     }
 }
 
@@ -234,10 +173,36 @@ class RevisionFile extends Model {
     }
 
     get content() {
-        var proxy = new RelationshipProxy(this.api, this, 'content', null);
-        return proxy;
+        return this.hasOne('content', null);
     }
 }
 
-var api = new Api();
+// Get the link header from the xhr of jquery
+function getLinkHeader(xhr) {
+    return parseLinkHeader(xhr.getResponseHeader('Link'));
 
+}
+// Parse the link header
+function parseLinkHeader(header) {
+    if (header.length == 0) {
+        throw new Error("input must not be of zero length");
+    }
+
+    // Split parts by comma
+    var parts = header.split(',');
+    var links = {};
+    // Parse each part into a named link
+    for (let p of parts) {
+        var section = p.split(';');
+        if (section.length != 2) {
+            throw new Error("section could not be split on ';'");
+        }
+        var url = section[0].replace(/<(.*)>/, '$1').trim();
+        var name = section[1].replace(/rel="(.*)"/, '$1').trim();
+        links[name] = url;
+    }
+
+    return links;
+}
+
+var api = new Api();
