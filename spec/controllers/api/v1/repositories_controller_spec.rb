@@ -105,8 +105,8 @@ RSpec.describe Api::V1::RepositoriesController do
         let(:job_id) { nil }
 
         it_behaves_like 'accepted api request'
-        it { expect(ScanRepositoryJob).to receive(:perform_later).with(repository) }
-        it { expect(repository.job_id).to eq(job.id) }
+        it { expect(ScanRepositoryJob).to have_received(:perform_later).with(repository) }
+        it { expect(repository.job_id).to eq(job.job_id) }
         it { expect(json_response[:refreshing]).to be true }
       end
 
