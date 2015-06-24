@@ -3,7 +3,7 @@ FactoryGirl.define do
     repository
     sha { SecureRandom.hex }
     message { Faker::Lorem.sentence }
-    date { Datetime.now }
+    date { DateTime.now }
   end
 
 end
