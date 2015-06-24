@@ -48,9 +48,7 @@ RSpec.describe Api::V1::RepositoriesController do
       get :show, id: repository.name, user_id: owner.username
     end
 
-    it { expect(response).to be_success }
-    it { expect(response).to have_http_status(200) }
-    it { expect(response).to return_json }
+    it_behaves_like 'successful api request'
     it { expect(json_response[:id]).to eq(repository.id) }
     it { expect(json_response[:name]).to eq(repository.name) }
   end
@@ -65,9 +63,7 @@ RSpec.describe Api::V1::RepositoriesController do
         get :enable, id: repository.name, user_id: owner.username
       end
 
-      it { expect(response).to be_success }
-      it { expect(response).to have_http_status(200) }
-      it { expect(response).to return_json }
+      it_behaves_like 'successful api request'
       it { expect(json_response[:id]).to eq(repository.id) }
       it { expect(json_response[:name]).to eq(repository.name) }
       it { expect(json_response[:enabled]).to be true }
@@ -85,13 +81,35 @@ RSpec.describe Api::V1::RepositoriesController do
         get :disable, id: repository.name, user_id: owner.username
       end
 
-      it { expect(response).to be_success }
-      it { expect(response).to have_http_status(200) }
-      it { expect(response).to return_json }
+      it_behaves_like 'successful api request'
       it { expect(json_response[:id]).to eq(repository.id) }
       it { expect(json_response[:name]).to eq(repository.name) }
       it { expect(json_response[:enabled]).to be false }
       it { expect(controller).to have_received(:delete_webhook) }
+    end
+  end
+
+  describe 'GET #refresh' do
+    let!(:repository) { FactoryGirl.create(:repository, owner: owner, hook_id: hook_id) }
+    before do
+      allow(ScanRepositoryJob).to receive(:perform_later)
+      get :refresh, id: repository.name, user_id: owner.username
+    end
+    context 'when repository is not refreshing' do
+      let(:hook_id) { nil }
+
+      it_behaves_like 'successful api request'
+      it { expect(ScanRepositoryJob).not_to receive(:perform_later) }
+      it { expect(json_response[:refreshing]).to be true }
+    end
+
+    context 'when repository is refreshing' do
+      let(:hook_id) { 'some id' }
+
+      it_behaves_like 'accepted api request'
+      it { expect(ScanRepositoryJob).to receive(:perform_later).with(repository) }
+      it { expect(json_response[:refreshing]).to be true }
+      it { expect(repository.reload.hook_id).to eq(hook_id) }
     end
   end
 end

@@ -26,3 +26,17 @@ RSpec.shared_examples 'Pagination API' do |action|
     it { expect(json_response.map { |x| x[:id] }).to eq(records[per_page..-1].map(&:id)) }
   end
 end
+
+# For 200 response
+RSpec.shared_examples 'successful api request' do
+  it { expect(response).to be_success }
+  it { expect(response).to have_http_status(200) }
+  it { expect(response).to return_json }
+end
+
+# For 202 response
+RSpec.shared_examples 'accepted api request' do
+  it { expect(response).to be_success }
+  it { expect(response).to have_http_status(202) }
+  it { expect(response).to return_json }
+end

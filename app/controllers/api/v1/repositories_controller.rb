@@ -20,13 +20,15 @@ class Api::V1::RepositoriesController < Api::V1::BaseController
   # Refresh to repo
   def refresh
     @repository.transaction do
-      unless @repository.refreshing
+      if @repository.refreshing
+        render json: @repository
+      else
         job = ScanRepositoryJob.perform_later(@repository)
         @repository.job_id = job.job_id
         @repository.save
+        render json: @repository, status: :accepted
       end
     end
-    render json: @repository
   end
 
   def init

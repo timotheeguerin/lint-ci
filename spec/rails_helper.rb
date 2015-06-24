@@ -89,5 +89,5 @@ RSpec.configure do |config|
   # https://relishapp.com/rspec/rspec-rails/docs
   config.infer_spec_type_from_file_location!
 
-  c.alias_it_should_behave_like_to :it_has_behavior, 'has behavior:'
+  config.alias_it_should_behave_like_to :it_has_behavior, 'has behavior:'
 end
