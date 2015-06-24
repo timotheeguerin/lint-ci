@@ -2,9 +2,14 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::RepositoriesController do
   let(:owner) { FactoryGirl.create(:user) }
+
+  let(:collection_params) { {user_id: owner.username} }
+  let(:params) { collection_params.merge(id: repository.name) }
+
+
   describe 'GET #index' do
     before do
-      get :index, user_id: owner.username
+      get :index, collection_params
     end
 
     it { expect(response).to be_success }
@@ -13,7 +18,6 @@ RSpec.describe Api::V1::RepositoriesController do
 
     it_has_behavior 'Pagination API', :index do
       let(:records) { FactoryGirl.create_list(:repository, 3, owner: owner) }
-      let(:params) { {user_id: owner.username} }
     end
 
     describe 'filtering' do
@@ -38,14 +42,13 @@ RSpec.describe Api::V1::RepositoriesController do
         ids = json_response.map { |x| x[:id] }
         expect(ids).to eq([disabled_repo.id])
       end
-
     end
   end
 
   describe 'GET #show' do
     let(:repository) { FactoryGirl.create(:repository, owner: owner) }
     before do
-      get :show, id: repository.name, user_id: owner.username
+      get :show, params
     end
 
     it_behaves_like 'successful api request'
@@ -60,7 +63,7 @@ RSpec.describe Api::V1::RepositoriesController do
       let!(:repository) { FactoryGirl.create(:repository, owner: owner) }
       before do
         allow(controller).to receive(:create_webhook)
-        get :enable, id: repository.name, user_id: owner.username
+        get :enable, params
       end
 
       it_behaves_like 'successful api request'
@@ -74,13 +77,13 @@ RSpec.describe Api::V1::RepositoriesController do
       let!(:repository) { FactoryGirl.create(:repository, owner: owner) }
 
       before do
-        get :refresh, id: repository.name, user_id: owner.username
+        get :refresh, params
       end
       it_behaves_like 'forbidden api request'
     end
 
-    it_has_behavior 'require authorization', :enable do
-      let(:params) { {id: create(:repository, owner: owner), user_id: owner.username} }
+    it_has_behavior 'require authorization', :refresh do
+      let(:repository) { FactoryGirl.create(:repository, owner: owner) }
     end
   end
 
@@ -91,7 +94,7 @@ RSpec.describe Api::V1::RepositoriesController do
       let!(:repository) { FactoryGirl.create(:repository, owner: owner) }
       before do
         allow(controller).to receive(:delete_webhook)
-        get :disable, id: repository.name, user_id: owner.username
+        get :disable, params
       end
 
       it_behaves_like 'successful api request'
@@ -101,8 +104,8 @@ RSpec.describe Api::V1::RepositoriesController do
       it { expect(controller).to have_received(:delete_webhook) }
     end
 
-    it_has_behavior 'require authorization', :disable do
-      let(:params) { {id: create(:repository, owner: owner), user_id: owner.username} }
+    it_has_behavior 'require authorization', :refresh do
+      let(:repository) { FactoryGirl.create(:repository, owner: owner) }
     end
   end
 
@@ -114,7 +117,7 @@ RSpec.describe Api::V1::RepositoriesController do
 
       before do
         allow(ScanRepositoryJob).to receive(:perform_later).and_return(job)
-        get :refresh, id: repository.name, user_id: owner.username
+        get :refresh, params
         repository.reload
       end
 
@@ -138,7 +141,7 @@ RSpec.describe Api::V1::RepositoriesController do
     end
 
     it_has_behavior 'require authorization', :refresh do
-      let(:params) { {id: create(:repository, owner: owner), user_id: owner.username} }
+      let(:repository) { FactoryGirl.create(:repository, owner: owner) }
     end
   end
 end

@@ -5,7 +5,12 @@ RSpec.shared_examples 'Pagination API' do |action|
   let(:per_page) { record_count - 1 }
 
   before do
-    get action, {per_page: per_page, page: page}.merge(params)
+    params = if self.respond_to?(:collection_params)
+               collection_params
+             else
+               {}
+             end
+    get action, {per_page: per_page, page: page}.merge(collection_params)
   end
 
   context 'when asking for first page' do
