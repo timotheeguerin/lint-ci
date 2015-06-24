@@ -106,7 +106,7 @@ RSpec.describe Api::V1::RepositoriesController do
 
         it_behaves_like 'accepted api request'
         it { expect(ScanRepositoryJob).to receive(:perform_later).with(repository) }
-        it { expect(repository.hook_id).to eq(hook_id) }
+        it { expect(repository.job_id).to eq(job_id) }
         it { expect(json_response[:refreshing]).to be true }
       end
 
@@ -118,9 +118,14 @@ RSpec.describe Api::V1::RepositoriesController do
         it { expect(json_response[:refreshing]).to be true }
       end
     end
+  end
 
-    when_user_signed_out do
-      it_behaves_like 'forbidden api request'
+  when_user_signed_out do
+    let!(:repository) { FactoryGirl.create(:repository, owner: owner) }
+
+    before do
+      get :refresh, id: repository.name, user_id: owner.username
     end
+    it_behaves_like 'forbidden api request'
   end
 end

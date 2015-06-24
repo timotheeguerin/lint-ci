@@ -9,6 +9,7 @@ RSpec.describe Api::V1::UsersController do
 
     it_has_behavior 'Pagination API', :index do
       let(:records) { FactoryGirl.create_list(:user, 3) }
+      let(:params) {}
     end
   end
 
