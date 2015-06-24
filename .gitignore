@@ -19,5 +19,4 @@
 # Ignore application configuration
 /config/application.yml
 /public/assets
-!/public/assets/*manifest*.json
 /vendor/assets/bower_components
