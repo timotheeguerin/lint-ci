@@ -28,6 +28,6 @@ RSpec.describe Api::V1::RevisionsController do
 
     it_behaves_like 'successful api request'
     it { expect(json_response[:id]).to eq(revision.id) }
-    it { expect(json_response[:name]).to eq(revision.name) }
+    it { expect(json_response[:sha]).to eq(revision.sha) }
   end
 end

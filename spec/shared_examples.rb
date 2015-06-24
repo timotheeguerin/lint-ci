@@ -10,7 +10,7 @@ RSpec.shared_examples 'Pagination API' do |action|
              else
                {}
              end
-    get action, {per_page: per_page, page: page}.merge(collection_params)
+    get action, {per_page: per_page, page: page}.merge(params)
   end
 
   context 'when asking for first page' do
