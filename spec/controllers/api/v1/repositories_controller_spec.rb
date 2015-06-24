@@ -92,12 +92,14 @@ RSpec.describe Api::V1::RepositoriesController do
   describe 'GET #refresh' do
     when_user_signed_in do
       can :refresh, Repository
-
+      let(:job) { double(:job, job_id: 'some id') }
       let!(:repository) { FactoryGirl.create(:repository, owner: owner, hook_id: hook_id) }
+
       before do
-        allow(ScanRepositoryJob).to receive(:perform_later)
+        allow(ScanRepositoryJob).to receive(:perform_later).and_return(job)
         get :refresh, id: repository.name, user_id: owner.username
       end
+
       context 'when repository is not refreshing' do
         let(:hook_id) { nil }
 

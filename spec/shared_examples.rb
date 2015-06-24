@@ -1,7 +1,6 @@
 require 'set'
 
 RSpec.shared_examples 'Pagination API' do |action|
-  let(:records) { send(record_attr) }
   let(:record_count) { records.size }
   let(:per_page) { record_count - 1 }
 
