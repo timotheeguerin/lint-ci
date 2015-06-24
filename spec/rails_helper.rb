@@ -15,28 +15,34 @@ module LintCI
 
     # Rspec custom macros
     module Macro
-      def test_pagination(action, records, &params_block)
-        let(:record_count) { send(records).size }
+      def it_paginate(action, record_attr, &params_block)
+        let(:records) { send(record_attr) }
+        let(:record_count) { records.size }
         let(:per_page) { record_count - 1 }
         if block_given?
           let(:pagination_params, &params_block)
         else
           let(:pagination_params) { {} }
-
+        end
+        before do
+          get action, {per_page: per_page, page: page}.merge(pagination_params)
         end
 
-        it 'get first page' do
-          get action, {per_page: per_page}.merge(pagination_params)
-          expect(response).to return_json
-          expect(json_response).to be_a Array
-          expect(json_response.size).to eq(per_page)
+        context 'when asking for first page' do
+          let(:page) { 1 }
+          it { expect(response).to return_json }
+          it { expect(json_response).to be_a Array }
+          it { expect(json_response.size).to eq(per_page) }
+          it { expect(json_response { |x| x[:id] }).to eq(records[0..records_count].map(&:id)) }
         end
 
-        it 'get second and last page' do
-          get action, {per_page: per_page, page: 2}.merge(pagination_params)
-          expect(response).to return_json
-          expect(json_response).to be_a Array
-          expect(json_response.size).to eq(record_count - per_page)
+        context 'when asking for second page' do
+          let(:page) { 2 }
+
+          it { expect(response).to return_json }
+          it { expect(json_response).to be_a Array }
+          it { expect(json_response.size).to eq(record_count - per_page) }
+          it { expect(json_response.map { |x| x[:id] }).to eq(records[(record_count - per_page)...-1].map(&:id)) }
         end
       end
 

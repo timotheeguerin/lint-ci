@@ -1,0 +1,11 @@
+language: ruby
+rvm:
+  - '2.2.2'
+
+gemfile:
+  - Gemfile
+
+matrix:
+
+notifications:
+  email: false

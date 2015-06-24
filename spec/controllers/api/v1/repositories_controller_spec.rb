@@ -14,7 +14,7 @@ RSpec.describe Api::V1::RepositoriesController do
     context 'when more record than pagination allow' do
       let!(:repos) { FactoryGirl.create_list(:repository, 3, owner: owner) }
 
-      test_pagination(:index, :repos) { {user_id: owner.username} }
+      it_paginate(:index, :repos) { {user_id: owner.username} }
     end
   end
 
@@ -33,8 +33,7 @@ RSpec.describe Api::V1::RepositoriesController do
 
   describe 'GET #enable' do
     when_user_signed_in do
-      # can :enable, Repository
-      can :manage, :all
+      can :enable, Repository
 
       let!(:repository) { FactoryGirl.create(:repository, owner: owner) }
       before do

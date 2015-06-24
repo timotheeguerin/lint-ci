@@ -1,6 +1,6 @@
 # Repository API controller
 class Api::V1::RepositoriesController < Api::V1::BaseController
-  load_and_authorize_resource :user
+  load_resource :user
   load_and_authorize_resource through: :user, through_association: :repos
 
   def enable

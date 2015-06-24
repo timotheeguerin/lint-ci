@@ -13,7 +13,7 @@ RSpec.describe Api::V1::UsersController do
     context 'when more record than pagination allow' do
       let!(:users) { FactoryGirl.create_list(:user, 3) }
 
-      test_pagination :index, :users
+      it_paginate :index, :users
     end
   end
 

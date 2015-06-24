@@ -3,6 +3,8 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
+    alias_action :enable, :disable, :refresh, :sync, to: :update
+
     can [:read, :badge, :badges, :badge_offense, :content], :all
 
     return if user.nil?
