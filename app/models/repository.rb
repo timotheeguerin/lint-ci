@@ -13,6 +13,10 @@ class Repository < ActiveRecord::Base
   validates :owner_id, presence: true
   validates :name, uniqueness: {scope: :owner_id}
 
+  before_create do
+    self.last_sync_at = created_at
+  end
+
   def owner_path
     File.join(LintCI.repositories_path, owner.username)
   end

@@ -3,31 +3,96 @@ ENV['RAILS_ENV'] ||= 'test'
 require 'spec_helper'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
-# Add additional requires below this line. Rails is not loaded until this point!
 
-# Requires supporting ruby files with custom matchers and macros, etc, in
-# spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
-# run as spec files by default. This means that files in spec/support that end
-# in _spec.rb will both be required and run as specs, causing the specs to be
-# run twice. It is recommended that you do not name files matching this glob to
-# end with _spec.rb. You can configure this pattern with the --pattern
-# option on the command line or in ~/.rspec, .rspec or `.rspec-local`.
-#
-# The following line is provided for convenience purposes. It has the downside
-# of increasing the boot-up time by auto-requiring all files in the support
-# directory. Alternatively, in the individual `*_spec.rb` files, manually
-# require only the support files necessary.
-#
-# Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+module LintCI
+  module Rspec
+    # Helper methods to access in examples
+    module Helper
+      def json_response
+        JSON.parse(response.body, symbolize_names: true)
+      end
+    end
 
-# Checks for pending migrations before tests are run.
-# If you are not using ActiveRecord, you can remove this line.
+    # Rspec custom macros
+    module Macro
+      def test_pagination(action, records, &params_block)
+        let(:record_count) { send(records).size }
+        let(:per_page) { record_count - 1 }
+        if block_given?
+          let(:pagination_params, &params_block)
+        else
+          let(:pagination_params) { {} }
+
+        end
+
+        it 'get first page' do
+          get action, {per_page: per_page}.merge(pagination_params)
+          expect(response).to return_json
+          expect(json_response).to be_a Array
+          expect(json_response.size).to eq(per_page)
+        end
+
+        it 'get second and last page' do
+          get action, {per_page: per_page, page: 2}.merge(pagination_params)
+          expect(response).to return_json
+          expect(json_response).to be_a Array
+          expect(json_response.size).to eq(record_count - per_page)
+        end
+      end
+
+      def when_user_signed_in(&block)
+        example_group_class = context 'when user is signed in' do
+          let(:ability) { Object.new.extend(CanCan::Ability) }
+          before do
+            @request.env['devise.mapping'] = Devise.mappings[:user]
+            @request.env['HTTP_REFERER'] = '/back'
+            @user = FactoryGirl.create(:user)
+            allow(controller).to receive(:current_ability).and_return(ability)
+            sign_in @user
+          end
+
+          after do
+            sign_out @user
+            @user = nil
+          end
+        end
+        example_group_class.class_eval &block
+      end
+
+      # Set an ability for the current user(To be used inside when_user_signed_in)
+      def can(action, resource)
+        before do
+          ability.can action, resource
+        end
+      end
+
+      def it_create_a(cls)
+        tester = ControllerActionTester.new(self, :create, cls)
+        tester
+      end
+    end
+  end
+end
+
+RSpec::Matchers.define :return_json do
+  match do |actual|
+    begin
+      JSON.parse(actual.body)
+      true
+    rescue JSON::ParserError
+      false
+    end
+  end
+end
+
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
-  # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
+  config.include FactoryGirl::Syntax::Methods
+  config.include Devise::TestHelpers, type: :controller
+  config.include LintCI::Rspec::Helper
+  config.extend LintCI::Rspec::Macro, type: :controller
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.

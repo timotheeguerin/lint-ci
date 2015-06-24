@@ -2,7 +2,7 @@
 # @see Repository
 class RepositorySerializer < ApplicationSerializer
   attributes :id, :name, :owner, :full_name, :enabled, :github_url, :refreshing,
-             :status, :offense_count
+             :status, :offense_count, :last_sync_at
 
   belongs_to :owner
 
