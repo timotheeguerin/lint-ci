@@ -40,3 +40,10 @@ RSpec.shared_examples 'accepted api request' do
   it { expect(response).to have_http_status(202) }
   it { expect(response).to return_json }
 end
+
+# For 403 response
+RSpec.shared_examples 'forbidden api request' do
+  it { expect(response).to be_forbidden }
+  it { expect(response).to have_http_status(403) }
+  it { expect(response).to return_json }
+end

@@ -16,6 +16,9 @@ module LintCI
 
     # Rspec custom macros
     module Macro
+      # Context that log a user in
+      # User can be accessed with @user
+      # Use #can to specify the user abilities
       def when_user_signed_in(&block)
         example_group_class = context 'when user is signed in' do
           let(:ability) { Object.new.extend(CanCan::Ability) }
@@ -31,6 +34,13 @@ module LintCI
             sign_out @user
             @user = nil
           end
+        end
+        example_group_class.class_eval &block
+      end
+
+      # Simple context stating the user is not login and thus as no extra abilities
+      def when_user_signed_out(&block)
+        example_group_class = context 'when user is NOT signed in' do
         end
         example_group_class.class_eval &block
       end

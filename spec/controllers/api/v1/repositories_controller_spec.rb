@@ -90,28 +90,34 @@ RSpec.describe Api::V1::RepositoriesController do
   end
 
   describe 'GET #refresh' do
-    can :refresh, Repository
+    when_user_signed_in do
+      can :refresh, Repository
 
-    let!(:repository) { FactoryGirl.create(:repository, owner: owner, hook_id: hook_id) }
-    before do
-      allow(ScanRepositoryJob).to receive(:perform_later)
-      get :refresh, id: repository.name, user_id: owner.username
+      let!(:repository) { FactoryGirl.create(:repository, owner: owner, hook_id: hook_id) }
+      before do
+        allow(ScanRepositoryJob).to receive(:perform_later)
+        get :refresh, id: repository.name, user_id: owner.username
+      end
+      context 'when repository is not refreshing' do
+        let(:hook_id) { nil }
+
+        it_behaves_like 'successful api request'
+        it { expect(ScanRepositoryJob).not_to receive(:perform_later) }
+        it { expect(json_response[:refreshing]).to be true }
+      end
+
+      context 'when repository is refreshing' do
+        let(:hook_id) { 'some id' }
+
+        it_behaves_like 'accepted api request'
+        it { expect(ScanRepositoryJob).to receive(:perform_later).with(repository) }
+        it { expect(json_response[:refreshing]).to be true }
+        it { expect(repository.reload.hook_id).to eq(hook_id) }
+      end
     end
-    context 'when repository is not refreshing' do
-      let(:hook_id) { nil }
 
-      it_behaves_like 'successful api request'
-      it { expect(ScanRepositoryJob).not_to receive(:perform_later) }
-      it { expect(json_response[:refreshing]).to be true }
-    end
-
-    context 'when repository is refreshing' do
-      let(:hook_id) { 'some id' }
-
-      it_behaves_like 'accepted api request'
-      it { expect(ScanRepositoryJob).to receive(:perform_later).with(repository) }
-      it { expect(json_response[:refreshing]).to be true }
-      it { expect(repository.reload.hook_id).to eq(hook_id) }
+    when_user_signed_out do
+      it_behaves_like 'forbidden api request'
     end
   end
 end
