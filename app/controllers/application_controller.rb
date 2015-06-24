@@ -60,4 +60,8 @@ class ApplicationController < ActionController::Base
   def resources_name
     @resources_name ||= controller_name.pluralize
   end
+
+  def github_token
+    session['devise.github_data']['access_token']
+  end
 end

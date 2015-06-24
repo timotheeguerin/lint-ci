@@ -33,7 +33,7 @@ class Api::V1::RepositoriesController < Api::V1::BaseController
 
   def init
     @repository = Repository.new
-    @repositories = Repository.empty
+    @repositories = Repository.none
   end
 
   def query_params
@@ -42,14 +42,18 @@ class Api::V1::RepositoriesController < Api::V1::BaseController
 
   protected def create_webhook
     url = api_revisions_url(@repository.owner, @repository)
-    GithubApi.create_hook(@repository, url) do |hook|
+    github.create_hook(@repository, url) do |hook|
       @repository.update(hook_id: hook.id)
     end
   end
 
   protected def delete_webhook
-    GithubApi.remove_hook(@repository) do
+    github.remove_hook(@repository) do
       @repository.update(hook_id: nil)
     end
+  end
+
+  protected def github
+    GithubApi.new(github_token)
   end
 end

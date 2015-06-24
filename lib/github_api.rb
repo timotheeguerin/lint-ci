@@ -6,16 +6,24 @@ class GithubApi
     @enable_hook ||= true
   end
 
-  def self.octokit
-    @octokit ||= Octokit::Client.new(client_id: ENV['github_client_id'],
-                                     client_secret: ENV['github_client_secret'])
+  def self.app_client
+    Octokit::Client.new(client_id: ENV['github_client_id'],
+                        client_secret: ENV['github_client_secret'])
+  end
+
+  def initialize(user_token)
+    @user_token = user_token
+  end
+
+  def octokit
+    @octokit ||= Octokit::Client.new(access_token: @user_token)
   end
 
   # Add a new hook
   # @param repository [Repository] Repository to watch.
   # @param callback_url [String] Hook callback url
-  def self.create_hook(repository, callback_url)
-    return unless enable_hook?
+  def create_hook(repository, callback_url)
+    return unless self.class.enable_hook?
     hook = octokit.create_hook(repository.full_name, 'web',
                                {url: callback_url, content_type: 'json'},
                                events: ['push'], active: true)
@@ -31,8 +39,8 @@ class GithubApi
 
   # Remove a hook
   # @param repository [Repository] Repository to stop watching.
-  def self.remove_hook(repository)
-    return unless enable_hook?
+  def remove_hook(repository)
+    return unless self.class.enable_hook?
     response = octokit.remove_hook(repository.full_name, repository.hook_id)
 
     yield if block_given?

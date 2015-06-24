@@ -90,6 +90,8 @@ RSpec.describe Api::V1::RepositoriesController do
   end
 
   describe 'GET #refresh' do
+    can :refresh, Repository
+
     let!(:repository) { FactoryGirl.create(:repository, owner: owner, hook_id: hook_id) }
     before do
       allow(ScanRepositoryJob).to receive(:perform_later)
