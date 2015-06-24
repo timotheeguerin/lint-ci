@@ -11,10 +11,34 @@ RSpec.describe Api::V1::RepositoriesController do
     it { expect(response).to have_http_status(200) }
     it { expect(response).to return_json }
 
-    context 'when more record than pagination allow' do
-      let!(:repos) { FactoryGirl.create_list(:repository, 3, owner: owner) }
+    it_has_behavior 'Pagination API', :index do
+      let(:records) { FactoryGirl.create_list(:repository, 3, owner: owner) }
+      let(:params) { {user_id: owner.username} }
+    end
 
-      it_paginate(:index, :repos) { {user_id: owner.username} }
+    describe 'filtering' do
+      let!(:enabled_repo1) { create(:repository, owner: owner, enabled: true) }
+      let!(:enabled_repo2) { create(:repository, owner: owner, enabled: true) }
+      let!(:disabled_repo) { create(:repository, owner: owner, enabled: false) }
+
+      it 'only retrieve all repos when filter not specified' do
+        get :index, user_id: owner.username
+        ids = json_response.map { |x| x[:id] }
+        expect(ids).to eq([enabled_repo1.id, enabled_repo2.id, disabled_repo.id])
+      end
+
+      it 'only retrieve enabled repos' do
+        get :index, user_id: owner.username, enabled: true
+        ids = json_response.map { |x| x[:id] }
+        expect(ids).to eq([enabled_repo1.id, enabled_repo2.id])
+      end
+
+      it 'only retrieve disabled repos' do
+        get :index, user_id: owner.username, enabled: false
+        ids = json_response.map { |x| x[:id] }
+        expect(ids).to eq([disabled_repo.id])
+      end
+
     end
   end
 
@@ -48,6 +72,26 @@ RSpec.describe Api::V1::RepositoriesController do
       it { expect(json_response[:name]).to eq(repository.name) }
       it { expect(json_response[:enabled]).to be true }
       it { expect(controller).to have_received(:create_webhook) }
+    end
+  end
+
+  describe 'GET #disable' do
+    when_user_signed_in do
+      can :disable, Repository
+
+      let!(:repository) { FactoryGirl.create(:repository, owner: owner) }
+      before do
+        allow(controller).to receive(:delete_webhook)
+        get :disable, id: repository.name, user_id: owner.username
+      end
+
+      it { expect(response).to be_success }
+      it { expect(response).to have_http_status(200) }
+      it { expect(response).to return_json }
+      it { expect(json_response[:id]).to eq(repository.id) }
+      it { expect(json_response[:name]).to eq(repository.name) }
+      it { expect(json_response[:enabled]).to be false }
+      it { expect(controller).to have_received(:delete_webhook) }
     end
   end
 end

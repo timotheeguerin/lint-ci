@@ -10,10 +10,8 @@ RSpec.describe Api::V1::UsersController do
     it { expect(response).to have_http_status(200) }
     it { expect(response).to return_json }
 
-    context 'when more record than pagination allow' do
-      let!(:users) { FactoryGirl.create_list(:user, 3) }
-
-      it_paginate :index, :users
+    it_has_behavior 'Pagination API', :index do
+      let(:records) { FactoryGirl.create_list(:repository, 3, owner: owner) }
     end
   end
 

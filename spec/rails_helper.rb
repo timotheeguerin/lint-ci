@@ -3,6 +3,7 @@ ENV['RAILS_ENV'] ||= 'test'
 require 'spec_helper'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
+require 'shared_examples'
 
 module LintCI
   module Rspec
@@ -15,37 +16,6 @@ module LintCI
 
     # Rspec custom macros
     module Macro
-      def it_paginate(action, record_attr, &params_block)
-        let(:records) { send(record_attr) }
-        let(:record_count) { records.size }
-        let(:per_page) { record_count - 1 }
-        if block_given?
-          let(:pagination_params, &params_block)
-        else
-          let(:pagination_params) { {} }
-        end
-        before do
-          get action, {per_page: per_page, page: page}.merge(pagination_params)
-        end
-
-        context 'when asking for first page' do
-          let(:page) { 1 }
-          it { expect(response).to return_json }
-          it { expect(json_response).to be_a Array }
-          it { expect(json_response.size).to eq(per_page) }
-          it { expect(json_response.map { |x| x[:id] }).to eq(records[0...per_page].map(&:id)) }
-        end
-
-        context 'when asking for second page' do
-          let(:page) { 2 }
-
-          it { expect(response).to return_json }
-          it { expect(json_response).to be_a Array }
-          it { expect(json_response.size).to eq(record_count - per_page) }
-          it { expect(json_response.map { |x| x[:id] }).to eq(records[per_page..-1].map(&:id)) }
-        end
-      end
-
       def when_user_signed_in(&block)
         example_group_class = context 'when user is signed in' do
           let(:ability) { Object.new.extend(CanCan::Ability) }
@@ -118,4 +88,6 @@ RSpec.configure do |config|
   # The different available types are documented in the features, such as in
   # https://relishapp.com/rspec/rspec-rails/docs
   config.infer_spec_type_from_file_location!
+
+  c.alias_it_should_behave_like_to :it_has_behavior, 'has behavior:'
 end
