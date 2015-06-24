@@ -184,8 +184,8 @@ function getLinkHeader(xhr) {
 }
 // Parse the link header
 function parseLinkHeader(header) {
-    if (header.length == 0) {
-        throw new Error("input must not be of zero length");
+    if (header == null || header.length == 0) {
+        return {};
     }
 
     // Split parts by comma

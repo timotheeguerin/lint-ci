@@ -113,7 +113,7 @@ class HasManyRelationship extends RelationshipProxy {
     fetchAll() {
         this.fetch().then((data) => {
             if (this.reachedLast) {
-                this.allResolve(dasta);
+                this.allResolve(data);
             } else {
                 this.fetchAll()
             }
@@ -150,7 +150,7 @@ class HasOneRelationship extends RelationshipProxy {
             this.resolve(this.getRelationshipValue());
         } else {
             Rest.get(this.url).done((data) => {
-                this.setRelationshipValue(getItem(data));
+                this.setRelationshipValue(this.getItem(data));
                 this.resolve(this.getRelationshipValue());
             });
         }
