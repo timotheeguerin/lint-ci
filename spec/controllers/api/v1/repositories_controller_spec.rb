@@ -69,6 +69,19 @@ RSpec.describe Api::V1::RepositoriesController do
       it { expect(json_response[:enabled]).to be true }
       it { expect(controller).to have_received(:create_webhook) }
     end
+
+    when_user_signed_out do
+      let!(:repository) { FactoryGirl.create(:repository, owner: owner) }
+
+      before do
+        get :refresh, id: repository.name, user_id: owner.username
+      end
+      it_behaves_like 'forbidden api request'
+    end
+
+    it_has_behavior 'require authorization', :enable do
+      let(:params) { {id: create(:repository, owner: owner), user_id: owner.username} }
+    end
   end
 
   describe 'GET #disable' do
@@ -86,6 +99,10 @@ RSpec.describe Api::V1::RepositoriesController do
       it { expect(json_response[:name]).to eq(repository.name) }
       it { expect(json_response[:enabled]).to be false }
       it { expect(controller).to have_received(:delete_webhook) }
+    end
+
+    it_has_behavior 'require authorization', :disable do
+      let(:params) { {id: create(:repository, owner: owner), user_id: owner.username} }
     end
   end
 
@@ -119,14 +136,9 @@ RSpec.describe Api::V1::RepositoriesController do
         it { expect(json_response[:refreshing]).to be true }
       end
     end
-  end
 
-  when_user_signed_out do
-    let!(:repository) { FactoryGirl.create(:repository, owner: owner) }
-
-    before do
-      get :refresh, id: repository.name, user_id: owner.username
+    it_has_behavior 'require authorization', :refresh do
+      let(:params) { {id: create(:repository, owner: owner), user_id: owner.username} }
     end
-    it_behaves_like 'forbidden api request'
   end
 end

@@ -26,6 +26,15 @@ RSpec.shared_examples 'Pagination API' do |action|
   end
 end
 
+
+# For 403 response
+RSpec.shared_examples 'require authorization' do |action|
+  before do
+    get action, params
+  end
+  it_behaves_like 'forbidden api request'
+end
+
 # For 200 response
 RSpec.shared_examples 'successful api request' do
   it { expect(response).to be_success }
