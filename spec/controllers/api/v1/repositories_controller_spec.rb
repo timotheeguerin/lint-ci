@@ -93,7 +93,7 @@ RSpec.describe Api::V1::RepositoriesController do
     when_user_signed_in do
       can :refresh, Repository
       let(:job) { double(:job, job_id: 'some id') }
-      let!(:repository) { FactoryGirl.create(:repository, owner: owner, hook_id: hook_id) }
+      let!(:repository) { FactoryGirl.create(:repository, owner: owner, job_id: job_id) }
 
       before do
         allow(ScanRepositoryJob).to receive(:perform_later).and_return(job)
@@ -101,7 +101,7 @@ RSpec.describe Api::V1::RepositoriesController do
       end
 
       context 'when repository is not refreshing' do
-        let(:hook_id) { nil }
+        let(:job_id) { nil }
 
         it_behaves_like 'accepted api request'
         it { expect(ScanRepositoryJob).to receive(:perform_later).with(repository) }
@@ -110,7 +110,7 @@ RSpec.describe Api::V1::RepositoriesController do
       end
 
       context 'when repository is refreshing' do
-        let(:hook_id) { 'some id' }
+        let(:job_id) { 'some id' }
 
         it_behaves_like 'successful api request'
         it { expect(ScanRepositoryJob).not_to receive(:perform_later) }
