@@ -11,7 +11,7 @@ gemfile:
 matrix:
 
 before_script:
-  - psql -c 'create database lint_ci_test;' -U postgres
+  - psql -c 'create database lintci_test;' -U postgres
 
 notifications:
   email: false
