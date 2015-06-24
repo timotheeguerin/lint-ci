@@ -103,18 +103,18 @@ RSpec.describe Api::V1::RepositoriesController do
       context 'when repository is not refreshing' do
         let(:hook_id) { nil }
 
-        it_behaves_like 'successful api request'
-        it { expect(ScanRepositoryJob).not_to receive(:perform_later) }
+        it_behaves_like 'accepted api request'
+        it { expect(ScanRepositoryJob).to receive(:perform_later).with(repository) }
+        it { expect(repository.reload.hook_id).to eq(hook_id) }
         it { expect(json_response[:refreshing]).to be true }
       end
 
       context 'when repository is refreshing' do
         let(:hook_id) { 'some id' }
 
-        it_behaves_like 'accepted api request'
-        it { expect(ScanRepositoryJob).to receive(:perform_later).with(repository) }
+        it_behaves_like 'successful api request'
+        it { expect(ScanRepositoryJob).not_to receive(:perform_later) }
         it { expect(json_response[:refreshing]).to be true }
-        it { expect(repository.reload.hook_id).to eq(hook_id) }
       end
     end
 
