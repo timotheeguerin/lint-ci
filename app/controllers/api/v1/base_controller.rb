@@ -1,5 +1,6 @@
 # Api V1 Base
 module Api::V1
+  # Base controller
   class BaseController < Api::BaseController
     helper_method :get_resource, :get_resources, :resource_name, :resources_name
 

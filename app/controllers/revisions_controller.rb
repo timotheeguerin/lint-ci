@@ -1,6 +1,6 @@
 # Revision controller
 class RevisionsController < ApplicationController
-  resource [:user, :repository, :revision]
+  load_and_auth_revision parents: true
 
   def show
   end

@@ -25,39 +25,68 @@ class CanCanConstraint
   end
 end
 
+# General constraints
+module LintCI::Constraints
+  class << self
+    # Allow repository to contain .
+    def repository
+      {repo: %r{[^/]+}}
+    end
+
+    # Allow file to have multiple segments and contain .
+    def file
+      {file: /.+/}
+    end
+
+    def all
+      repository.merge(file)
+    end
+  end
+end
+
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  get 'settings/repositories'
+  # Allow :repo, :file to be more than the regular format.
+  constraints LintCI::Constraints.all do
 
-  devise_for :users, controllers: {omniauth_callbacks: 'users/omniauth_callbacks'}
-
-  scope path: '/admin' do
-    mount Sidekiq::Web => '/sidekiq', constraints: CanCanConstraint.new(:manage, :sidekiq)
-  end
-
-  root 'welcome#index'
+    get 'settings/repositories'
 
 
-  namespace :api do
-    scope path: :v1, module: :v1 do
-      draw :api_routes
+    devise_for :users, controllers: {omniauth_callbacks: 'users/omniauth_callbacks'}
+
+    scope path: '/admin' do
+      mount Sidekiq::Web => '/sidekiq', constraints: CanCanConstraint.new(:manage, :sidekiq)
+    end
+
+    root 'welcome#index'
+
+
+    namespace :api do
+      scope path: :v1, module: :v1 do
+        draw :api_routes
+      end
+    end
+
+    get 'settings' => 'settings#index', as: :user_settings
+    get 'settings/repositories' => 'settings#repositories', as: :user_repo_settings
+
+    get ':user' => 'users#show', as: :user
+
+    constraints LintCI::Constraints.repository do
+      get ':user/:repo' => 'repositories#show', as: :repository
+      # Page showing the available badges as well as their url.
+      get ':user/:repo/badges' => 'repositories#badges', as: :repository_badges
+
+      get ':user/:repo/badge.svg' => 'repositories#badge', as: :repository_badge
+
+      get ':user/:repo/offense.svg' => 'repositories#badge_offense', as: :repository_offense_badge
+
+      get ':user/:repo/:revision' => 'revisions#show', as: :revision
+
+      get ':user/:repo/:revision/:file/' => 'revision_files#show',
+          as: :file, constraints: LintCI::Constraints.file
     end
   end
-
-  get 'settings' => 'settings#index', as: :user_settings
-  get 'settings/repositories' => 'settings#repositories', as: :user_repo_settings
-
-  get ':id' => 'users#show', as: :user
-  get ':user_id/:id' => 'repositories#show', as: :repository
-  # Page showing the available badges as well as their url.
-  get ':user_id/:id/badges' => 'repositories#badges', as: :repository_badges
-  get ':user_id/:id/badge.svg' => 'repositories#badge', as: :repository_badge
-  get ':user_id/:id/offense.svg' => 'repositories#badge_offense', as: :repository_offense_badge
-
-  get ':user_id/:repository_id/:id' => 'revisions#show', as: :revision
-  get ':user_id/:repository_id/:revision_id/:id/' => 'revision_files#show',
-      as: :file, constraints: {id: /.+/}
-
 end
 

@@ -1,6 +1,6 @@
 # App user controller
 class UsersController < ApplicationController
-  load_and_authorize_resource
+  load_and_auth_user
 
   def index
 

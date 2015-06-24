@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe Api::V1::RevisionsController do
   let(:owner) { FactoryGirl.create(:user) }
   let(:repository) { FactoryGirl.create(:repository, owner: owner) }
-  let(:collection_params) { {user_id: owner.username, repository_id: repository.name} }
-  let(:params) { collection_params.merge(id: revision.sha) }
+  let(:collection_params) { {user: owner.username, repo: repository.name} }
+  let(:params) { collection_params.merge(revision: revision.sha) }
 
   describe 'GET #index' do
     before do

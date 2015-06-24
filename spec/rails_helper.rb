@@ -21,6 +21,8 @@ module LintCI
       # Use #can to specify the user abilities
       def when_user_signed_in(&block)
         example_group_class = context 'when user is signed in' do
+          can :read, :all
+
           let(:ability) { Object.new.extend(CanCan::Ability) }
           before do
             @request.env['devise.mapping'] = Devise.mappings[:user]

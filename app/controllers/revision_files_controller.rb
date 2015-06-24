@@ -1,9 +1,6 @@
 # Revision file html controller
 class RevisionFilesController < ApplicationController
-  load_and_authorize_resource :user
-  load_and_authorize_resource :repository, through: :user, through_association: :repos
-  load_and_authorize_resource :revision, through: :repository
-  load_and_authorize_resource through: :revision, through_association: :files
+  load_and_auth_revision_file parents: true
 
   def show
   end

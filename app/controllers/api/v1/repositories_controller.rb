@@ -1,7 +1,6 @@
 # Repository API controller
 class Api::V1::RepositoriesController < Api::V1::BaseController
-  load_and_authorize_resource :user
-  load_and_authorize_resource through: :user, through_association: :repos
+  load_and_auth_repository parents: true
 
   def enable
     create_webhook
@@ -41,7 +40,7 @@ class Api::V1::RepositoriesController < Api::V1::BaseController
   end
 
   protected def create_webhook
-    url = api_revisions_url(@repository.owner, @repository)
+    url = api_revisions_hook_url(@repository.owner, @repository)
     github.create_hook(@repository, url) do |hook|
       @repository.update(hook_id: hook.id)
     end
@@ -51,9 +50,5 @@ class Api::V1::RepositoriesController < Api::V1::BaseController
     github.remove_hook(@repository) do
       @repository.update(hook_id: nil)
     end
-  end
-
-  protected def github
-
   end
 end

@@ -15,7 +15,7 @@ RSpec.describe Api::V1::UsersController do
   describe 'GET #show' do
     before do
       @user = FactoryGirl.create(:user)
-      get :show, id: @user.username
+      get :show, user: @user.username
     end
 
     it_behaves_like 'successful api request'

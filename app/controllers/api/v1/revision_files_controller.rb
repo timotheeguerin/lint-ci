@@ -1,9 +1,6 @@
 # Revision file controller
 class Api::V1::RevisionFilesController < Api::V1::BaseController
-  load_and_authorize_resource :user
-  load_and_authorize_resource :repository, through: :user, through_association: :repos
-  load_and_authorize_resource :revision, through: :repository
-  load_and_authorize_resource through: :revision, through_association: :files
+  load_and_auth_revision_file parents: true
 
   def content
     formatter = Rouge::Formatters::HTML.new(css_class: 'highlight', line_numbers: false)

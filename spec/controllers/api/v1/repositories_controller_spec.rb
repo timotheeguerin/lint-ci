@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe Api::V1::RepositoriesController do
   let(:owner) { FactoryGirl.create(:user) }
 
-  let(:collection_params) { {user_id: owner.username} }
-  let(:params) { collection_params.merge(id: repository.name) }
+  let(:collection_params) { {user: owner.username} }
+  let(:params) { collection_params.merge(repo: repository.name) }
 
 
   describe 'GET #index' do
@@ -26,19 +26,19 @@ RSpec.describe Api::V1::RepositoriesController do
       let!(:disabled_repo) { create(:repository, owner: owner, enabled: false) }
 
       it 'only retrieve all repos when filter not specified' do
-        get :index, user_id: owner.username
+        get :index, collection_params
         ids = json_response.map { |x| x[:id] }
         expect(ids).to eq([enabled_repo1.id, enabled_repo2.id, disabled_repo.id])
       end
 
       it 'only retrieve enabled repos' do
-        get :index, user_id: owner.username, enabled: true
+        get :index, collection_params.merge(enabled: true)
         ids = json_response.map { |x| x[:id] }
         expect(ids).to eq([enabled_repo1.id, enabled_repo2.id])
       end
 
       it 'only retrieve disabled repos' do
-        get :index, user_id: owner.username, enabled: false
+        get :index, collection_params.merge(enabled: false)
         ids = json_response.map { |x| x[:id] }
         expect(ids).to eq([disabled_repo.id])
       end

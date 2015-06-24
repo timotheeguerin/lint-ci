@@ -1,6 +1,6 @@
 # Repositories Api controller
 class RepositoriesController < ApplicationController
-  resource [:user, :repository]
+  load_and_auth_repository parents: true
 
   def index
   end
