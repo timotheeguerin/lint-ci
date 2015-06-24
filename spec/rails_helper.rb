@@ -33,7 +33,7 @@ module LintCI
           it { expect(response).to return_json }
           it { expect(json_response).to be_a Array }
           it { expect(json_response.size).to eq(per_page) }
-          it { expect(json_response { |x| x[:id] }).to eq(records[0..records_count].map(&:id)) }
+          it { expect(json_response { |x| x[:id] }).to eq(records[0..record_count].map(&:id)) }
         end
 
         context 'when asking for second page' do
