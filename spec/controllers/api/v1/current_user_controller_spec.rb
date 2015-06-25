@@ -10,11 +10,7 @@ RSpec.describe Api::V1::CurrentUserController do
       before do
         get :show
       end
-      it do
-        puts 'Current user response: '
-        puts json_response
-        expect(json_response[:id]).to eq(@user.id)
-      end
+      it { expect(json_response[:id]).to eq(@user.id) }
       it { expect(json_response[:username]).to eq(@user.username) }
     end
 

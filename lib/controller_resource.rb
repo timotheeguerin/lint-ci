@@ -32,7 +32,7 @@ module ControllerResource
     def load_and_auth_offense(**kwargs)
       load_and_auth_revision_file(**kwargs) if kwargs[:parents]
       load_and_authorize_resource :offense,
-                                  id_param: :file,
+                                  id_param: :offense,
                                   through: :revision_file, through_association: :offenses, **kwargs
     end
   end

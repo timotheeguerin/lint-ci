@@ -14,7 +14,7 @@ RSpec.describe BadgesController do
   end
 
   describe 'GET #quality' do
-    let(:badge) { double(:quality_badge, path: 'some.svg') }
+    let(:badge) { double(:quality_badge, file: 'some.svg') }
 
     before do
       allow(LintCI::Badge).to receive(:new).and_return(badge)

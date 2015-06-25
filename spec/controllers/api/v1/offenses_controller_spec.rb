@@ -26,6 +26,7 @@ RSpec.describe Api::V1::OffensesController do
 
   describe 'GET #show' do
     let(:offense) { FactoryGirl.create(:offense, file: file) }
+
     before do
       get :show, params
     end
