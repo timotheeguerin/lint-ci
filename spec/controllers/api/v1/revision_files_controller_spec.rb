@@ -34,7 +34,7 @@ RSpec.describe Api::V1::RevisionFilesController do
 
   describe 'GET #content' do
     let(:file) { FactoryGirl.create(:revision_file, revision: revision) }
-    let(:content) { FactoryGirl::Lorem.paragraph }
+    let(:content) { Faker::Lorem.paragraph }
     let(:highlighter) { double(:highlighter, highlight: content) }
     before do
       allow(LintCI::Highlighter).to receive(:new).and_return(highlighter)

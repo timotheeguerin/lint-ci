@@ -8,7 +8,11 @@ RSpec.describe Api::V1::CurrentUserController do
       before do
         get :show
       end
-      it { expect(json_response[:id]).to eq(@user.id) }
+      it do
+        puts 'Current user response: '
+        puts json_response
+        expect(json_response[:id]).to eq(@user.id)
+      end
       it { expect(json_response[:username]).to eq(@user.username) }
     end
 
@@ -20,7 +24,7 @@ RSpec.describe Api::V1::CurrentUserController do
   describe 'GET #current_repos' do
     when_user_signed_in do
       before do
-        @repo = FactoryGirl.create(:repository, owner: owner)
+        @repo = FactoryGirl.create(:repository, owner: @user)
         get :current_repos
       end
 
