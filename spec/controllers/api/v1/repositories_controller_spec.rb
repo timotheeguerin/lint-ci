@@ -12,9 +12,7 @@ RSpec.describe Api::V1::RepositoriesController do
       get :index, collection_params
     end
 
-    it { expect(response).to be_success }
-    it { expect(response).to have_http_status(200) }
-    it { expect(response).to return_json }
+    it_behaves_like 'successful api request'
 
     it_has_behavior 'Pagination API', :index do
       let(:records) { FactoryGirl.create_list(:repository, 3, owner: owner) }

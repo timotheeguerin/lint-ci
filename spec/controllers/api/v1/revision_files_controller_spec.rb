@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Api::V1::RevisionsFileController do
+RSpec.describe Api::V1::RevisionFilesController do
   let(:owner) { FactoryGirl.create(:user) }
   let(:repository) { FactoryGirl.create(:repository, owner: owner) }
   let(:revision) { FactoryGirl.create(:revision, repository: repository) }
