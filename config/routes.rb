@@ -76,11 +76,11 @@ Rails.application.routes.draw do
     constraints LintCI::Constraints.repository do
       get ':user/:repo' => 'repositories#show', as: :repository
       # Page showing the available badges as well as their url.
-      get ':user/:repo/badges' => 'repositories#badges', as: :repository_badges
+      get ':user/:repo/badges' => 'badges#index', as: :repository_badges
 
-      get ':user/:repo/badge.svg' => 'repositories#badge', as: :repository_badge
+      get ':user/:repo/badge.svg' => 'badges#quality', as: :repository_badge
 
-      get ':user/:repo/offense.svg' => 'repositories#badge_offense', as: :repository_offense_badge
+      get ':user/:repo/offense.svg' => 'badges#offense', as: :repository_offense_badge
 
       get ':user/:repo/:revision' => 'revisions#show', as: :revision
 

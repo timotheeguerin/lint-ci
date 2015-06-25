@@ -41,20 +41,26 @@ RSpec.shared_examples 'require authorization' do |action|
 end
 
 # For 200 response
-RSpec.shared_examples 'successful api request' do
+RSpec.shared_examples 'successful request' do
   it { expect(response).to be_success }
   it { expect(response).to have_http_status(200) }
+end
+
+
+# For 200 response for API
+RSpec.shared_examples 'successful api request' do
+  it_behaves_like 'successful request'
   it { expect(response).to return_json }
 end
 
-# For 202 response
+# For 202 response for API
 RSpec.shared_examples 'accepted api request' do
   it { expect(response).to be_success }
   it { expect(response).to have_http_status(202) }
   it { expect(response).to return_json }
 end
 
-# For 403 response
+# For 403 response for API
 RSpec.shared_examples 'forbidden api request' do
   it { expect(response).to be_forbidden }
   it { expect(response).to have_http_status(403) }

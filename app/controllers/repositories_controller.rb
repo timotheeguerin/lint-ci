@@ -8,24 +8,6 @@ class RepositoriesController < ApplicationController
   def show
   end
 
-  def badges
-
-  end
-
-  def badge
-    badge = LintCI::Badge.new('Style', @repository.badge_message,
-                              @repository.badge_color,
-                              params.except(:action))
-    send_file badge.file, disposition: 'inline'
-  end
-
-  def badge_offense
-    badge = LintCI::Badge.new('Offenses', @repository.offense_count,
-                              @repository.badge_color,
-                              params.except(:action))
-    send_file badge.file, disposition: 'inline'
-  end
-
   private
 
   def query_params
