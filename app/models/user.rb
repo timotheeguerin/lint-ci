@@ -48,16 +48,15 @@ class User < ActiveRecord::Base
   end
 
   # Sync the user project with github
-  def sync_repositories
-    GithubApi.octokit.auto_paginate = true
-    repos = GithubApi.octokit.repos(username, type: :all)
+  def sync_repositories(github)
+    github.octokit.auto_paginate = true
+    repos = github.octokit.repos(username, type: :all)
     repos.each do |github_repo|
       repo = find_or_create_repo(github_repo)
       repo.github_url = github_repo.html_url
       repo.save
       repositories << repo unless repositories.include?(repo)
     end
-    GithubApi.octokit.auto_paginate = false
     save
   end
 

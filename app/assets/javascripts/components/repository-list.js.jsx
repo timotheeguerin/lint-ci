@@ -8,18 +8,32 @@ class RepositoryList extends React.Component {
 
     computeRepositories(repositories) {
         if (repositories instanceof RelationshipProxy) {
-            repositories.fetch().then((repositories) => {
-                this.setState({repositories: repositories, loading: false})
-            });
+            repositories.fetch().then(this.receiveRepositories.bind(this));
+            return [];
+        } else if (repositories instanceof Promise) {
+            repositories.then(this.receiveRepositories.bind(this));
             return [];
         } else {
-            return repositories.map((x) => new Repository(x));
+            return repositories.map((x) => {
+                if (x instanceof Repository) {
+                    return x;
+                } else {
+                    return new Repository(x);
+                }
+            });
         }
+    }
+
+    receiveRepositories(repositories) {
+        this.setState({repositories: repositories, loading: false})
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.repositories != this.state.repositories) {
-            this.setState({repositories: this.computeRepositories(nextProps.repositories)})
+            this.setState({
+                repositories: this.computeRepositories(nextProps.repositories),
+                loading: false
+            })
         }
     }
 

@@ -9,6 +9,8 @@
   cursor: pointer;
 }
 
+$box-shadow-border: 1px solid $grey_medium_light;
+
 .shadow-box {
   display: block;
   color: $grey_darkest;
@@ -22,7 +24,12 @@
     padding: 1rem;
     font-size: 2rem;
     font-weight: bold;
-    border-bottom: 1px solid $grey_medium_light;
+    border-bottom: $box-shadow-border;
+  }
+
+  .box-search {
+    font-size: 2rem;
+    color: #a0a8a8;
   }
 
   .box-important-data {
@@ -40,7 +47,7 @@
       padding: 1rem;
       width: 100%;
       &:not(:last-child) {
-        border-bottom: 1px solid $grey_medium_light;
+        border-bottom: $box-shadow-border;
       }
     }
 
