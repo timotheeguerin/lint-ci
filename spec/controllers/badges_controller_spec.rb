@@ -29,7 +29,7 @@ RSpec.describe BadgesController do
   end
 
   describe 'GET #offense' do
-    let(:badge) { double(:offense_badge, path: 'some.svg') }
+    let(:badge) { double(:offense_badge, file: 'some.svg') }
 
     before do
       allow(LintCI::Badge).to receive(:new).and_return(badge)

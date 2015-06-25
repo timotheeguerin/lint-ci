@@ -29,7 +29,11 @@ RSpec.describe Api::V1::CurrentUserController do
       end
 
       it { expect(json_response.size).to be 1 }
-      it { expect(json_response.first[:id]).to eq(@repo.id) }
+      it {
+        puts 'Cur index response'
+        puts json_response
+        expect(json_response.first[:id]).to eq(@repo.id)
+      }
       it { expect(json_response.first[:name]).to eq(@repo.name) }
     end
 
