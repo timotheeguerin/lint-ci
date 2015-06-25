@@ -2,10 +2,10 @@
 class LintCI::Config
 
   # Languages
-  attr_accessor :languages
+  attr_accessor :linters
 
   def initialize(hash = {})
-    @languages = hash.fetch(:languages, [:ruby])
+    @linters = hash.fetch(:linters, [:ruby])
   end
 
   def self.load_yml(filename)

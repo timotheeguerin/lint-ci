@@ -1,17 +1,14 @@
 # Linter
 class Linter::Rubocop < Linter::Base
-  def review
-    json = nil
-    puts Benchmark.measure('Rubocop') {
-           out = `rubocop --format json`
-           json = JSON.parse(out)
-         }
-    puts Benchmark.measure('Save') {
-           parse_json(json)
-         }
+  language :ruby
+  keys :rubocop, :ruby
+
+  def run_linter
+    out = `rubocop --format json`
+    JSON.parse(out)
   end
 
-  def parse_json(json)
+  def upload(json)
     json['files'].each do |file_hash|
       @revision.files << parse_file(file_hash)
     end
@@ -19,8 +16,7 @@ class Linter::Rubocop < Linter::Base
   end
 
   def parse_file(json)
-    file = RevisionFile.new
-    file.path = json['path']
+    file = new_file(json['path'])
     json['offenses'].each do |offense_hash|
       file.offenses << parse_offense(offense_hash)
     end

@@ -1,8 +1,7 @@
 FactoryGirl.define do
   factory :revision_file do
-    revision nil
-path "MyString"
-offense_count 1
+    revision
+    path { "/#{Faker::Name.name}/file.rb" }
+    offense_count 1
   end
-
 end

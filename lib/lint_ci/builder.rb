@@ -16,10 +16,10 @@ class LintCI::Builder
 
   def run_in_repo_dir
     config = load_config
-    linters = Linter::Base.linters(config.languages)
+    linters = Linter::Base.fetch_linters_for(config.linters)
     cleanup_existing
     revision = new_revision
-    linters.each do |_, cls|
+    linters.each do |cls|
       linter = cls.new(revision, @dir, config)
       linter.review
     end
