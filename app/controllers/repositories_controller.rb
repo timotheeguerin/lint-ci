@@ -2,9 +2,6 @@
 class RepositoriesController < ApplicationController
   load_and_auth_repository parents: true
 
-  def index
-  end
-
   def show
   end
 

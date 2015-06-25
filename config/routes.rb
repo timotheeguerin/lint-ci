@@ -71,9 +71,10 @@ Rails.application.routes.draw do
     get 'settings' => 'settings#index', as: :user_settings
     get 'settings/repositories' => 'settings#repositories', as: :user_repo_settings
 
-    get ':user' => 'users#show', as: :user
 
     constraints LintCI::Constraints.repository do
+      get ':user' => 'users#show', as: :user
+
       get ':user/:repo' => 'repositories#show', as: :repository
       # Page showing the available badges as well as their url.
       get ':user/:repo/badges' => 'badges#index', as: :repository_badges

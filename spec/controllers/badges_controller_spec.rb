@@ -24,7 +24,7 @@ RSpec.describe BadgesController do
 
     it_behaves_like 'successful request'
 
-    it { expect(LintCI::Badge).to have_receive(:new).with('Style', any_args) }
+    it { expect(LintCI::Badge).to have_received(:new).with('Style', any_args) }
     it { expect(controller).to have_received(:send_file) }
   end
 
@@ -39,7 +39,7 @@ RSpec.describe BadgesController do
 
     it_behaves_like 'successful request'
 
-    it { expect(LintCI::Badge).to have_receive(:new).with('Offenses', any_args) }
+    it { expect(LintCI::Badge).to have_received(:new).with('Offenses', any_args) }
     it { expect(controller).to have_received(:send_file) }
   end
 end

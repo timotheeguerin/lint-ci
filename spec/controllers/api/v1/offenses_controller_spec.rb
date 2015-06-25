@@ -33,6 +33,6 @@ RSpec.describe Api::V1::OffensesController do
 
     it_behaves_like 'successful api request'
     it { expect(json_response[:id]).to eq(offense.id) }
-    it { expect(json_response[:sha]).to eq(offense.path) }
+    it { expect(json_response[:message]).to eq(offense.message) }
   end
 end
