@@ -17,7 +17,7 @@ RSpec.describe Api::V1::RevisionsFileController do
     it { expect(response).to return_json }
 
     it_has_behavior 'Pagination API', :index do
-      let(:records) { FactoryGirl.create_list(:revision_file, 3, repository: repository) }
+      let(:records) { FactoryGirl.create_list(:revision_file, 3, revision: revision) }
     end
   end
 
@@ -29,7 +29,7 @@ RSpec.describe Api::V1::RevisionsFileController do
 
     it_behaves_like 'successful api request'
     it { expect(json_response[:id]).to eq(file.id) }
-    it { expect(json_response[:sha]).to eq(file.path) }
+    it { expect(json_response[:path]).to eq(file.path) }
   end
 
   describe 'GET #content' do
