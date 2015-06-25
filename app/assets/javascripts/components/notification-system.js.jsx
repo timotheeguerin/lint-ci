@@ -418,7 +418,7 @@ var NotificationSystem = React.createClass({
         wrapper: function () {
             if (!this.overrideStyle) return {};
             var override = this.overrideStyle.Wrapper || {};
-            return merge({}, Styles.Wrapper, this.overrideStyle);
+            return Object.assign({}, Styles.Wrapper, this.overrideStyle);
         },
 
         container: function (position) {
@@ -435,43 +435,43 @@ var NotificationSystem = React.createClass({
                 this.overrideWidth = override[position].width;
             }
 
-            return merge({}, Styles.Containers.DefaultStyle, Styles.Containers[position], override.DefaultStyle, override[position]);
+            return Object.assign({}, Styles.Containers.DefaultStyle, Styles.Containers[position], override.DefaultStyle, override[position]);
         },
 
         notification: function (level) {
             if (!this.overrideStyle) return {};
             var override = this.overrideStyle.NotificationItem || {};
-            return merge({}, Styles.NotificationItem.DefaultStyle, Styles.NotificationItem[level], override.DefaultStyle, override[level]);
+            return Object.assign({}, Styles.NotificationItem.DefaultStyle, Styles.NotificationItem[level], override.DefaultStyle, override[level]);
         },
 
         title: function (level) {
             if (!this.overrideStyle) return {};
             var override = this.overrideStyle.Title || {};
-            return merge({}, Styles.Title.DefaultStyle, Styles.Title[level], override.DefaultStyle, override[level]);
+            return Object.assign({}, Styles.Title.DefaultStyle, Styles.Title[level], override.DefaultStyle, override[level]);
         },
 
         messageWrapper: function (level) {
             if (!this.overrideStyle) return {};
             var override = this.overrideStyle.MessageWrapper || {};
-            return merge({}, Styles.MessageWrapper.DefaultStyle, Styles.MessageWrapper[level], override.DefaultStyle, override[level]);
+            return Object.assign({}, Styles.MessageWrapper.DefaultStyle, Styles.MessageWrapper[level], override.DefaultStyle, override[level]);
         },
 
         dismiss: function (level) {
             if (!this.overrideStyle) return {};
             var override = this.overrideStyle.Dismiss || {};
-            return merge({}, Styles.Dismiss.DefaultStyle, Styles.Dismiss[level], override.DefaultStyle, override[level]);
+            return Object.assign({}, Styles.Dismiss.DefaultStyle, Styles.Dismiss[level], override.DefaultStyle, override[level]);
         },
 
         action: function (level) {
             if (!this.overrideStyle) return {};
             var override = this.overrideStyle.Action || {};
-            return merge({}, Styles.Action.DefaultStyle, Styles.Action[level], override.DefaultStyle, override[level]);
+            return Object.assign({}, Styles.Action.DefaultStyle, Styles.Action[level], override.DefaultStyle, override[level]);
         },
 
         actionWrapper: function (level) {
             if (!this.overrideStyle) return {};
             var override = this.overrideStyle.ActionWrapper || {};
-            return merge({}, Styles.ActionWrapper.DefaultStyle, Styles.ActionWrapper[level], override.DefaultStyle, override[level]);
+            return Object.assign({}, Styles.ActionWrapper.DefaultStyle, Styles.ActionWrapper[level], override.DefaultStyle, override[level]);
         },
 
     },
@@ -507,7 +507,7 @@ var NotificationSystem = React.createClass({
 
     addNotification: function (notification) {
         var self = this;
-        var notification = merge({}, Constants.notification, notification);
+        var notification = Object.assign({}, Constants.notification, notification);
 
         var error = false;
 

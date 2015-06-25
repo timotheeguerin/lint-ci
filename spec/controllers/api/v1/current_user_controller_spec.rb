@@ -25,6 +25,7 @@ RSpec.describe Api::V1::CurrentUserController do
 
       before do
         @repo = FactoryGirl.create(:repository, owner: @user)
+        @user.reload
         get :current_repos
       end
 
