@@ -18,11 +18,12 @@ RSpec.describe BadgesController do
 
     before do
       allow(LintCI::Badge).to receive(:new).and_return(badge)
-      allow(controller).to receive(:send_file).and_return { controller.render nothing: true }
+      allow(controller).to receive(:send_file) { controller.render nothing: true }
       get :quality, params
     end
 
     it_behaves_like 'successful request'
+
     it { expect(LintCI::Badge).to have_receive(:new).with('Style', any_args) }
     it { expect(controller).to have_received(:send_file) }
   end
@@ -32,11 +33,12 @@ RSpec.describe BadgesController do
 
     before do
       allow(LintCI::Badge).to receive(:new).and_return { badge }
-      allow(controller).to receive(:send_file).and_return { controller.render nothing: true }
+      allow(controller).to receive(:send_file) { controller.render nothing: true }
       get :offense, params
     end
 
     it_behaves_like 'successful request'
+
     it { expect(LintCI::Badge).to have_receive(:new).with('Offenses', any_args) }
     it { expect(controller).to have_received(:send_file) }
   end

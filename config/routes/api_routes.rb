@@ -63,7 +63,7 @@ get 'repos/:user/:repo/:revision/files' => 'revision_files#index', as: :files
 #================================================================
 get 'repos/:user/:repo/:revision/:file/offenses' => 'offenses#index',
     as: :offenses
-get 'repos/:user/:repo/:revision/:file/offenses/:id' => 'offenses#show',
+get 'repos/:user/:repo/:revision/:file/offenses/:offense' => 'offenses#show',
     as: :offense
 
 get 'repos/:user/:repo/:revision/:file/content' => 'revision_files#content',

@@ -5,6 +5,8 @@ RSpec.describe Api::V1::CurrentUserController do
 
   describe 'GET #show' do
     when_user_signed_in do
+      can :current, @user
+
       before do
         get :show
       end
@@ -23,6 +25,8 @@ RSpec.describe Api::V1::CurrentUserController do
 
   describe 'GET #current_repos' do
     when_user_signed_in do
+      can :current, @user
+
       before do
         @repo = FactoryGirl.create(:repository, owner: @user)
         get :current_repos
