@@ -5,7 +5,7 @@ RSpec.describe Api::V1::CurrentUserController do
 
   describe 'GET #show' do
     when_user_signed_in do
-      can :current, @user
+      can :current, User
 
       before do
         get :show

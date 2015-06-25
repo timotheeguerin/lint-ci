@@ -32,7 +32,7 @@ RSpec.describe BadgesController do
     let(:badge) { double(:offense_badge, path: 'some.svg') }
 
     before do
-      allow(LintCI::Badge).to receive(:new).and_return { badge }
+      allow(LintCI::Badge).to receive(:new).and_return(badge)
       allow(controller).to receive(:send_file) { controller.render nothing: true }
       get :offense, params
     end
