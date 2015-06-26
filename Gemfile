@@ -67,7 +67,7 @@ group :development, :test do
   gem 'faker'
   gem 'rspec-rails', '~> 3.0'
   gem 'factory_girl_rails'
-
+  gem 'webmock'
 end
 
 group :production do
