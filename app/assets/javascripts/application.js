@@ -23,9 +23,3 @@
 
 Turbolinks.enableProgressBar();
 
-
-EventManager.trigger('notification', {
-    type: 'success',
-    title: 'Test notification',
-    message: 'This is working'
-});
