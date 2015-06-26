@@ -1,18 +1,3 @@
-var defaultWidth = 320;
-var defaultColors = {
-    success: '#5ea400',
-    error: '#ec3d3d',
-    warning: '#ebad1a',
-    info: '#369cc7'
-};
-
-
-var Styles = {
-
-    Wrapper: {},
-    Containers: {}
-};
-
 var Constants = {
     // Positions
     positions: {
@@ -184,14 +169,6 @@ var NotificationSystem = React.createClass({
         this.notification_event = EventManager.on('notification', (notification) => {
             console.log('receive not', notification);
             this.addNotification(notification);
-        });
-
-
-        EventManager.trigger('notification', {
-            level: 'info',
-            title: 'Test notification',
-            message: 'This is working <a>Some</a>',
-            callback: (x) => console.log('wowow')
         });
     },
     componentWillUnmount: function () {
