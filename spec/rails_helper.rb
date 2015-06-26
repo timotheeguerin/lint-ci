@@ -20,6 +20,7 @@ module LintCI
       # User can be accessed with @user
       # Use #can to specify the user abilities
       def when_user_signed_in(&block)
+        let(:current_user) { FactoryGirl.create(:user) }
         example_group_class = context 'when user is signed in' do
           can :read, :all
 
@@ -27,7 +28,7 @@ module LintCI
           before do
             @request.env['devise.mapping'] = Devise.mappings[:user]
             @request.env['HTTP_REFERER'] = '/back'
-            @user = FactoryGirl.create(:user)
+            @user = current_user
             allow(controller).to receive(:current_ability).and_return(ability)
             sign_in @user
           end
@@ -50,9 +51,9 @@ module LintCI
       end
 
       # Set an ability for the current user(To be used inside when_user_signed_in)
-      def can(action, resource)
+      def can(action, resource, options={})
         before do
-          ability.can action, resource
+          ability.can action, resource, options
         end
       end
 

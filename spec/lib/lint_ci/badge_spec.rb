@@ -22,7 +22,7 @@ RSpec.describe LintCI::Badge do
       let(:params) { {style: 'flat-square', label: 'New label'} }
 
       it 'return join the params in a http query format' do
-        expect(subject.shields_params).to eq('?style=flat-square&label=New label')
+        expect(subject.shields_params).to eq('?label=New+label&style=flat-square')
       end
     end
   end
@@ -43,27 +43,30 @@ RSpec.describe LintCI::Badge do
   describe '#filename' do
     it 'return filename' do
       badge = LintCI::Badge.new('Style', 'Great', 'green')
-      expect(badge.shields_url).to eq('Style-Great-green.svg')
+      expect(badge.filename).to eq('Style-Great-green.svg')
     end
 
     it 'return a shields.io url with params' do
       badge = LintCI::Badge.new('Style', 'Great', 'green', style: 'flat-square')
-      expect(badge.shields_url)
+      expect(badge.filename)
         .to eq('Style-Great-green?style=flat-square.svg')
     end
   end
 
   describe '#download' do
     subject { LintCI::Badge.new('Style', 'Great', 'green') }
-    let(:file) { double(:file, :write) }
+    let(:file) { double(:file, write: true) }
     let(:content) { Faker::Lorem.sentence }
     before do
-      allow(File).to receive(:open).and_yield_with_args(file)
+      allow(LintCI).to receive(:badge_path).and_return('/some/path')
+      allow(FileUtils).to receive(:mkdir_p)
+      allow(File).to receive(:open) {|&b|  b.call(file) }
       stub_request(:get, subject.shields_url).to_return(body: content)
       subject.download
     end
 
     it { expect(a_request(:get, subject.shields_url)).to have_been_made.once }
+    it { expect(FileUtils).to have_received(:mkdir_p).with('/some/path') }
     it { expect(file).to have_received(:write).with(content) }
   end
 end
