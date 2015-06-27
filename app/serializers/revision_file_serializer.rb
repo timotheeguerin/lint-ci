@@ -3,9 +3,6 @@
 class RevisionFileSerializer < ApplicationSerializer
   attributes :id, :path, :offense_count, :status
 
-  has_many :offenses
-
-
   link :url do
     api_file_url(object.repository.owner, object.repository, object.revision, object)
   end

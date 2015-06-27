@@ -175,6 +175,22 @@ class RevisionFile extends Model {
     get content() {
         return this.hasOne('content', null);
     }
+
+    set offenses(ary) {
+        this._offenses = ary;
+    }
+
+    get offenses() {
+        return this.hasMany('offenses', Offense);
+
+    }
+}
+
+
+class Offense extends Model {
+    getUrl() {
+        return '';
+    }
 }
 
 // Get the link header from the xhr of jquery

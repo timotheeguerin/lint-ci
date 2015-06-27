@@ -6,7 +6,8 @@ class RevisionFileViewer extends React.Component {
             file: new RevisionFile(api, props.file),
             lines: [],
             annotations: {},
-            loading: true
+            loading: true,
+            offenses: []
         }
 
     }
@@ -19,14 +20,14 @@ class RevisionFileViewer extends React.Component {
         return '<span class="offense" data-id="' + offense.id + '" title="' + offense.message + '">' + text + '</span>'
     }
 
-    handleContent(content) {
+    handleContent(content, offenses) {
         var dom = $(content);
         var pre = dom.find('code');
         var lines = pre.html().split('\n').map(function (x) {
             return $('<div>' + x + '</div>')
         });
         var that = this;
-        this.state.file.offenses.forEach(function (offense) {
+        offenses.forEach(function (offense) {
             var row = offense.line - 1;
             var start = offense.column - 1;
             var end = start + offense.length;
@@ -67,8 +68,8 @@ class RevisionFileViewer extends React.Component {
 
     findOffense(id) {
         id = parseInt(id);
-        for (var i in this.state.file.offenses) {
-            var offense = this.state.file.offenses[i];
+        for (var i in this.state.offenses) {
+            var offense = this.state.offenses[i];
             if (offense.id == id) {
                 return offense;
             }
@@ -96,11 +97,38 @@ class RevisionFileViewer extends React.Component {
     }
 
     componentDidMount() {
-        this.state.file.content.fetch().then((content) => {
-            this.setState({lines: this.handleContent(content.highlighted), loading: false});
-
+        var promises = [this.state.file.content.fetch(), this.state.file.offenses.fetchAll()];
+        Promise.all(promises).then((values) => {
+            var content = values[0];
+            var offenses = values[1];
+            this.setState({
+                lines: this.handleContent(content.highlighted, offenses),
+                offenses: offenses,
+                loading: false
+            });
         });
         this.registerEvents();
+    }
+
+    getLinters() {
+        var linters = [];
+        for (let offense of this.state.offenses) {
+            console.log(offense);
+            var linter = offense.linter;
+            if (!(linter.name in linters)) {
+                linter.offense_count = 1;
+                linters[linter.name] = linter;
+            } else {
+                linters[linter.name].offense_count++;
+            }
+        }
+        var out = [];
+        for (let key in linters) {
+            if (linters.hasOwnProperty(key)) {
+                out.push(linters[key]);
+            }
+        }
+        return out;
     }
 
     render() {
@@ -109,13 +137,17 @@ class RevisionFileViewer extends React.Component {
                 <Tabs tabActive={1}>
                     <Tabs.Panel title={'Preview'} active={true}>
                         <Loader loading={this.state.loading} size={4} message="Loading content...">
+                            <div className='linters'>
+                                <LinterPreview linters={this.getLinters()}/>
+                            </div>
+
                             <RevisionFileViewerCode lines={this.state.lines}
                                                     annotations={this.state.annotations}/>
                         </Loader>
                     </Tabs.Panel>
                     <Tabs.Panel title={'Offenses'}>
                         <div className='list'>
-                            <OffenseList offenses={this.state.file.offenses}
+                            <OffenseList offenses={this.state.offenses}
                                          lines={this.state.lines}/>
                         </div>
                     </Tabs.Panel>

@@ -17,7 +17,9 @@ RSpec.describe Api::V1::RevisionFilesController do
     it { expect(response).to return_json }
 
     it_has_behavior 'Pagination API', :index do
-      let(:records) { FactoryGirl.create_list(:revision_file, 3, revision: revision) }
+      let(:records) do
+        FactoryGirl.create_list(:revision_file, 3, revision: revision, offense_count: 0)
+      end
     end
   end
 
