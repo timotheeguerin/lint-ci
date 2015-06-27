@@ -1,11 +1,11 @@
 # Linter base class
 class Linter::Base
+  class << self
+    attr_accessor :_language
+    attr_accessor :_keys
+  end
 
-  attr_accessor :directory
-  attr_accessor :config
 
-  cattr_accessor :_language
-  cattr_accessor :_keys
   # Set the linter language
   # Any file created in the linter will be mapped to this language
   def self.language(language)
@@ -20,20 +20,26 @@ class Linter::Base
 
   # Get the list of linters
   def self.fetch_linters_for(*linter_names)
+    linter_names = Set.new(linter_names.flatten)
     linters = []
     subclasses.each do |cls|
-      if (cls._keys & linter_names).any?
-        linters << cls
-      end
+      linters << cls if (cls._keys & linter_names).any?
     end
     linters
   end
 
 
+  attr_accessor :directory
+  attr_accessor :config
+
+  # Track the number of offenses found while scanning
+  attr_accessor :linter
+
   def initialize(revision, directory, config)
     @directory = directory
     @config = config
     @revision = revision
+    @linter = Linter.new(name: self.class.name.demodulize.downcase, offense_count: 0)
   end
 
   def review
@@ -66,8 +72,32 @@ class Linter::Base
     RevisionFile.new(path: path, language: language || self.class._language)
   end
 
-  def exec(command, *args)
-    args = args.map { |x| %("#{x}") }.join(' ')
-    `#{command} #{args}`
+  # Create a new offense USE this DO NOT do Offense.new directly
+  def new_offense(message)
+    offense = Offense.new
+    offense.message = message
+    @linter.offenses << offense
+    @linter.offense_count += 1
+    offense
+  end
+
+  def exec(command)
+    Open3.popen3(command, chdir: @directory) do |_i, o, _e, _t|
+      return o.read.chomp
+    end
+  end
+
+  # ./node_modules Dir
+  def node_modules
+    Rails.root.join('node_modules')
+  end
+
+  # ./node_modules/.bin Dir
+
+  def node_modules_bin
+    node_modules.join('.bin')
   end
 end
+
+require_dependency 'linter/rubocop'
+require_dependency 'linter/js_hint'

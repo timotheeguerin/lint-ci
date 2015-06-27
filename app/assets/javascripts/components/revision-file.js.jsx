@@ -34,8 +34,7 @@ class RevisionFileViewer extends React.Component {
 
             lines[row].contents().filter(function () {
                 return this.nodeType === 3
-            })
-                .wrap('<span/>');
+            }).wrap('<span/>');
             lines[row].children().each(function () {
                 var text = $(this).text();
                 if (current < start) {
@@ -51,6 +50,12 @@ class RevisionFileViewer extends React.Component {
                 }
                 current += text.length;
             });
+
+            //When missing a character a the end
+            if (current < end) {
+                $(that.highlightOffense(offense, ' ')).appendTo(lines[row])
+
+            }
         });
 
         lines = lines.map(function (x) {
@@ -79,17 +84,20 @@ class RevisionFileViewer extends React.Component {
             var annotations = self.state.annotations;
             if (offense.line in annotations) {
                 delete annotations[offense.line];
-                self.setState(annotations);
+                self.setState({annotations: annotations});
             } else {
+                console.log('clk');
                 annotations[offense.line] = offense.message;
-                self.setState(annotations);
+                console.log(annotations);
+                self.setState({annotations: annotations});
+                console.log('clk');
             }
         });
     }
 
     componentDidMount() {
         this.state.file.content.fetch().then((content) => {
-            this.setState({lines: this.handleContent(content.raw), loading: false});
+            this.setState({lines: this.handleContent(content.highlighted), loading: false});
 
         });
         this.registerEvents();
@@ -97,7 +105,7 @@ class RevisionFileViewer extends React.Component {
 
     render() {
         return (
-            <div style={{padding: '1rem'}}>
+            <div>
                 <Tabs tabActive={1}>
                     <Tabs.Panel title={'Preview'} active={true}>
                         <Loader loading={this.state.loading} size={4} message="Loading content...">
@@ -107,6 +115,8 @@ class RevisionFileViewer extends React.Component {
                     </Tabs.Panel>
                     <Tabs.Panel title={'Offenses'}>
                         <div className='list'>
+                            <OffenseList offenses={this.state.file.offenses}
+                                         lines={this.state.lines}/>
                         </div>
                     </Tabs.Panel>
                 </Tabs>
@@ -118,22 +128,30 @@ class RevisionFileViewer extends React.Component {
     }
 }
 
-RevisionFileViewerCode.defaultProps = {annotations: {}};
 class RevisionFileViewerCode extends React.Component {
     render() {
         return (
             <pre className='highlight'>
                 <table>
-                    {this.renderLines()}
+                    <tbody>{this.renderLines()}</tbody>
                 </table>
             </pre>
         )
     }
 
     renderLines() {
-        return this.props.lines.map((content, i) => {
-            var box = '';
-            var line = i + 1;
+        var start = this.props.start;
+        var end = this.props.end;
+        if (!start || start < 0) {
+            start = 0;
+        }
+        if (!end || end > this.props.length) {
+            end = this.props.lines.length;
+        }
+
+        return this.props.lines.slice(start, end).map((content, i) => {
+            var box = null;
+            var line = start + i + 1;
             if (line in this.props.annotations) {
                 box = this.renderAnnotation(line)
             }
@@ -148,15 +166,15 @@ class RevisionFileViewerCode extends React.Component {
         return (
             <tr>
                 <td></td>
-                <td>
-                    <div className='offense-details'>
-                        {this.props.annotations[line]}
-                    </div>
+                <td className='offense-details'>
+                    {this.props.annotations[line]}
                 </td>
             </tr>
         )
     }
 }
+RevisionFileViewerCode.defaultProps = {annotations: {}};
+
 
 class RevisionFileViewerLine extends React.Component {
     render() {
@@ -167,6 +185,29 @@ class RevisionFileViewerLine extends React.Component {
                     dangerouslySetInnerHTML={{__html: this.props.content}}>
                 </td>
             </tr>
+        )
+    }
+}
+
+class OffenseList extends React.Component {
+    render() {
+        return (
+            <div className='list offense-list'>
+                {this.props.offenses.map((x) => this.renderOffense(x))}
+            </div>
+        )
+    }
+
+    renderOffense(offense) {
+        var start = offense.line - 3;
+        var end = offense.line + 2;
+        return (
+            <div className='item'>
+                <div className='message'>
+                    {offense.message}
+                </div>
+                <RevisionFileViewerCode lines={this.props.lines} start={start} end={end}/>
+            </div>
         )
     }
 }

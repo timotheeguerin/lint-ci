@@ -11,10 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150626110343) do
+ActiveRecord::Schema.define(version: 20150627135705) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "linters", force: :cascade do |t|
+    t.string   "name",          null: false
+    t.integer  "revision_id"
+    t.integer  "offense_count", null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "linters", ["revision_id"], name: "index_linters_on_revision_id", using: :btree
 
   create_table "memberships", force: :cascade do |t|
     t.integer  "user_id"
@@ -33,8 +43,9 @@ ActiveRecord::Schema.define(version: 20150626110343) do
     t.integer  "column"
     t.integer  "length"
     t.integer  "severity"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.integer  "linter_id",  default: 0
   end
 
   add_index "offenses", ["file_id"], name: "index_offenses_on_file_id", using: :btree
@@ -100,6 +111,7 @@ ActiveRecord::Schema.define(version: 20150626110343) do
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
+  add_foreign_key "linters", "revisions"
   add_foreign_key "memberships", "repositories"
   add_foreign_key "memberships", "users"
   add_foreign_key "repositories", "users", column: "owner_id"

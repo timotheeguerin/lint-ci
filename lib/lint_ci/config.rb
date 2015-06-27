@@ -5,7 +5,7 @@ class LintCI::Config
   attr_accessor :linters
 
   def initialize(hash = {})
-    @linters = hash.fetch(:linters, [:ruby])
+    @linters = hash.fetch(:linters, [:javascript])
   end
 
   def self.load_yml(filename)

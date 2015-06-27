@@ -1,7 +1,9 @@
-# Repository serializer
-# @see Repository
+# Revision serializer
+# @see Revision
 class RevisionSerializer < ApplicationSerializer
   attributes :id, :sha, :message, :offense_count, :date, :status
+
+  has_many :linters
 
   link :url do
     api_revision_url(object.repository.owner, object.repository, object)

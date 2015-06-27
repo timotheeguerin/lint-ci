@@ -4,7 +4,7 @@ class Linter::Rubocop < Linter::Base
   keys :rubocop, :ruby
 
   def run_linter
-    out = `rubocop --format json`
+    out = exec('rubocop --format json')
     JSON.parse(out)
   end
 
@@ -12,7 +12,6 @@ class Linter::Rubocop < Linter::Base
     json['files'].each do |file_hash|
       @revision.files << parse_file(file_hash)
     end
-    @revision.offense_count = json['summary']['offense_count']
   end
 
   def parse_file(json)
@@ -25,8 +24,7 @@ class Linter::Rubocop < Linter::Base
   end
 
   def parse_offense(json)
-    offense = Offense.new
-    offense.message = json['message']
+    offense = new_offense(json['message'])
     parse_location(offense, json['location'])
     offense.severity = json['severity'].to_sym
     offense

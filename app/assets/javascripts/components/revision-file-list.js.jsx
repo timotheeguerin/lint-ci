@@ -22,10 +22,10 @@ var RevisionFileList = React.createClass({
         var files = this.state.files.map(function (file) {
             return (
                 <a className='item flex-center' href={file.html_url} key={file.id}>
-                    <div className={'file ' + file.status}>
+                    <div className={'offense-status ' + file.status}>
                         {this.renderOffenseCount(file.offense_count)}
                     </div>
-                    <div className='flex-fill'>
+                    <div className='details'>
                         {file.path}
                     </div>
                 </a>

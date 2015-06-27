@@ -4,18 +4,17 @@ class Linter::JsHint < Linter::Base
   keys :jshint, :javascript
 
   def run_linter
-    out = `jshint **/*.js --reporter=#{reporter}`
+    out = exec("#{exe} . --reporter=#{reporter}")
     JSON.parse(out)
   end
 
   def upload(json)
     files = group_by_file(json)
-    files.each do |path, file_hash| 
+    files.each do |path, file_hash|
       @revision.files << parse_file(path, file_hash)
     end
-    @revision.offense_count = json['summary']['offense_count']
   end
-  
+
   def group_by_file(json)
     files = {}
     json.each do |hash|
@@ -36,9 +35,8 @@ class Linter::JsHint < Linter::Base
   end
 
   def parse_offense(json)
-    offense = Offense.new
-    offense.message = json['reason']
-    parse_location(offense, json['location'])
+    offense = new_offense(json['reason'])
+    parse_location(offense, json)
     offense.severity = json['id'][1...-1].to_sym
     offense
   end
@@ -48,7 +46,11 @@ class Linter::JsHint < Linter::Base
     offense.column = json['character']
     offense.length = 1
   end
-  
+
+  def exe
+    File.join(node_modules_bin, 'jshint')
+  end
+
   def reporter
     File.join(File.dirname(__FILE__), 'jshint', 'reporter.js')
   end

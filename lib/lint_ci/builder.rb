@@ -9,12 +9,6 @@ class LintCI::Builder
 
   def run
     @git.pull
-    Dir.chdir @dir do
-      run_in_repo_dir
-    end
-  end
-
-  def run_in_repo_dir
     config = load_config
     linters = Linter::Base.fetch_linters_for(config.linters)
     cleanup_existing
@@ -22,7 +16,10 @@ class LintCI::Builder
     linters.each do |cls|
       linter = cls.new(revision, @dir, config)
       linter.review
+      revision.linters << linter.linter
+      revision.offense_count += linter.linter.offense_count
     end
+
     revision.save!
   end
 
@@ -37,6 +34,7 @@ class LintCI::Builder
     revision.repository = @repository
     revision.message = commit.message
     revision.date = commit.date
+    revision.offense_count = 0
     revision
   end
 

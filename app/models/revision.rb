@@ -6,6 +6,7 @@ class Revision < ActiveRecord::Base
   belongs_to :repository
 
   has_many :files, class_name: 'RevisionFile', dependent: :destroy
+  has_many :linters, dependent: :destroy
 
   validates :sha, presence: true, uniqueness: {scope: :repository_id}
 

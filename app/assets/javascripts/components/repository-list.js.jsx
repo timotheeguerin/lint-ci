@@ -91,10 +91,10 @@ class RepositoryListItem extends React.Component {
 
         return (
             <Link className='item flex-center' href={repository.html_url} key={repository.id}>
-                <div className={'offense ' + repository.status}>
+                <div className={'offense-status ' + repository.status}>
                     {renderOffenseCount(repository.offense_count)}
                 </div>
-                <div className='flex-fill'>
+                <div className='details'>
                     <h3>{this.props.repository.name}</h3>
                     <i>
                         <a href={this.props.repository.github_url}>
@@ -103,7 +103,7 @@ class RepositoryListItem extends React.Component {
                     </i>
                 </div>
 
-                <div className="flex-right flex-center">
+                <div className="extra">
                     <small>
                         <TimeFromNow date={this.props.repository.sync_at} format='{0}'/>
                     </small>

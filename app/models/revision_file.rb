@@ -8,6 +8,9 @@ class RevisionFile < ActiveRecord::Base
 
   delegate :repository, to: :revision
 
+  validates :offense_count, presence: true
+  validates :language, presence: true
+
   default_scope do
     order(offense_count: :desc)
   end

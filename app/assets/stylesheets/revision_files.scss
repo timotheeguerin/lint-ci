@@ -1,9 +1,11 @@
 @import 'variables';
 
 .highlight {
+  margin: 0;
   counter-reset: line-numbering;
-  border: 1px solid #e5e5e5;
-
+  table {
+    width: 100%;
+  }
   tr {
     width: 100%;
     td.line-number {
@@ -16,6 +18,7 @@
     }
 
     td.line {
+      width: 100%;
       padding-left: 0.5rem;
       border-left: 1px solid #e5e5e5;
     }
@@ -26,27 +29,21 @@
   }
 
   .offense-details {
-    background-color: cornflowerblue;
-    height: 5rem;
-    padding-left: 0.5rem;
+    background-color: $red;
+    color: $grey_lightest;
+    font-weight: bold;
+    padding: 0 4rem;
     width: 100%
   }
 
-  //.offense:before {
-  //  content: "~~~~~~~~~~~~";
-  //  font-size: 0.6em;
-  //  font-weight: 700;
-  //  font-family: Times New Roman, Serif;
-  //  color: red;
-  //  width: 100%;
-  //  position: absolute;
-  //  top: 12px;
-  //  left: -1px;
-  //  overflow: hidden;
-  //}
 }
 
-.ace_gutter-cell.ace_breakpoint {
-  background-color: $red;
-  border-radius: 1rem;
+.offense-list {
+  .highlight {
+    margin-top: 0.5rem;
+    border: 1px solid $grey_medium_light;
+  }
+  .message {
+    font-weight: bold;
+  }
 }
