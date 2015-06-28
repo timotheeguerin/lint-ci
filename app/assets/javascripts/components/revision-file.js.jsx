@@ -112,7 +112,7 @@ class RevisionFileViewer extends React.Component {
 
     getLinters() {
         var linters = [];
-        for (let offense of this.state.offenses) {
+        for (var offense of this.state.offenses) {
             console.log(offense);
             var linter = offense.linter;
             if (!(linter.name in linters)) {
