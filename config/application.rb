@@ -29,8 +29,9 @@ module LintCi
 
     config.autoload_paths << "#{Rails.root}/lib/" << "#{Rails.root}/config/routes"
 
+
     config.react.jsx_transform_options = {
-      harmony: true
+      # harmony: true
     }
   end
 end

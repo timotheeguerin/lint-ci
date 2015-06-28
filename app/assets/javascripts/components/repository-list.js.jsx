@@ -1,5 +1,6 @@
 class RepositoryList extends React.Component {
     constructor(props) {
+        super(props);
         this.state = {
             loading: true,
             repositories: this.computeRepositories(props.repositories)

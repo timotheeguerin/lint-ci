@@ -1,8 +1,4 @@
 class Loader extends React.Component {
-    constructor(props) {
-
-    }
-
     render() {
         if (this.props.loading) {
             return this.renderLoader()

@@ -2,6 +2,7 @@
 
 class RevisionFileViewer extends React.Component {
     constructor(props) {
+        super(props);
         this.state = {
             file: new RevisionFile(api, props.file),
             lines: [],

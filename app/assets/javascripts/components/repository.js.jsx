@@ -1,5 +1,6 @@
 class RepositoryComponent extends React.Component {
     constructor(props) {
+        super(props);
         this.state = {
             repository: new Repository(api, props.repository)
         }

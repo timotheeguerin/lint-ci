@@ -1,5 +1,6 @@
 class UserComponent extends React.Component {
     constructor(props) {
+        super(props);
         this.state = {
             user: new User(api, props.user)
         }
