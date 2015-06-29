@@ -68,7 +68,6 @@ class RevisionFileViewer extends React.Component {
     }
 
     findOffense(id) {
-        id = parseInt(id);
         for (var i in this.state.offenses) {
             var offense = this.state.offenses[i];
             if (offense.id == id) {
