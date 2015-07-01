@@ -36,9 +36,12 @@ RSpec.describe Api::V1::RevisionFilesController do
 
   describe 'GET #content' do
     let(:file) { FactoryGirl.create(:revision_file, revision: revision) }
+    let(:raw_content) { Faker::Lorem.paragraph }
     let(:content) { Faker::Lorem.paragraph }
     let(:highlighter) { double(:highlighter, highlight: content) }
+    let(:github) { double(:github_api, content: content) }
     before do
+      allow(controller).to receive(:github).and_return(github)
       allow(LintCI::Highlighter).to receive(:new).and_return(highlighter)
       get :content, params
     end
@@ -46,6 +49,7 @@ RSpec.describe Api::V1::RevisionFilesController do
     it_behaves_like 'successful api request'
     it { expect(LintCI::Highlighter).to have_received(:new) }
     it { expect(highlighter).to have_received(:highlight) }
+    it { expect(github).to have_received(:content).with(file) }
     it { expect(json_response[:highlighted]).to eq(content) }
   end
 end

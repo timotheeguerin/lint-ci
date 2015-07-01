@@ -123,7 +123,7 @@ class RevisionFileViewer extends React.Component {
             }
         }
         var out = [];
-        for (let key in linters) {
+        for (var key in linters) {
             if (linters.hasOwnProperty(key)) {
                 out.push(linters[key]);
             }
@@ -206,7 +206,6 @@ class RevisionFileViewerCode extends React.Component {
     }
 }
 RevisionFileViewerCode.defaultProps = {annotations: {}};
-
 
 class RevisionFileViewerLine extends React.Component {
     render() {

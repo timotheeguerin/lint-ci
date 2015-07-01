@@ -4,8 +4,9 @@ class LintCI::Highlighter
     @formatter ||= Rouge::Formatters::HTML.new(css_class: 'highlight', line_numbers: false)
   end
 
-  def initialize(file)
+  def initialize(file, content)
     @file = file
+    @content = content
   end
 
   def language
@@ -21,6 +22,6 @@ class LintCI::Highlighter
   end
 
   def highlight
-    self.class.formatter.format(lexer.lex(@file.content))
+    self.class.formatter.format(lexer.lex(@content))
   end
 end

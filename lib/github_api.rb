@@ -46,4 +46,11 @@ class GithubApi
     yield if block_given?
     response
   end
+
+  def content(file)
+    response = octokit.contents(file.repository.full_name,
+                                path: file.path,
+                                ref: file.revision.sha)
+    Base64.decode64(response.content)
+  end
 end
