@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var TimeFromNow = React.createClass({
     getDefaultProps: function () {
         return {

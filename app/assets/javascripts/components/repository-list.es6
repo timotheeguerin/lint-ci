@@ -65,6 +65,7 @@ class RepositoryList extends React.Component {
 
 class RepositoryListItem extends React.Component {
     constructor(props) {
+        super();
         this.state = {repository: props.repository}
     }
 

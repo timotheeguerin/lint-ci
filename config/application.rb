@@ -28,8 +28,6 @@ module LintCi
     config.active_job.queue_adapter = :sidekiq
 
     config.autoload_paths << "#{Rails.root}/lib/" << "#{Rails.root}/config/routes"
-
-
     config.react.jsx_transform_options = {
       harmony: true
     }
