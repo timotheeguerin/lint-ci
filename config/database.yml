@@ -10,6 +10,6 @@ test:
 production:
   <<: *default
   database: lintci_production
-  url: <%= ENV['LINTCI_DATABASE_URL'] %>
+  host: <%= ENV['LINTCI_DATABASE_URL'] %>
   username: <%= ENV['LINTCI_DATABASE_USERNAME'] %>
   password: <%= ENV['LINTCI_DATABASE_PASSWORD'] %>
