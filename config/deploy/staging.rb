@@ -7,7 +7,7 @@
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
-server 'ssh.stg.lint-ci.io', user: 'deploy', roles: %w(web app)
+server '45.55.89.46', user: 'deploy', roles: %w(web app)
 set :rails_env, 'production'
 
 # role-based syntax
@@ -23,7 +23,6 @@ set :rails_env, 'production'
 # role :db,  %w{deploy@example.com}
 
 
-
 # Configuration
 # =============
 # You can set any configuration variable like in config/deploy.rb
@@ -31,7 +30,6 @@ set :rails_env, 'production'
 # For available Capistrano configuration variables see the documentation page.
 # http://capistranorb.com/documentation/getting-started/configuration/
 # Feel free to add new variables to customise your setup.
-
 
 
 # Custom SSH Options

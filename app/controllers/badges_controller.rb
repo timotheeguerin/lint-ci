@@ -1,4 +1,4 @@
-# Controller that handle the repository badges
+ # Controller that handle the repository badges
 class BadgesController < ApplicationController
   load_and_auth_repository parents: true
 

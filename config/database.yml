@@ -6,3 +6,10 @@ development: &default
 test:
   <<: *default
   database: lintci_test
+
+production:
+  <<: *default
+  database: lintci_production
+  url: <%= ENV['LINTCI_DATABASE_URL'] %>
+  username: <%= ENV['LINTCI_DATABASE_USERNAME'] %>
+  password: <%= ENV['LINTCI_DATABASE_PASSWORD'] %>

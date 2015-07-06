@@ -66,8 +66,11 @@ group :development, :test do
   gem 'spring'
   gem 'rspec-rails', '~> 3.0'
   gem 'factory_girl_rails'
-  gem 'capistrano'
-  gem 'capistrano-rails'
+  gem 'capistrano', require: false
+  gem 'capistrano-rbenv', require: false
+  gem 'capistrano-bundler', require: false
+  gem 'capistrano-rails', require: false
+  gem 'capistrano3-puma', require: false
 end
 
 group :test do
