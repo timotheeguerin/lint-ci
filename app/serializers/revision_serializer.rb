@@ -1,7 +1,7 @@
 # Revision serializer
 # @see Revision
 class RevisionSerializer < ApplicationSerializer
-  attributes :id, :sha, :message, :offense_count, :date, :status
+  attributes :id, :sha, :message, :offense_count, :date, :status, :style_status
 
   has_many :linters
 

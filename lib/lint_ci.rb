@@ -14,4 +14,8 @@ module LintCI
   def self.badge_path
     File.join(data_path, 'badges')
   end
+
+  def self.build_dir
+    File.join(data_path, 'build')
+  end
 end

@@ -7,7 +7,7 @@
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
-server '45.55.89.46', user: 'deploy', roles: %w(web app)
+server '45.55.89.46', user: 'deploy', roles: %w(web app db)
 set :rails_env, 'production'
 
 # role-based syntax

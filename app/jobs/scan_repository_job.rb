@@ -3,11 +3,12 @@ class ScanRepositoryJob < ActiveJob::Base
   queue_as :default
 
 
-  def perform(repository)
-    builder = LintCI::Builder.new(repository)
+  def perform(revision)
+    revision.update_attributes(status: :processing)
+    builder = LintCI::Builder.new(revision)
     builder.run
   ensure
-    repository.reload
-    repository.update_attributes(job_id: nil)
+    revision.reload
+    revision.update_attributes(status: :scanned)
   end
 end

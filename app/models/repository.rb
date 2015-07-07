@@ -37,9 +37,9 @@ class Repository < ActiveRecord::Base
     end
   end
 
-  def status
+  def style_status
     revision = revisions.last
-    revision ? revision.status : :unavailable
+    revision ? revision.style_status : :unavailable
   end
 
   def offense_count
@@ -48,11 +48,11 @@ class Repository < ActiveRecord::Base
   end
 
   def badge_message
-    status.to_s.capitalize
+    style_status.to_s.capitalize
   end
 
   def badge_color
-    badge_colors[status]
+    badge_colors[style_status]
   end
 
   def badge_colors

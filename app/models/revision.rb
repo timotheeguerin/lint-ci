@@ -8,9 +8,12 @@ class Revision < ActiveRecord::Base
   has_many :files, class_name: 'RevisionFile', dependent: :destroy
   has_many :linters, dependent: :destroy
 
-  validates :sha, presence: true, uniqueness: {scope: :repository_id}
+  enum status: [:queued, :processing, :scanned]
 
-  def status
+  # If sha is nil it means it is currently queued.
+  validates :sha, uniqueness: {scope: :repository_id}
+
+  def style_status
     case offense_count
     when 0
       :perfect
@@ -27,5 +30,9 @@ class Revision < ActiveRecord::Base
     else
       :bad
     end
+  end
+
+  def scanning?
+    status != :scanned
   end
 end

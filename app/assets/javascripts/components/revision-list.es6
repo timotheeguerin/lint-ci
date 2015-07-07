@@ -11,26 +11,34 @@ var RevisionList = React.createClass({
             this.setState({revisions: revisions, loading: false})
         }.bind(this));
     },
-    renderOffenseCount: function (count) {
-        if (count == 0) {
+    renderOffenseCount: function (revision) {
+        if (revision.status != 'scanned') {
+            return <i className='fa fa-refresh fa-spin' title='Refreshing...'></i>
+
+        }
+        else if (revision.offense_count == 0) {
             return <i className='fa fa-check' title='No offenses'></i>
         } else {
-            return count;
+            return revision.offense_count;
         }
     },
     render: function () {
         var revisions = this.state.revisions.map(function (revision) {
+            let short_sha = '';
+            if (revision.sha) {
+                short_sha = revision.sha.substring(0, 8);
+            }
             return (
                 <a className='item' href={revision.html_url} key={revision.id}>
-                    <div className={'offense-status ' + revision.status}>
-                        {this.renderOffenseCount(revision.offense_count)}
+                    <div className={'offense-status ' + revision.style_status}>
+                        {this.renderOffenseCount(revision)}
                     </div>
                     <div className='details'>
                         <div>{revision.message}</div>
                         <LinterPreview linters={revision.linters}/>
                     </div>
                     <div className='extra'>
-                        <i className="fa fa-github"></i> {revision.sha.substring(0, 8)}
+                        <i className="fa fa-github"></i> {short_sha}
                     </div>
                 </a>
             )
