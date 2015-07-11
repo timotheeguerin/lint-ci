@@ -13,6 +13,19 @@ class Revision < ActiveRecord::Base
   # If sha is nil it means it is currently queued.
   validates :sha, uniqueness: {scope: :repository_id}
 
+  after_create do |revision|
+    WebsocketRails['revisions/change'].trigger(:create, revision.id)
+  end
+
+  after_update do |revision|
+    puts 'some updated: ' + revision.to_s
+    WebsocketRails['revisions/change'].trigger(:update, revision.id)
+  end
+
+  after_destroy do |revision|
+    WebsocketRails['revisions/change'].trigger(:destroy, revision.id)
+  end
+
   def style_status
     case offense_count
     when 0

@@ -110,31 +110,27 @@ RSpec.describe Api::V1::RepositoriesController do
   describe 'GET #refresh' do
     when_user_signed_in do
       can :refresh, Repository
-      let(:job) { double(:job, job_id: 'some id') }
-      let!(:repository) { FactoryGirl.create(:repository, owner: owner, job_id: job_id) }
+      let!(:repository) { FactoryGirl.create(:repository, owner: owner) }
+      let(:scanner) { double(:scanner, scan: queue) }
 
       before do
-        allow(ScanRepositoryJob).to receive(:perform_later).and_return(job)
+        allow(RevisionScan).to receive(:new).and_return(scanner)
         get :refresh, params
         repository.reload
       end
 
-      context 'when repository is not refreshing' do
-        let(:job_id) { nil }
+      context 'when scanner queue the revision' do
+        let(:queue) { true }
 
         it_behaves_like 'accepted api request'
-        it { expect(ScanRepositoryJob).to have_received(:perform_later).with(repository) }
-        it { expect(repository.job_id).to eq(job.job_id) }
-        it { expect(json_response[:refreshing]).to be true }
+        it { expect(scanner).to have_received(:scan).with(no_args) }
       end
 
       context 'when repository is refreshing' do
-        let(:job_id) { 'some existing id' }
+        let(:queue) { false }
 
         it_behaves_like 'successful api request'
-        it { expect(ScanRepositoryJob).not_to receive(:perform_later) }
-        it { expect(repository.job_id).to eq(job_id) }
-        it { expect(json_response[:refreshing]).to be true }
+        it { expect(scanner).to have_received(:scan).with(no_args) }
       end
     end
 

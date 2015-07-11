@@ -1,0 +1,31 @@
+I, [2015-07-04T12:54:44.456727 #12154]  INFO -- Kitchen: -----> Starting Kitchen (v1.4.1)
+E, [2015-07-04T12:54:44.457054 #12154] ERROR -- Kitchen: ------Exception-------
+E, [2015-07-04T12:54:44.457080 #12154] ERROR -- Kitchen: Class: Kitchen::UserError
+E, [2015-07-04T12:54:44.457093 #12154] ERROR -- Kitchen: Message: Kitchen YAML file /Users/tim/dev/ruby/lint-ci/.kitchen.yml does not exist.
+E, [2015-07-04T12:54:44.457105 #12154] ERROR -- Kitchen: ------Backtrace-------
+E, [2015-07-04T12:54:44.457114 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/gems/test-kitchen-1.4.1/lib/kitchen/loader/yaml.rb:74:in `read'
+E, [2015-07-04T12:54:44.457125 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/gems/test-kitchen-1.4.1/lib/kitchen/config.rb:145:in `data'
+E, [2015-07-04T12:54:44.457135 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/gems/test-kitchen-1.4.1/lib/kitchen/config.rb:124:in `suites'
+E, [2015-07-04T12:54:44.457144 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/gems/test-kitchen-1.4.1/lib/kitchen/config.rb:175:in `filter_instances'
+E, [2015-07-04T12:54:44.457154 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/gems/test-kitchen-1.4.1/lib/kitchen/config.rb:134:in `build_instances'
+E, [2015-07-04T12:54:44.457164 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/gems/test-kitchen-1.4.1/lib/kitchen/config.rb:110:in `instances'
+E, [2015-07-04T12:54:44.457173 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/gems/test-kitchen-1.4.1/lib/kitchen/command.rb:115:in `filtered_instances'
+E, [2015-07-04T12:54:44.457183 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/gems/test-kitchen-1.4.1/lib/kitchen/command.rb:145:in `parse_subcommand'
+E, [2015-07-04T12:54:44.457192 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/gems/test-kitchen-1.4.1/lib/kitchen/command/action.rb:38:in `block in call'
+E, [2015-07-04T12:54:44.457202 #12154] ERROR -- Kitchen: /Users/tim/.rvm/rubies/ruby-2.2.2/lib/ruby/2.2.0/benchmark.rb:288:in `measure'
+E, [2015-07-04T12:54:44.457211 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/gems/test-kitchen-1.4.1/lib/kitchen/command/action.rb:37:in `call'
+E, [2015-07-04T12:54:44.457221 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/gems/test-kitchen-1.4.1/lib/kitchen/cli.rb:56:in `perform'
+E, [2015-07-04T12:54:44.457231 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/gems/test-kitchen-1.4.1/lib/kitchen/cli.rb:171:in `block (2 levels) in <class:CLI>'
+E, [2015-07-04T12:54:44.457240 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/gems/thor-0.19.1/lib/thor/command.rb:27:in `run'
+E, [2015-07-04T12:54:44.457250 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/gems/thor-0.19.1/lib/thor/invocation.rb:126:in `invoke_command'
+E, [2015-07-04T12:54:44.457259 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/gems/test-kitchen-1.4.1/lib/kitchen/cli.rb:308:in `invoke_task'
+E, [2015-07-04T12:54:44.457269 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/gems/thor-0.19.1/lib/thor.rb:359:in `dispatch'
+E, [2015-07-04T12:54:44.457278 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/gems/thor-0.19.1/lib/thor/base.rb:440:in `start'
+E, [2015-07-04T12:54:44.457288 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/gems/test-kitchen-1.4.1/bin/kitchen:13:in `block in <top (required)>'
+E, [2015-07-04T12:54:44.457297 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/gems/test-kitchen-1.4.1/lib/kitchen/errors.rb:154:in `with_friendly_errors'
+E, [2015-07-04T12:54:44.457307 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/gems/test-kitchen-1.4.1/bin/kitchen:13:in `<top (required)>'
+E, [2015-07-04T12:54:44.457316 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/bin/kitchen:23:in `load'
+E, [2015-07-04T12:54:44.457326 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/bin/kitchen:23:in `<main>'
+E, [2015-07-04T12:54:44.457335 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/bin/ruby_executable_hooks:15:in `eval'
+E, [2015-07-04T12:54:44.457344 #12154] ERROR -- Kitchen: /Users/tim/.rvm/gems/ruby-2.2.2/bin/ruby_executable_hooks:15:in `<main>'
+E, [2015-07-04T12:54:44.457362 #12154] ERROR -- Kitchen: ----------------------

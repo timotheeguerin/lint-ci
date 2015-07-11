@@ -1,3 +1,18 @@
+class PromiseOnce {
+    static get(key, callback) {
+        if (key in PromiseOnce.promises) {
+            return PromiseOnce.promises[key];
+        } else {
+            return PromiseOnce.promises[key] = new Promise(callback);
+        }
+    }
+
+    static clear(key) {
+        delete PromiseOnce.promises[key]
+    }
+}
+PromiseOnce.promises = {};
+
 class RelationshipProxy {
     constructor(api, record, relationship, cls) {
         this.api = api;
@@ -5,15 +20,11 @@ class RelationshipProxy {
         this.record = record;
         this.relationship = relationship;
         this.filter = {};
-        this.resetPromise()
+        this.id = RelationshipProxy.counter++;
     }
 
-    resetPromise() {
-        this.promise = new Promise((resolve, reject) => {
-                this.resolve = resolve;
-                this.reject = reject;
-            }
-        )
+    clone() {
+        return new this.constructor(this.api, this.record, this.relationship, this.cls)
     }
 
     get url() {
@@ -53,23 +64,23 @@ class RelationshipProxy {
     }
 
     where(filter) {
-        this.filter = filter;
-        return this;
+        let other = this.clone();
+        other.filter = filter;
+        return other;
     }
 
-    // Fetch the record
-    fetch() {
-        if (!this.fetching) {
-            this.fetching = true;
+    proxyPromise(key, callback) {
+        key = `${this.id}_${key}`;
+        return PromiseOnce.get(key, (...args) => {
             this.record.fetch().then(() => {
-                this._fetch();
+                callback(...args);
             });
-            this.promise.then(() => {
-                this.fetching = false;
-            });
-        }
+        });
+    }
 
-        return this.promise
+    clearPromise(key) {
+        key = `${this.id}_${key}`;
+        PromiseOnce.clear(key);
     }
 
     _fetch() {
@@ -85,10 +96,12 @@ class RelationshipProxy {
         });
     }
 }
+RelationshipProxy.counter = 0;
 
 class HasManyRelationship extends RelationshipProxy {
     constructor(...args) {
         super(...args);
+        this.items = [];
         this.reachedLast = false;
         this.setRelationshipValue([]);
         this.resetFetchAllPromise();
@@ -111,7 +124,7 @@ class HasManyRelationship extends RelationshipProxy {
 
     // Iterate thought all the page
     fetchAll() {
-        this.fetch().then((data) => {
+        this.fetchNext().then((data) => {
             if (this.reachedLast) {
                 this.allResolve(data);
             } else {
@@ -121,18 +134,30 @@ class HasManyRelationship extends RelationshipProxy {
         return this.allPromise;
     }
 
-    _fetch() {
+    // Fetch will only load if no items have already been loaded
+    // Use fetchNext to load the next page or fetchAll to load them all.
+    fetch() {
+        if (this.items.length > 0) {
+            return Promise.resolve(this.items);
+        } else {
+            return this.fetchNext();
+        }
+    }
+
+    _fetch(resolve) {
         Rest.get(this.nextUrl).done((data, _, xhr) => {
+            this.clearPromise('fetchNext');
             this._handleLinkHeader(getLinkHeader(xhr));
-            var items = [];
             for (let item of data) {
-                items.push(this.getItem(item))
+                this.items.push(this.getItem(item))
             }
-            var cur = this.getRelationshipValue();
-            this.setRelationshipValue(cur.concat(items));
-            var resolve = this.resolve;
-            this.resetPromise();
-            resolve(this.getRelationshipValue());
+            resolve(this.items);
+        });
+    }
+
+    fetchNext() {
+        return this.proxyPromise('fetchNext', (resolve) => {
+            this._fetch(resolve);
         });
     }
 
@@ -142,17 +167,41 @@ class HasManyRelationship extends RelationshipProxy {
             this.reachedLast = true;
         }
     }
+
+    findBy(filter) {
+        return new Promise((resolve) => {
+            this.where(filter).fetch().then((items) => {
+                if (items.length > 0) {
+                    resolve(items[0]);
+                } else {
+                    resolve(null);
+                }
+            });
+        });
+    }
+
+    find(id) {
+        return this.findBy({id: id});
+    }
+
 }
 
 class HasOneRelationship extends RelationshipProxy {
-    _fetch() {
-        if (this.getRelationshipValue() != undefined) {
-            this.resolve(this.getRelationshipValue());
+    fetch() {
+        if (this.item) {
+            return Promise.resolve(this.item);
         } else {
-            Rest.get(this.url).done((data) => {
-                this.setRelationshipValue(this.getItem(data));
-                this.resolve(this.getRelationshipValue());
+            return this.proxyPromise('fetch', (resolve) => {
+                this._fetch(resolve);
             });
         }
+    }
+
+    _fetch(resolve) {
+        Rest.get(this.url).done((data) => {
+            this.item = this.getItem(data);
+            resolve(this.item);
+            this.clearPromise('fetch');
+        });
     }
 }

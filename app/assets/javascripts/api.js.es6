@@ -143,7 +143,7 @@ class Repository extends Model {
         return this.api.urls.repo(username, this.name);
     }
 
-    revisions() {
+    get revisions() {
         return this.hasMany('revisions', Revision);
     }
 }

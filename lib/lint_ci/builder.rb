@@ -24,10 +24,7 @@ class LintCI::Builder
 
   def cleanup_existing
     revision = Revision.find_by_sha(commit.sha)
-    return if revision.nil?
-    @revision = revision
-    @revision.linters.destroy_all
-    @revision.files.destroy_all
+    revision.destroy if revision.present?
   end
 
   def init_revision

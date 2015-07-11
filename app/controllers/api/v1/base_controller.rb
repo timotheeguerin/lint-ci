@@ -12,7 +12,7 @@ module Api::V1
         resource = resource.order(params[:order_by] => sens)
       end
       resource = resource.page(params[:page]).per(params[:per_page])
-      resource = resource.where(query_params)
+      resource = resource.where(params.permit(:id).merge(query_params))
       set_resources resource
       paginate json: get_resources
     end

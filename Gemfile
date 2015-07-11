@@ -26,7 +26,7 @@ gem 'active_model_serializers',
 
 gem 'sprockets'
 gem 'sprockets-es6'
-
+gem 'websocket-rails', github: 'timcolonel/websocket-rails'
 gem 'figaro'
 
 # Authentication

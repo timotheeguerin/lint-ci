@@ -7,9 +7,54 @@ var RevisionList = React.createClass({
         }
     },
     componentDidMount: function () {
-        this.state.repository.revisions().fetch().then(function (revisions) {
+        this.state.repository.revisions.fetch().then(function (revisions) {
             this.setState({revisions: revisions, loading: false})
         }.bind(this));
+        this.registerWebEvents();
+    },
+    registerWebEvents: function () {
+        this.channel = websocket.subscribe_private('revisions/change');
+        this.channel.bind('create', (data) => {
+            this.addRevision(data);
+        });
+
+        this.channel.bind('update', (data) => {
+            this.updateRevision(data);
+        });
+
+
+        this.channel.bind('destroy', (data) => {
+            this.removeRevision(data);
+        });
+
+    },
+    addRevision(id) {
+        this.state.repository.revisions.find(id).then((revision) => {
+            let revisions = [revision].concat(this.state.revisions);
+            this.setState({revisions: revisions})
+        })
+    },
+    updateRevision(id) {
+        this.state.repository.revisions.find(id).then((revision) => {
+            let revisions = this.state.revisions;
+            for (let i = 0; i < revisions.length; i++) {
+                if (this.state.revisions[i].id == id) {
+                    var newRevisions = revisions.slice(0, i - 1).concat([revision]).concat(revisions.slice(i + 1, revisions.length));
+                    this.setState({revisions: newRevisions});
+                    return;
+                }
+            }
+        })
+    },
+    removeRevision(id) {
+        let revisions = this.state.revisions;
+        for (let i = 0; i < revisions.length; i++) {
+            if (this.state.revisions[i].id == id) {
+                var newRevisions = revisions.slice(0, i - 1).concat(revisions.slice(i + 1, revisions.length));
+                this.setState({revisions: newRevisions});
+                return;
+            }
+        }
     },
     renderOffenseCount: function (revision) {
         if (revision.status != 'scanned') {

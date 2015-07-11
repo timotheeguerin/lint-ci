@@ -20,6 +20,22 @@
 //= require components
 //= require rest
 //= require_tree .
+//= require websocket_rails/main
 
 Turbolinks.enableProgressBar();
+var websocket = new WebSocketRails('localhost:3000/websocket');
 
+
+var channel = websocket.subscribe_private('revisions/change');
+channel.bind('create', function(data) {
+    console.log('crea:', data);
+});
+
+channel.bind('update', function(data) {
+    console.log('updt:', data);
+});
+
+
+channel.bind('destroy', function(data) {
+    console.log('destr:', data);
+});

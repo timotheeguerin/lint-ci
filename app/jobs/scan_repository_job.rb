@@ -2,6 +2,9 @@
 class ScanRepositoryJob < ActiveJob::Base
   queue_as :default
 
+  rescue_from(ActiveRecord::RecordNotFound) do |e|
+    puts "Revision seems to have benn deleted before scanning could start: #{e}"
+  end
 
   def perform(revision)
     revision.update_attributes(status: :processing)

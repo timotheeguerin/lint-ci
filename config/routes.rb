@@ -28,6 +28,11 @@ end
 # General constraints
 module LintCI::Constraints
   class << self
+
+    def user
+      {user: %r{[^/]+}}
+    end
+
     # Allow repository to contain .
     def repository
       {repo: %r{[^/]+}}
@@ -39,7 +44,21 @@ module LintCI::Constraints
     end
 
     def all
-      repository.merge(file)
+      user.merge(repository.merge(file))
+    end
+  end
+
+  # Matcher that exclude certain keyword from the url.
+  # e.g. websocket for the user.
+  class Exclude
+    def matches?(request)
+      LintCI::Constraints.all.each do |key, re|
+        value = request.params[key]
+        # next if value.nil?
+        # return false unless re.match(value)
+        return false if key == :user && value == 'websocket'
+      end
+      true
     end
   end
 end
@@ -49,30 +68,30 @@ require 'sidekiq/web'
 Rails.application.routes.draw do
   # Allow :repo, :file to be more than the regular format.
   constraints LintCI::Constraints.all do
+    constraints LintCI::Constraints::Exclude.new do
 
-    get 'settings/repositories'
-
-
-    devise_for :users, controllers: {omniauth_callbacks: 'users/omniauth_callbacks'}
-
-    scope path: '/admin' do
-      mount Sidekiq::Web => '/sidekiq', constraints: CanCanConstraint.new(:manage, :sidekiq)
-    end
-
-    root 'welcome#index'
+      get 'settings/repositories'
 
 
-    namespace :api do
-      scope path: :v1, module: :v1 do
-        draw :api_routes
+      devise_for :users, controllers: {omniauth_callbacks: 'users/omniauth_callbacks'}
+
+      scope path: '/admin' do
+        mount Sidekiq::Web => '/sidekiq', constraints: CanCanConstraint.new(:manage, :sidekiq)
       end
-    end
 
-    get 'settings' => 'settings#index', as: :user_settings
-    get 'settings/repositories' => 'settings#repositories', as: :user_repo_settings
+      root 'welcome#index'
 
 
-    constraints LintCI::Constraints.repository do
+      namespace :api do
+        scope path: :v1, module: :v1 do
+          draw :api_routes
+        end
+      end
+
+      get 'settings' => 'settings#index', as: :user_settings
+      get 'settings/repositories' => 'settings#repositories', as: :user_repo_settings
+
+
       get ':user' => 'users#show', as: :user
 
       get ':user/:repo' => 'repositories#show', as: :repository
@@ -83,10 +102,12 @@ Rails.application.routes.draw do
 
       get ':user/:repo/offense.svg' => 'badges#offense', as: :repository_offense_badge
 
+
       get ':user/:repo/:revision' => 'revisions#show', as: :revision
 
       get ':user/:repo/:revision/:file/' => 'revision_files#show',
           as: :file, constraints: LintCI::Constraints.file
+
     end
   end
 end
