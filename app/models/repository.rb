@@ -38,12 +38,12 @@ class Repository < ActiveRecord::Base
   end
 
   def style_status
-    revision = revisions.last
+    revision = revisions.first
     revision ? revision.style_status : :unavailable
   end
 
   def offense_count
-    revision = revisions.last
+    revision = revisions.first
     revision ? revision.offense_count : :unavailable
   end
 

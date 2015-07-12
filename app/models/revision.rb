@@ -13,6 +13,10 @@ class Revision < ActiveRecord::Base
   # If sha is nil it means it is currently queued.
   validates :sha, uniqueness: {scope: :repository_id}
 
+  default_scope do
+    order(created_at: :desc)
+  end
+
   after_create do |revision|
     Channel.repo_revisions_change(revision.repository).trigger(:create, revision.id)
   end

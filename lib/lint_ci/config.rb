@@ -5,12 +5,12 @@ class LintCI::Config
   attr_accessor :linters
 
   def initialize(hash = {})
-    @linters = hash.fetch(:linters, [:javascript])
+    @linters = hash.fetch(:linters, [])
   end
 
   def self.load_yml(filename)
     if File.file? filename
-      new(YAML.load(File.read(filename)))
+      new(YAML.load(File.read(filename)).symbolize_keys)
     else
       new
     end

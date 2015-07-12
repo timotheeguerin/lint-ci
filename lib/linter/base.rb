@@ -20,7 +20,7 @@ class Linter::Base
 
   # Get the list of linters
   def self.fetch_linters_for(*linter_names)
-    linter_names = Set.new(linter_names.flatten)
+    linter_names = Set.new(linter_names.flatten).map(&:to_sym)
     linters = []
     subclasses.each do |cls|
       linters << cls if (cls._keys & linter_names).any?
