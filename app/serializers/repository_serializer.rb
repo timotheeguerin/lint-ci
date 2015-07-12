@@ -38,8 +38,13 @@ class RepositorySerializer < ApplicationSerializer
     api_enable_repo_url(object.owner, object)
   end
 
-
   link :disable_url do
     api_disable_repo_url(object.owner, object)
+  end
+
+  link :channels do
+    {
+      revision_changes: Channel.repo_revisions_change_path(object)
+    }
   end
 end

@@ -87,11 +87,8 @@ class RevisionFileViewer extends React.Component {
                 delete annotations[offense.line];
                 self.setState({annotations: annotations});
             } else {
-                console.log('clk');
                 annotations[offense.line] = offense.message;
-                console.log(annotations);
                 self.setState({annotations: annotations});
-                console.log('clk');
             }
         });
     }
@@ -99,10 +96,11 @@ class RevisionFileViewer extends React.Component {
     componentDidMount() {
         var promises = [this.state.file.content.fetch(), this.state.file.offenses.fetchAll()];
         Promise.all(promises).then((values) => {
-            var content = values[0];
+            console.log(values[0].highlighted);
+            var content = atob(values[0].highlighted);
             var offenses = values[1];
             this.setState({
-                lines: this.handleContent(content.highlighted, offenses),
+                lines: this.handleContent(content, offenses),
                 offenses: offenses,
                 loading: false
             });

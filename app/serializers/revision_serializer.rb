@@ -16,4 +16,10 @@ class RevisionSerializer < ApplicationSerializer
   link :files_url do
     api_files_url(object.repository.owner, object.repository, object)
   end
+
+  link :channels do
+    {
+      scan_update: Channel.repo_revision_scan_update_path(object.repository, object)
+    }
+  end
 end

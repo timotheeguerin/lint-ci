@@ -13,7 +13,7 @@ var RevisionList = React.createClass({
         this.registerWebEvents();
     },
     registerWebEvents: function () {
-        this.channel = websocket.subscribe_private('revisions/change');
+        this.channel = websocket.subscribe_private(this.state.repository.channels.revision_changes);
         this.channel.bind('create', (data) => {
             this.addRevision(data);
         });
@@ -58,9 +58,9 @@ var RevisionList = React.createClass({
     },
     render: function () {
         var revisions = this.state.revisions.map(function (revision) {
-
             return (
-                <RevisionListItem revision={revision} key={revision.id}/>
+                <RevisionListItem revision={revision} repository={this.state.repository}
+                                  key={revision.id}/>
             )
         }.bind(this));
 
@@ -110,7 +110,7 @@ class RevisionListItem extends React.Component {
     updateEvents(props) {
         if (this.isScanning()) {
             if (this.channel == null) {
-                this.channel = websocket.subscribe_private(`revisions/${this.props.revision.id}/scan`);
+                this.channel = websocket.subscribe_private(this.props.revision.channels.scan_update);
                 this.channel.bind('update', (message) => {
                     this.setState({scanMessages: this.state.scanMessages.concat([message])});
                 })

@@ -74,7 +74,7 @@ class LintCI::Builder
   end
 
   def channel
-    WebsocketRails["revisions/#{@revision.id}/scan"]
+    Channel.repo_revision_scan_update(@revision.repository, @revision)
   end
 
   def notify(message)

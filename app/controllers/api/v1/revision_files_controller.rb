@@ -5,6 +5,6 @@ class Api::V1::RevisionFilesController < Api::V1::BaseController
   def content
     content = github.content(@revision_file)
     value = LintCI::Highlighter.new(@revision_file, content).highlight
-    render json: {highlighted: value}
+    render json: {highlighted: Base64.encode64(value)}
   end
 end

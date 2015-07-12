@@ -14,15 +14,15 @@ class Revision < ActiveRecord::Base
   validates :sha, uniqueness: {scope: :repository_id}
 
   after_create do |revision|
-    WebsocketRails['revisions/change'].trigger(:create, revision.id)
+    Channel.repo_revisions_change(revision.repository).trigger(:create, revision.id)
   end
 
   after_update do |revision|
-    WebsocketRails['revisions/change'].trigger(:update, revision.id)
+    Channel.repo_revisions_change(revision.repository).trigger(:update, revision.id)
   end
 
   after_destroy do |revision|
-    WebsocketRails['revisions/change'].trigger(:destroy, revision.id)
+    Channel.repo_revisions_change(revision.repository).trigger(:destroy, revision.id)
   end
 
   def style_status
