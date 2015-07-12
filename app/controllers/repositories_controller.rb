@@ -1,5 +1,7 @@
-# Repositories Api controller
+# Repo controller
 class RepositoriesController < ApplicationController
+  include ActionController::Live
+
   load_and_auth_repository parents: true
 
   def show

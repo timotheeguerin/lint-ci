@@ -18,7 +18,6 @@ class Revision < ActiveRecord::Base
   end
 
   after_update do |revision|
-    puts 'some updated: ' + revision.to_s
     WebsocketRails['revisions/change'].trigger(:update, revision.id)
   end
 

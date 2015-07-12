@@ -5,6 +5,7 @@ class LintCI::Builder
     @revision = revision
     @repository = revision.repository
     checkout
+    notify('Repository cloned!')
     cleanup_existing
     init_revision
   end
@@ -12,13 +13,17 @@ class LintCI::Builder
   def run
     config = load_config
     linters = Linter::Base.fetch_linters_for(config.linters)
+    notify('Running linters...')
+
     linters.each do |cls|
+      notify("Running #{cls}...")
+
       linter = cls.new(@revision, dir, config)
       linter.review
       @revision.linters << linter.linter
       @revision.offense_count += linter.linter.offense_count
     end
-
+    notify('Scanning complete!')
     @revision.save!
   end
 
@@ -45,7 +50,7 @@ class LintCI::Builder
   end
 
   def commit
-    @commit ||= @git.object('HEAD^')
+    @commit ||= @git.object('HEAD')
   end
 
   def root_dir
@@ -62,9 +67,17 @@ class LintCI::Builder
   end
 
   def checkout
+    notify('Cloning repository...')
     clone
-    unless @revision.sha.nil?
-      @git.checkout(@revision.sha)
-    end
+    notify('Updating to commit...')
+    @git.checkout(@revision.sha) unless @revision.sha.nil?
+  end
+
+  def channel
+    WebsocketRails["revisions/#{@revision.id}/scan"]
+  end
+
+  def notify(message)
+    channel.trigger('update', message)
   end
 end

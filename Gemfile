@@ -26,8 +26,14 @@ gem 'active_model_serializers',
 
 gem 'sprockets'
 gem 'sprockets-es6'
-gem 'websocket-rails', github: 'timcolonel/websocket-rails'
+# gem 'websocket-rails', github: 'timcolonel/websocket-rails'
+# gem 'websocket-rails', path: '../websocket-rails'
+gem 'websocket-rails', github: 'moaa/websocket-rails', branch: 'sync_fixes'
+
 gem 'figaro'
+
+gem 'hiredis'
+gem 'redis'
 
 # Authentication
 gem 'devise'

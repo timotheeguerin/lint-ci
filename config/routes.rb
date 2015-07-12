@@ -1,3 +1,5 @@
+require 'sidekiq/web'
+
 # Add a draw method inside the mapper
 class ActionDispatch::Routing::Mapper
   def draw(name)
@@ -51,33 +53,33 @@ module LintCI::Constraints
   # Matcher that exclude certain keyword from the url.
   # e.g. websocket for the user.
   class Exclude
+    def excludes
+      {user: %w(websocket admin)}
+    end
+
     def matches?(request)
-      LintCI::Constraints.all.each do |key, re|
+      excludes.each do |key, list|
         value = request.params[key]
-        # next if value.nil?
-        # return false unless re.match(value)
-        return false if key == :user && value == 'websocket'
+        return false if list.include?(value)
       end
       true
     end
   end
 end
 
-require 'sidekiq/web'
-
 Rails.application.routes.draw do
+  scope path: '/admin' do
+    mount Sidekiq::Web => '/sidekiq'#, constraints: CanCanConstraint.new(:manage, :sidekiq)
+  end
   # Allow :repo, :file to be more than the regular format.
   constraints LintCI::Constraints.all do
     constraints LintCI::Constraints::Exclude.new do
-
       get 'settings/repositories'
 
 
       devise_for :users, controllers: {omniauth_callbacks: 'users/omniauth_callbacks'}
 
-      scope path: '/admin' do
-        mount Sidekiq::Web => '/sidekiq', constraints: CanCanConstraint.new(:manage, :sidekiq)
-      end
+
 
       root 'welcome#index'
 

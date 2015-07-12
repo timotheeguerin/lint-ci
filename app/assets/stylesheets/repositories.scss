@@ -116,3 +116,9 @@
     }
   }
 }
+
+.live-scan-messages {
+  height: 1rem;
+  background: $grey_lightest;
+  box-shadow: 1px 1px 5px 0 $grey_medium_light inset;
+}

@@ -3,6 +3,7 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
+    can :revision_change, :all
     alias_action :enable, :disable, :refresh, :sync, to: :update
 
     can [:read, :badge, :badges, :badge_offense, :content], :all

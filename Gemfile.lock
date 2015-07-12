@@ -1,8 +1,10 @@
 GIT
-  remote: git://github.com/timcolonel/websocket-rails.git
-  revision: 712fd4e35325887956724be388821121a866c7fc
+  remote: git://github.com/moaa/websocket-rails.git
+  revision: cf5d59b671c5b72caa7d3de91444063152ac6bb1
+  branch: sync_fixes
   specs:
     websocket-rails (0.7.0)
+      connection_pool
       em-synchrony
       faye-websocket
       hiredis
@@ -352,6 +354,7 @@ DEPENDENCIES
   font-awesome-rails
   friendly_id
   git
+  hiredis
   jquery-rails
   kaminari
   neat
@@ -362,6 +365,7 @@ DEPENDENCIES
   quiet_assets
   rails (= 4.2.2)
   react-rails
+  redis
   rouge
   rspec-rails (~> 3.0)
   rubocop
