@@ -24,4 +24,5 @@
 
 Turbolinks.enableProgressBar();
 var host = window.location.hostname;
-var websocket = new WebSocketRails(host + ':3000/websocket');
+var port = window.location.port;
+var websocket = new WebSocketRails(host + ':' + port + '/websocket');

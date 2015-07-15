@@ -2,6 +2,18 @@
 class Api::V1::RepositoriesController < Api::V1::BaseController
   load_and_auth_repository parents: true
 
+  def index
+    super
+    # object = @repositories.first
+    # Benchmark.ips do |x|
+    #   x.report { "some/#{object.id}/path" }
+    #   x.report { api_repo_url(object.owner.id, object.id) }
+    #   x.report { api_repo_url(object.owner.username, object.name) }
+    #   x.report { repository_offense_badge_url(object.owner, object) }
+    #   x.report { Channel.repo_revisions_change_path(object) }
+    # end
+  end
+
   def enable
     create_webhook
     @repository.enabled = true

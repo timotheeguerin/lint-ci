@@ -9,6 +9,7 @@ set :rbenv_custom_path, '/opt/rbenv'
 set :rbenv_ruby, File.read('.ruby-version').strip
 
 set :linked_dirs, %w(tmp/pids tmp/sockets log)
+set :puma_bind, ["unix://#{shared_path}/tmp/sockets/puma.sock", 'tcp://0.0.0.0:3000']
 
 namespace :deploy do
 
@@ -63,9 +64,21 @@ end
 
 namespace :logs do
   desc 'tail rails logs'
-  task :tail_rails do
+  task :rails do
     on roles(:app) do
       execute "tail -f #{shared_path}/log/#{fetch(:rails_env)}.log"
+    end
+  end
+
+  task :websocket do
+    on roles(:app) do
+      execute "tail -f #{shared_path}/log/websocket_rails.log"
+    end
+  end
+
+  task :nginx do
+    on roles(:app) do
+      execute 'tail -f /var/log/nginx/error.log'
     end
   end
 end

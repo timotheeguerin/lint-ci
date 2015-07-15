@@ -2,6 +2,8 @@
 # @see Repository
 # Rails.application.routes.default_url_options[:host] = '127.0.0.1:3000'
 class UserSerializer < ApplicationSerializer
+  cache key: 'user', expires_in: 3.hours
+
   attributes :id, :username
 
   link :url do

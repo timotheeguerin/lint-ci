@@ -10,8 +10,14 @@ class Repository < ActiveRecord::Base
 
   has_many :revisions, dependent: :destroy
 
+  has_one :current_revision, class_name: 'Revision'
+
   validates :owner_id, presence: true
   validates :name, uniqueness: {scope: :owner_id}
+
+  default_scope do
+    includes(:current_revision, :owner)
+  end
 
   before_create do
     self.last_sync_at = created_at
@@ -38,12 +44,12 @@ class Repository < ActiveRecord::Base
   end
 
   def style_status
-    revision = revisions.first
+    revision = current_revision
     revision ? revision.style_status : :unavailable
   end
 
   def offense_count
-    revision = revisions.first
+    revision = current_revision
     revision ? revision.offense_count : :unavailable
   end
 

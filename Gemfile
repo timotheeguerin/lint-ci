@@ -63,6 +63,7 @@ gem 'react-rails'
 gem 'font-awesome-rails'
 gem 'bower-rails', '~> 0.9.2'
 gem 'neat'
+gem 'benchmark-ips'
 
 # For Sidekiq monitor
 gem 'sinatra', require: nil
@@ -78,6 +79,7 @@ group :development, :test do
   gem 'capistrano-bundler', require: false
   gem 'capistrano-rails', require: false
   gem 'capistrano3-puma', require: false
+  gem 'capistrano-sidekiq', require: false
 end
 
 group :test do

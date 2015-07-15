@@ -2,7 +2,7 @@
 module LintCI
   def self.data_path
     unless ENV.key? 'data_path'
-      fail ConfigError('No repositories root defined! Define it in application.yml or as env var')
+      fail ConfigError('No data root defined! Define it in application.yml or as env var')
     end
     @data_path ||= ENV['data_path'].sub(/\A~/, Dir.home)
   end
