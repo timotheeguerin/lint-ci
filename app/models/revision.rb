@@ -18,15 +18,22 @@ class Revision < ActiveRecord::Base
   end
 
   after_create do |revision|
-    Channel.repo_revisions_change(revision.repository).trigger(:create, revision.id)
+    Fiber.new do
+      Channel.repo_revisions_change(revision.repository).trigger(:create, revision.id)
+    end.resume
   end
 
   after_update do |revision|
-    Channel.repo_revisions_change(revision.repository).trigger(:update, revision.id)
+    Fiber.new do
+      Channel.repo_revisions_change(revision.repository).trigger(:update, revision.id)
+    end.resume
+
   end
 
   after_destroy do |revision|
-    Channel.repo_revisions_change(revision.repository).trigger(:destroy, revision.id)
+    Fiber.new do
+      Channel.repo_revisions_change(revision.repository).trigger(:destroy, revision.id)
+    end.resume
   end
 
   def style_status
