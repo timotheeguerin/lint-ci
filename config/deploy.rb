@@ -76,9 +76,24 @@ namespace :logs do
     end
   end
 
+  task :puma do
+    on roles(:app) do
+      execute "tail -f #{shared_path}/log/puma_error.log"
+    end
+  end
+
   task :nginx do
     on roles(:app) do
       execute 'tail -f /var/log/nginx/error.log'
+    end
+  end
+end
+
+namespace :rails do
+  desc 'Remote console'
+  task :console do
+    on roles(:app) do
+      execute "bundle exec rails console #{fetch(:rails_env)}"
     end
   end
 end
