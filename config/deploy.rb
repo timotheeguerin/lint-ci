@@ -70,9 +70,21 @@ namespace :logs do
     end
   end
 
+  task :sidekiq do
+    on roles(:app) do
+      execute "tail -f #{shared_path}/log/sidekiq.log"
+    end
+  end
+
   task :websocket do
     on roles(:app) do
       execute "tail -f #{shared_path}/log/websocket_rails.log"
+    end
+  end
+
+  task :websocket_server do
+    on roles(:app) do
+      execute "tail -f #{shared_path}/log/websocket_rails_server.log"
     end
   end
 

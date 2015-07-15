@@ -28,12 +28,14 @@ gem 'sprockets'
 gem 'sprockets-es6'
 # gem 'websocket-rails', github: 'timcolonel/websocket-rails'
 # gem 'websocket-rails', path: '../websocket-rails'
-gem 'websocket-rails', github: 'moaa/websocket-rails', branch: 'sync_fixes'
+# gem 'websocket-rails', github: 'moaa/websocket-rails', branch: 'sync_fixes'
+gem 'websocket-rails', github: 'moaa/websocket-rails', branch: 'threadsocket-rails'
+gem 'websocket-rails-js', github: 'websocket-rails/websocket-rails-js', branch: 'sub_protocols'
 
 gem 'figaro'
 
 gem 'hiredis'
-gem 'redis'
+gem 'redis', require: %w(redis redis/connection/hiredis)
 
 # Authentication
 gem 'devise'

@@ -25,4 +25,12 @@
 Turbolinks.enableProgressBar();
 var host = window.location.hostname;
 var port = window.location.port;
+//port = 3001;
 var websocket = new WebSocketRails(host + ':' + port + '/websocket');
+websocket.on_open = function(data) {
+    console.log('Connection has been established: ', data);
+    var channel = websocket.subscribe_private('repos/17/revisions/change');
+    channel.bind('create', function (data) {
+        console.log('cret', data);
+    })
+};
