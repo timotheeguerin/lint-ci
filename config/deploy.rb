@@ -100,32 +100,3 @@ namespace :logs do
     end
   end
 end
-
-namespace :websocket do
-  task :stop do
-    on roles(:app), in: :sequence, wait: 5 do
-      within current_path do
-        websocket_pid = current_path.join('tmp/pids/websocket_rails.pid')
-        if test("[ -f #{websocket_pid} ]")
-          with rails_env: :production do
-            rake 'websocket_rails:stop_server'
-          end
-        else
-          info 'WebsocketRails is not running, not need to be stopped.'
-        end
-      end
-    end
-  end
-
-  desc 'Start websocket deamon'
-  task :start do
-    on roles(:app), in: :sequence, wait: 5 do
-      within current_path do
-        with rails_env: :production do
-          info 'Start WebsocketRails server'
-          rake 'websocket_rails:start_server'
-        end
-      end
-    end
-  end
-end

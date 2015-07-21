@@ -50,6 +50,6 @@ RSpec.describe Api::V1::RevisionFilesController do
     it { expect(LintCI::Highlighter).to have_received(:new) }
     it { expect(highlighter).to have_received(:highlight) }
     it { expect(github).to have_received(:content).with(file) }
-    it { expect(json_response[:highlighted]).to eq(content) }
+    it { expect(Base64.decode64(json_response[:highlighted])).to eq(content) }
   end
 end
