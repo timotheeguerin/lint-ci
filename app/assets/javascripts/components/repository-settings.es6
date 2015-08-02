@@ -1,22 +1,30 @@
 var RepositoriesSettings = React.createClass({
     loadCommentsFromServer: function () {
-        api.user().fetch().then((user) => {
-            user.repos.fetchAll().then((repos) => {
-                this.setState({repositories: repos})
-            });
-        })
+        this.state.user.repos.clone().fetchAll().then((repos) => {
+            this.setState({repositories: repos})
+        });
     },
     getInitialState: function () {
         return {repositories: [], query: '', refreshing: false};
     },
     componentDidMount: function () {
-        this.loadCommentsFromServer();
+        api.user().fetch().then((user) => {
+            this.setState({user: user});
+            this.loadCommentsFromServer();
+            this.registerWebEvents();
+        });
+    },
+    registerWebEvents: function () {
+        this.channel = websocket.subscribe_private(this.state.user.channels.sync_repo);
+        this.channel.bind('completed', (data) => {
+            this.loadCommentsFromServer();
+            this.setState({refreshing: false})
+        });
     },
     onSync: function (e) {
         e.preventDefault();
-        this.setState({refreshing: true});
         Rest.post('/api/v1/user/repos/sync').done(function (data) {
-            this.setState({repositories: data, refreshing: false})
+            this.setState({refreshing: true})
         }.bind(this));
     },
     filterRepos() {

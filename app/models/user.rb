@@ -24,7 +24,15 @@ class User < ActiveRecord::Base
 
   def self.from_omniauth(auth)
     user = where(provider: auth.provider, uid: auth.uid).first
-    return user unless user.nil?
+    user = new_from_omniauth(auth) if user.nil?
+    if user.access_token != auth.credentials.token
+      user.access_token = auth.credentials.token
+      user.save
+    end
+    user
+  end
+
+  def self.new_from_omniauth(auth)
     user = User.find_or_create_by(username: auth.info.nickname)
     user.provider = auth.provider
     user.uid = auth.uid
@@ -69,6 +77,11 @@ class User < ActiveRecord::Base
     repo.name = github_repo.name
     repo.owner = User.find_or_create_owner(github_repo.owner.login)
     repo
+  end
+
+  # Get the github object using the user access token
+  def github
+    GithubApi.new(access_token)
   end
 
   def to_s
