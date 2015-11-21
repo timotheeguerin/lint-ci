@@ -55,33 +55,9 @@ class User < ActiveRecord::Base
     create_with(active: false).find_or_create_by(username: username)
   end
 
-  # Sync the user project with github
-  def sync_repositories(github)
-    github.octokit.auto_paginate = true
-    repos = github.octokit.repos(username, type: :all)
-    repos.each do |github_repo|
-      repo = find_or_create_repo(github_repo)
-      repo.github_url = github_repo.html_url
-      repo.save
-      repositories << repo unless repositories.include?(repo)
-    end
-    save
-  end
-
-  def find_or_create_repo(github_repo)
-    repo = Repository.find_by_full_name(github_repo.full_name)
-    return repo unless repo.nil?
-
-    repo = Repository.new
-    repo.full_name = github_repo.full_name
-    repo.name = github_repo.name
-    repo.owner = User.find_or_create_owner(github_repo.owner.login)
-    repo
-  end
-
   # Get the github object using the user access token
   def github
-    GithubApi.new(access_token)
+    @github_api ||= GithubApi.new(access_token)
   end
 
   def to_s

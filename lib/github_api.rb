@@ -15,8 +15,8 @@ class GithubApi
     @user_token = user_token
   end
 
-  def octokit
-    @octokit ||= Octokit::Client.new(access_token: @user_token)
+  def client
+    @client ||= Octokit::Client.new(access_token: @user_token)
   end
 
   # Add a new hook
@@ -24,9 +24,9 @@ class GithubApi
   # @param callback_url [String] Hook callback url
   def create_hook(repository, callback_url)
     return unless self.class.enable_hook?
-    hook = octokit.create_hook(repository.full_name, 'web',
-                               {url: callback_url, content_type: 'json'},
-                               events: ['push'], active: true)
+    hook = client.create_hook(repository.full_name, 'web',
+                              {url: callback_url, content_type: 'json'},
+                              events: ['push'], active: true)
     yield hook if block_given?
     hook
   rescue Octokit::UnprocessableEntity => e
@@ -41,16 +41,16 @@ class GithubApi
   # @param repository [Repository] Repository to stop watching.
   def remove_hook(repository)
     return unless self.class.enable_hook?
-    response = octokit.remove_hook(repository.full_name, repository.hook_id)
+    response = client.remove_hook(repository.full_name, repository.hook_id)
 
     yield if block_given?
     response
   end
 
   def content(file)
-    response = octokit.contents(file.repository.full_name,
-                                path: file.path,
-                                ref: file.revision.sha)
+    response = client.contents(file.repository.full_name,
+                               path: file.path,
+                               ref: file.revision.sha)
     Base64.decode64(response.content)
   end
 end

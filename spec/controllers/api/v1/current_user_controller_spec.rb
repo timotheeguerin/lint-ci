@@ -39,4 +39,22 @@ RSpec.describe Api::V1::CurrentUserController do
       it_has_behavior 'require authorization', :current_repos
     end
   end
+
+  describe 'POST #sync_repos' do
+    when_user_signed_in do
+      can :current, User
+
+      before do
+        allow(SyncRepositoriesJob).to receive(:perform_later)
+        get :sync_repos
+      end
+
+      it { expect(SyncRepositoriesJob).to have_received(:perform_later).with(@user) }
+      it_behaves_like 'accepted api request'
+    end
+
+    when_user_signed_out do
+      it_has_behavior 'require authorization', :current_repos
+    end
+  end
 end

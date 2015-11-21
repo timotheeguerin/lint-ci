@@ -19,7 +19,6 @@ class Api::V1::CurrentUserController < Api::V1::BaseController
   # POST /api/v1/user/repos/sync
   # Sync all the user repositories
   def sync_repos
-    current_user.sync_repositories(github)
     SyncRepositoriesJob.perform_later(current_user)
     render json: {}, status: :accepted
   end
