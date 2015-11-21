@@ -27,14 +27,6 @@ var RepositoriesSettings = React.createClass({
             this.setState({refreshing: true})
         }.bind(this));
     },
-    filterRepos() {
-        return this.state.repositories.filter((x) => {
-            return x.name.indexOf(this.state.query) != -1
-        })
-    },
-    onSearch: function (e) {
-        this.setState({query: e.target.value})
-    },
     renderSyncBtn() {
         var classes = classNames({
             'fa fa-refresh': true,
@@ -53,11 +45,7 @@ var RepositoriesSettings = React.createClass({
                     <h2 className='flex-fill'>Repositories</h2>
                     {this.renderSyncBtn()}
                 </div>
-                <div className='box-search'>
-                    <input onChange={this.onSearch} value={this.state.query}
-                           placeholder='Search..'/>
-                </div>
-                <RepositoryList repositories={this.filterRepos()} readonly={false}/>
+                <RepositoryList repositories={this.state.repositories} readonly={false}/>
             </div>
         );
     }

@@ -19,6 +19,16 @@ class RepositoryComponent extends React.Component {
         });
     }
 
+    renderName() {
+        var repository = this.state.repository;
+        return (
+            <span>
+                <a href={repository.owner.html_url}>{repository.owner.username}</a>
+                     /<a href={repository.html_url}>{repository.name}</a>
+                </span>
+        )
+    }
+
     render() {
         var repository = this.state.repository;
         var classes = classNames({
@@ -45,16 +55,6 @@ class RepositoryComponent extends React.Component {
                     <RevisionList repository={repository}/>
                 </div>
             </div>
-        )
-    }
-
-    renderName() {
-        var repository = this.state.repository;
-        return (
-            <span>
-                <a href={repository.owner.html_url}>{repository.owner.username}</a>
-                     /{repository.name}
-                </span>
         )
     }
 }

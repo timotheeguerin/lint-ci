@@ -1,65 +1,111 @@
-class RepositoryList extends React.Component {
+/**
+ * Reusable class for any type of list
+ */
+class List extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             loading: true,
-            repositories: this.computeRepositories(props.repositories)
+            items: [],
+            query: ""
         }
+    }
+
+    listClasses() {
+        return "";
+    }
+
+    setItems(items) {
+        this.setState({items: items, loading: false})
+    }
+
+    renderItem(item) {
+
+    }
+
+    itemMatch(item, query) {
+        return true;
+    }
+
+    renderNoItems() {
+        return (
+            <div>
+                <div className='fa fa-database'></div>
+                <div>No data!</div>
+            </div>
+        )
+    }
+
+    filterItems(e) {
+        this.setState({query: e.target.value})
+    }
+
+    render() {
+        var items = this.state.items.filter((item) => {
+            return this.itemMatch(item, this.state.query)
+        }).map(this.renderItem.bind(this));
+        if (items.length === 0) {
+            items = (
+                <div className='flex-center no-repository'>
+                    {this.renderNoItems()}
+                </div>
+            )
+        }
+        return (
+            <div className={'list '+ this.listClasses()}>
+                <div className='box-search'>
+                    <input type="text" onChange={this.filterItems.bind(this)}
+                           placeholder="Search..."/>
+                </div>
+                <Loader loading={this.state.loading} size={4} message={this.props.loadingMessage}>
+                    {items}
+                </Loader>
+            </div>
+        )
+    }
+}
+
+class RepositoryList extends List {
+    constructor(props) {
+        super(props);
+        this.computeRepositories(props.repositories)
     }
 
     computeRepositories(repositories) {
         if (repositories instanceof RelationshipProxy) {
-            repositories.fetch().then(this.receiveRepositories.bind(this));
-            return [];
+            repositories.fetch().then(this.setItems.bind(this));
         } else if (repositories instanceof Promise) {
-            repositories.then(this.receiveRepositories.bind(this));
-            return [];
+            repositories.then(this.setItems.bind(this));
         } else {
-            return repositories.map((x) => {
+            let repos = repositories.map((x) => {
                 if (x instanceof Repository) {
                     return x;
                 } else {
                     return new Repository(x);
                 }
             });
+            this.setItems(repos)
         }
     }
 
-    receiveRepositories(repositories) {
-        this.setState({repositories: repositories, loading: false})
+    itemMatch(repository, query) {
+        return repository.name.indexOf(query) !== -1;
+    }
+
+    renderItem(item) {
+        return (
+            <RepositoryListItem repository={item} readonly={this.props.readonly} key={item.id}/>
+        )
+    }
+
+    listClasses() {
+        return "repository-list";
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.repositories != this.state.repositories) {
-            this.setState({
-                repositories: this.computeRepositories(nextProps.repositories),
-                loading: false
-            })
+        if (nextProps.repositories != this.state.items) {
+            this.computeRepositories(nextProps.repositories);
         }
-    }
-
-    render() {
-        var repositories = this.state.repositories.map(function (repository) {
-            return (
-                <RepositoryListItem repository={repository} readonly={this.props.readonly}
-                                    key={repository.id}/>
-            )
-        }.bind(this));
-        if (repositories.length == 0) {
-            repositories = (
-                <div className='flex-center no-repository'>
-                    <div className='fa fa-database'></div>
-                    <div>No repository</div>
-                </div>
-            )
-        }
-        return (
-            <div className='list repository-list'>
-                <Loader loading={this.state.loading} size={4} message="Loading repositories...">
-                    {repositories}
-                </Loader>
-            </div>
-        )
     }
 }
 
@@ -93,7 +139,7 @@ class RepositoryListItem extends React.Component {
 
         return (
             <Link className='item flex-center' href={repository.html_url} key={repository.id}>
-                <div className={'offense-status ' + repository.status}>
+                <div className={'offense-status ' + repository.style_status}>
                     {renderOffenseCount(repository.offense_count)}
                 </div>
                 <div className='details'>
@@ -129,13 +175,11 @@ class RepositoryListItem extends React.Component {
             checked = <input type="checkbox" onChange={this.toggleRepository.bind(this)}/>;
         }
 
-        return (checked
-
-        )
+        return (checked)
     }
 }
 
-RepositoryListItem.defaultProps = {readonly: true}
+RepositoryListItem.defaultProps = {readonly: true};
 
 function renderOffenseCount(count) {
     if (count === 'unavailable') {

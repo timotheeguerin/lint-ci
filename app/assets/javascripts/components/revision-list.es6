@@ -1,18 +1,19 @@
-var RevisionList = React.createClass({
-    getInitialState: function () {
-        return {
-            repository: new Repository(api, this.props.repository),
-            revisions: [],
-            loading: true
-        }
-    },
-    componentDidMount: function () {
+class RevisionList extends List {
+    constructor(props) {
+        super(props);
+        Object.assign(this.state, {
+            repository: new Repository(api, this.props.repository)
+        });
+    }
+
+    componentDidMount() {
         this.state.repository.revisions.fetch().then(function (revisions) {
-            this.setState({revisions: revisions, loading: false})
+            this.setItems(revisions)
         }.bind(this));
         this.registerWebEvents();
-    },
-    registerWebEvents: function () {
+    }
+
+    registerWebEvents() {
         this.channel = websocket.subscribe_private(this.state.repository.channels.revision_changes);
         this.channel.bind('create', (data) => {
             this.addRevision(data);
@@ -27,52 +28,54 @@ var RevisionList = React.createClass({
             this.removeRevision(data);
         });
 
-    },
+    }
+
     addRevision(id) {
         this.state.repository.revisions.find(id).then((revision) => {
             let revisions = [revision].concat(this.state.revisions);
-            this.setState({revisions: revisions})
+            this.setItems(revisions);
         })
-    },
+    }
+
     updateRevision(id) {
         this.state.repository.revisions.find(id).then((revision) => {
-            let revisions = this.state.revisions;
+            let revisions = this.state.items;
             for (let i = 0; i < revisions.length; i++) {
                 if (this.state.revisions[i].id == id) {
                     var newRevisions = revisions.slice(0, i).concat([revision]).concat(revisions.slice(i + 1));
-                    this.setState({revisions: newRevisions});
+                    this.setItems(newRevisions);
                     return;
                 }
             }
         })
-    },
+    }
+
     removeRevision(id) {
-        let revisions = this.state.revisions;
+        let revisions = this.state.items;
         for (let i = 0; i < revisions.length; i++) {
             if (this.state.revisions[i].id == id) {
                 var newRevisions = revisions.slice(0, i).concat(revisions.slice(i + 1));
-                this.setState({revisions: newRevisions});
+                this.setItems(newRevisions);
                 return;
             }
         }
-    },
-    render: function () {
-        var revisions = this.state.revisions.map(function (revision) {
-            return (
-                <RevisionListItem revision={revision} repository={this.state.repository}
-                                  key={revision.id}/>
-            )
-        }.bind(this));
+    }
 
+    listClasses() {
+        return 'revision-list';
+    }
+
+    renderItem(revision) {
         return (
-            <div className='list revision-list'>
-                <Loader loading={this.state.loading} size={4} message="Loading revisions...">
-                    {revisions}
-                </Loader>
-            </div>
+            <RevisionListItem revision={revision} repository={this.state.repository}
+                              key={revision.id}/>
         )
     }
-});
+
+    itemMatch(revision, query) {
+        return revision.message.indexOf(query) !== -1;
+    }
+}
 
 class RevisionListItem extends React.Component {
     constructor() {
@@ -165,10 +168,10 @@ class RevisionListItem extends React.Component {
     renderOffenseCount() {
         var revision = this.props.revision;
         if (this.isScanning()) {
-            return <i className='fa fa-refresh fa-spin' title='Refreshing...'></i>
+            return <i className='fa fa-refresh fa-spin' title='Refreshing...'/>
         }
         else if (revision.offense_count == 0) {
-            return <i className='fa fa-check' title='No offenses'></i>
+            return <i className='fa fa-check' title='No offenses'/>
         } else {
             return revision.offense_count;
         }

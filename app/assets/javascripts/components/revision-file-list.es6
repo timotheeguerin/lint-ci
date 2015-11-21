@@ -1,44 +1,44 @@
-var RevisionFileList = React.createClass({
-    getInitialState: function () {
-        return {
-            revision: new Revision(api, this.props.revision),
-            files: [],
+class RevisionFileList extends List {
+    constructor(props) {
+        super(props);
+        Object.assign(this.state, {
+            revision: new Revision(api, props.revision),
             loading: true
-        }
-    },
-    componentDidMount: function () {
+        });
+    }
+
+    componentDidMount() {
         this.state.revision.files.fetchAll().then(function (files) {
-            this.setState({files: files, loading: false})
+            this.setItems(files);
         }.bind(this));
-    },
-    renderOffenseCount: function (count) {
+    }
+
+    renderOffenseCount(count) {
         if (count == 0) {
             return <i className='fa fa-check' title='No offenses'></i>
         } else {
             return count;
         }
-    },
-    render: function () {
-        var files = this.state.files.map(function (file) {
-            return (
-                <a className='item flex-center' href={file.html_url} key={file.id}>
-                    <div className={'offense-status ' + file.status}>
-                        {this.renderOffenseCount(file.offense_count)}
-                    </div>
-                    <div className='details'>
-                        {file.path}
-                    </div>
-                </a>
-            )
-        }.bind(this));
+    }
 
+    listClasses() {
+        return 'revision-file-list';
+    }
+
+    itemMatch(file, query) {
+        return file.path.indexOf(query) !== -1;
+    }
+
+    renderItem(file) {
         return (
-            <div className='list revision-file-list'>
-                <Loader loading={this.state.loading} size={4} message="Loading files...">
-
-                    {files}
-                </Loader>
-            </div>
+            <a className='item flex-center' href={file.html_url} key={file.id}>
+                <div className={'offense-status ' + file.status}>
+                    {this.renderOffenseCount(file.offense_count)}
+                </div>
+                <div className='details'>
+                    {file.path}
+                </div>
+            </a>
         )
     }
-});
+}
