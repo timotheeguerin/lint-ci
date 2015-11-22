@@ -32,7 +32,7 @@ class RevisionList extends List {
 
     addRevision(id) {
         this.state.repository.revisions.find(id).then((revision) => {
-            let revisions = [revision].concat(this.state.revisions);
+            let revisions = [revision].concat(this.state.items);
             this.setItems(revisions);
         })
     }
@@ -41,7 +41,7 @@ class RevisionList extends List {
         this.state.repository.revisions.find(id).then((revision) => {
             let revisions = this.state.items;
             for (let i = 0; i < revisions.length; i++) {
-                if (this.state.revisions[i].id == id) {
+                if (this.state.items[i].id == id) {
                     var newRevisions = revisions.slice(0, i).concat([revision]).concat(revisions.slice(i + 1));
                     this.setItems(newRevisions);
                     return;
@@ -53,7 +53,7 @@ class RevisionList extends List {
     removeRevision(id) {
         let revisions = this.state.items;
         for (let i = 0; i < revisions.length; i++) {
-            if (this.state.revisions[i].id == id) {
+            if (this.state.items[i].id == id) {
                 var newRevisions = revisions.slice(0, i).concat(revisions.slice(i + 1));
                 this.setItems(newRevisions);
                 return;
@@ -73,6 +73,9 @@ class RevisionList extends List {
     }
 
     itemMatch(revision, query) {
+        if (!revision.message) {
+            return query === "";
+        }
         return revision.message.indexOf(query) !== -1;
     }
 }
