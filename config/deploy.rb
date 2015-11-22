@@ -50,7 +50,7 @@ namespace :task do
   # Run a rake task
   # $ cap staging rake:invoke task=<rake_task>
   # e.g.
-  # $ cap staging rake:invoke task=rake db:migrate
+  # $ cap staging rake:invoke task=db:migrate
   task :invoke do
     on roles(:app) do
       within "#{deploy_to}/current" do

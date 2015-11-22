@@ -8,4 +8,9 @@ class AuthorizationController < WebsocketRails::BaseController
   rescue Cancan::AccessDenied
     deny_channel(message: 'Unauthorized!')
   end
+
+  def test_event
+    puts "Received event with data: #{message}"
+    broadcast_message :testevent, 'THis test is working...'
+  end
 end
