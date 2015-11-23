@@ -1,34 +1,3 @@
-var Constants = {
-    // Positions
-    positions: {
-        tl: 'tl',
-        tr: 'tr',
-        tc: 'tc',
-        bl: 'bl',
-        br: 'br',
-        bc: 'bc'
-    },
-
-    // Levels
-    levels: {
-        success: 'success',
-        error: 'error',
-        warning: 'warning',
-        info: 'info'
-    },
-
-    // Notification defaults
-    notification: {
-        title: null,
-        message: null,
-        level: null,
-        position: 'tr',
-        autoDismiss: 5,
-        dismissible: true,
-        action: null
-    }
-};
-
 var Helpers = {
     inArray: function (needle, haystack) {
         needle = needle.toLowerCase();
@@ -114,60 +83,21 @@ var NotificationSystem = React.createClass({
     },
 
     addNotification: function (notification) {
-        var notification = $.extend({}, Constants.notification, notification);
+        var notifications = this.state.notifications;
 
-        var error = false;
+        notification.uid = this.uid;
+        notification.ref = "notification-" + this.uid;
+        this.uid += 1;
 
-        try {
-            if (!notification.level) {
-                throw "notification level is required."
-            }
+        notifications.push(notification);
 
-            if (isNaN(notification.autoDismiss)) {
-                throw "'autoDismiss' must be a number."
-            }
-
-            if (!Helpers.inArray(notification.position, Object.keys(Constants.positions))) {
-                throw "'" + notification.position + "' is not a valid position."
-            }
-
-            if (!Helpers.inArray(notification.level, Object.keys(Constants.levels))) {
-                throw "'" + notification.level + "' is not a valid level."
-            }
-
-            if (!notification.dismissible && !notification.action) {
-                throw "You need to set notification dismissible to true or set an action, otherwise user will not be able to dismiss the notification."
-            }
-
-        } catch (err) {
-            error = true;
-            console.error('Error adding notification: ' + err);
-        }
-
-        if (!error) {
-            var notifications = this.state.notifications;
-
-            // Some preparations
-            notification.position = notification.position.toLowerCase();
-            notification.level = notification.level.toLowerCase();
-            notification.autoDismiss = parseInt(notification.autoDismiss);
-
-            notification.uid = this.uid;
-            notification.ref = "notification-" + this.uid;
-            this.uid += 1;
-
-            notifications.push(notification);
-
-            this.setState({
-                notifications: notifications
-            });
-        }
-
+        this.setState({
+            notifications: notifications
+        });
     },
 
     componentDidMount: function () {
         this.notification_event = EventManager.on('notification', (notification) => {
-            console.log('receive not', notification);
             this.addNotification(notification);
         });
     },
@@ -180,7 +110,7 @@ var NotificationSystem = React.createClass({
         var notifications = this.state.notifications;
 
         if (notifications.length) {
-            containers = Object.keys(Constants.positions).map(function (position) {
+            containers = Object.keys(Notification.Positions).map(function (position) {
 
                 var _notifications = notifications.filter(function (notification) {
                     return position === notification.position;
@@ -195,7 +125,7 @@ var NotificationSystem = React.createClass({
                             onRemove={self._didNotificationRemoved}
                             noAnimation={self.props.noAnimation}
                             allowHTML={self.props.allowHTML}
-                            />
+                        />
                     );
                 }
             });

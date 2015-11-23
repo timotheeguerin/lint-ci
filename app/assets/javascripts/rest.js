@@ -9,6 +9,10 @@ Rest.post = function (url, data) {
 };
 
 Rest.request = function (method, url, data) {
+    // Temporary hack to allow cloudflare flexible SSL
+    if (window.location.protocol == 'https') {
+        url.replace('http://', 'https://');
+    }
     return $.ajax({
             type: method,
             url: url,
@@ -17,7 +21,7 @@ Rest.request = function (method, url, data) {
             data: JSON.stringify(data)
         }
     ).fail(function (jqXHR, textStatus, errorThrown) {
-            console.error('Fail to load url: ', this.url);
-            console.error(jqXHR, textStatus, errorThrown);
-        })
+        console.error('Fail to load url: ', this.url);
+        console.error(jqXHR, textStatus, errorThrown);
+    })
 };

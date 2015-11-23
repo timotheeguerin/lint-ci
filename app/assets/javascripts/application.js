@@ -38,3 +38,7 @@ websocket.on_open = function (data) {
         console.log('cret', data);
     })
 };
+
+//setTimeout(() => {
+//    EventManager.trigger('notification', new Notification('Bullshit', 'Is happening', 'warning'));
+//}, 1000);

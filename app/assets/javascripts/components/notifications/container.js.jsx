@@ -1,5 +1,3 @@
-
-
 var NotificationContainer = React.createClass({
     propTypes: {
         position: React.PropTypes.string.isRequired,
@@ -7,7 +5,7 @@ var NotificationContainer = React.createClass({
     },
 
     render: function () {
-        if (Helpers.inArray(this.props.position, [Constants.positions.bl, Constants.positions.br, Constants.positions.bc])) {
+        if (this.props.position.isBottom()) {
             this.props.notifications.reverse();
         }
 
@@ -20,7 +18,7 @@ var NotificationContainer = React.createClass({
                     onRemove={this.props.onRemove}
                     noAnimation={this.props.noAnimation}
                     allowHTML={this.props.allowHTML}
-                    />
+                />
             );
         });
 
