@@ -14,11 +14,11 @@ class Position {
     }
 
     isTop() {
-        return this.vertical == Position.Vertical.top
+        return this.vertical == Position.top
     }
 
     isBottom() {
-        return this.vertical == Position.Vertical.bottom
+        return this.vertical == Position.bottom
     }
 
     toString() {
@@ -28,6 +28,7 @@ class Position {
 
 /**
  * Container class for notifications.
+ * @see NotificationManager for usage
  */
 class Notification {
     static Positions = {
@@ -39,7 +40,7 @@ class Notification {
         bc: new Position(Position.bottom, Position.center)
     };
 
-    constructor(title, message, level, options = {}) {
+    constructor(level, title, message, options = {}) {
         this.title = title;
         this.message = message;
         this.level = level;

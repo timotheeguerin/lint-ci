@@ -1,72 +1,68 @@
-var NotificationItem = React.createClass({
-
-    propTypes: {
+class NotificationItem extends React.Component {
+    static propTypes = {
         notification: React.PropTypes.object,
         onRemove: React.PropTypes.func,
         allowHTML: React.PropTypes.bool
-    },
+    };
 
-    getDefaultProps: function () {
-        return {
-            noAnimation: false,
-            onRemove: function (uid) {
-            },
-            allowHTML: false
-        };
-    },
+    static defaultProps = {
+        noAnimation: false,
+        onRemove: function (uid) {
+        },
+        allowHTML: false
+    };
 
-    getInitialState: function () {
-        return {
+    constructor(props) {
+        super(props);
+        this.state = {
             visible: false,
             removed: false
         };
-    },
+    }
 
-    componentWillMount: function () {
+    componentWillMount() {
         this._noAnimation = this.props.noAnimation;
 
         if (!this.props.notification.dismissible) {
             this._Styles.notification.cursor = 'default';
         }
-    },
+    }
 
-    _notificationTimer: null,
+    _notificationTimer = null;
 
-    _height: 0,
+    _height = 0;
 
-    _noAnimation: null,
+    _noAnimation = null;
 
-    _hideNotification: function () {
+    _hideNotification() {
         if (this._notificationTimer) {
             this._notificationTimer.clear();
         }
 
-        if (this.isMounted()) {
-            this.setState({
-                visible: false,
-                removed: true
-            });
-        }
+        this.setState({
+            visible: false,
+            removed: true
+        });
 
         if (this._noAnimation) {
             this._removeNotification();
         }
-    },
+    }
 
-    _removeNotification: function () {
+    _removeNotification() {
         this.props.onRemove(this.props.notification.uid);
-    },
+    }
 
-    _showNotification: function () {
+    _showNotification() {
         var self = this;
         setTimeout(() => {
             self.setState({
                 visible: true
             });
         }, 50);
-    },
+    }
 
-    componentDidMount: function () {
+    componentDidMount() {
         var self = this;
         var transitionEvent = whichTransitionEvent();
         var notification = this.props.notification;
@@ -94,7 +90,7 @@ var NotificationItem = React.createClass({
 
 
         if (notification.autoDismiss) {
-            this._notificationTimer = new Helpers.timer(function () {
+            this._notificationTimer = new Timer(() => {
                 self._hideNotification();
             }, notification.autoDismiss * 1000);
 
@@ -109,27 +105,30 @@ var NotificationItem = React.createClass({
 
         this._showNotification();
 
-    },
+    }
 
-    html: function (string) {
+    html(string) {
         return {__html: string};
-    },
-    dismiss: function (e) {
+    }
+
+    dismiss(e) {
         e.stopPropagation();
         if (!this.props.notification.dismissible) {
             return;
         }
 
         this._hideNotification();
-    },
-    handleClick: function (e) {
+    }
+
+    handleClick(e) {
         var notification = this.props.notification;
         this.dismiss(e);
         if (notification.callback) {
             notification.callback()
         }
-    },
-    render: function () {
+    }
+
+    render() {
         var notification = this.props.notification;
 
         var classes = classNames('notification', notification.level, {
@@ -138,7 +137,7 @@ var NotificationItem = React.createClass({
         });
 
         return (
-            <div className={classes} onClick={this.handleClick}>
+            <div className={classes} onClick={this.handleClick.bind(this)}>
                 <div>
                     {this.renderTitle()}
                     {this.renderMessage()}
@@ -146,16 +145,18 @@ var NotificationItem = React.createClass({
                 {this.renderDismiss()}
             </div>
         );
-    },
-    renderTitle: function () {
+    }
+
+    renderTitle() {
         var notification = this.props.notification;
         if (notification.title) {
             return <h4 className="notification-title">{notification.title}</h4>;
         } else {
             return null;
         }
-    },
-    renderMessage: function () {
+    }
+
+    renderMessage() {
         var notification = this.props.notification;
         if (notification.message) {
             if (!this.props.allowHTML) {
@@ -169,11 +170,12 @@ var NotificationItem = React.createClass({
                 );
             }
         }
-    },
-    renderDismiss: function () {
+    }
+
+    renderDismiss() {
         var notification = this.props.notification;
         if (notification.dismissible) {
-            return <span className="notification-dismiss" onClick={this.dismiss}></span>;
+            return <span className="notification-dismiss" onClick={this.dismiss.bind(this)}></span>;
         }
     }
-});
+}

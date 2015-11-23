@@ -1,12 +1,10 @@
-var NotificationContainer = React.createClass({
-    propTypes: {
-        position: React.PropTypes.string.isRequired,
+class NotificationContainer extends React.Component {
+    static propTypes = {
         notifications: React.PropTypes.array.isRequired
-    },
+    };
 
-    render: function () {
+    render() {
         if (this.props.position.isBottom()) {
-            this.props.notifications.reverse();
         }
 
         var notifications = this.props.notifications.map((notification) => {
@@ -28,4 +26,4 @@ var NotificationContainer = React.createClass({
             </div>
         );
     }
-});
+}

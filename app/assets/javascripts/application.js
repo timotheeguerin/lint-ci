@@ -44,5 +44,11 @@ websocket.on_open = function (data) {
 };
 
 //setTimeout(() => {
-//    EventManager.trigger('notification', new Notification('Bullshit', 'Is happening', 'warning'));
+//    console.log(NotificationManager.warn);
+//    NotificationManager.warn('Bullshit', 'Is happening');
+//    NotificationManager.success('Bullshit', 'Is happening');
+//    NotificationManager.inform('Bullshit', 'Is happening');
+//    NotificationManager.error('Bullshit', 'Is happening', {
+//        position: Notification.Positions.tl
+//    });
 //}, 1000);
