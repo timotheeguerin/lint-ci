@@ -40,8 +40,8 @@ class RepositorySerializer < ApplicationSerializer
     repository_offense_badge_url(object.owner.username, object.name)
   end
 
-  link :revisions_url do
-    api_revisions_url(object.owner.username, object.name)
+  link :branches_url do
+    api_branches_url(object.owner.username, object.name)
   end
 
   link :refresh_url do

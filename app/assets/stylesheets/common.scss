@@ -27,6 +27,10 @@ $box-shadow-border: 1px solid $grey_medium_light;
     border-bottom: $box-shadow-border;
   }
 
+  .banner {
+    border-bottom: $box-shadow-border;
+  }
+
   .box-search {
     font-size: 2rem;
     color: #a0a8a8;

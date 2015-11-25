@@ -59,6 +59,14 @@ class ApiUrl {
     repo(username, repo) {
         return URI.expand(this.urls['repo'], {user_id: username, id: repo})
     }
+
+    branch(username, repo, branch) {
+        return URI.expand(this.urls['branch'], {
+            user_id: username,
+            repository: repo,
+            branch: branch
+        })
+    }
 }
 
 class Model {
@@ -146,8 +154,17 @@ class Repository extends Model {
     get revisions() {
         return this.hasMany('revisions', Revision);
     }
+
+    get branches() {
+        return this.hasMany('branches', Branch);
+    }
 }
 
+class Branch extends Model {
+    getUrl() {
+        return ''
+    }
+}
 
 class Revision extends Model {
     getUrl() {

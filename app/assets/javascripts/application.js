@@ -17,6 +17,10 @@
 //= require react_ujs
 //= require vendor/uri
 //= require vendor/uri-template
+//= require classnames
+//= require react-input-autosize
+//= require vendor/react-select
+// require react-select
 //= require components
 //= require rest
 //= require_tree .

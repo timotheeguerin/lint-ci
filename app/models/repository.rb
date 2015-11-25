@@ -1,5 +1,5 @@
-# Class containing repository
 class Repository < ActiveRecord::Base
+# Class containing repository
   extend FriendlyId
   friendly_id :name, use: [:finders]
 
@@ -8,7 +8,7 @@ class Repository < ActiveRecord::Base
   has_many :memberships, dependent: :destroy
   has_many :users, through: :memberships
 
-  has_many :revisions, dependent: :destroy
+  has_many :branches, dependent: :destroy
 
   has_one :current_revision, class_name: 'Revision'
 
@@ -21,6 +21,10 @@ class Repository < ActiveRecord::Base
 
   before_create do
     self.last_sync_at = created_at
+  end
+
+  def default_branch
+    branches.where(name: 'master').first || branches.first
   end
 
   def owner_path

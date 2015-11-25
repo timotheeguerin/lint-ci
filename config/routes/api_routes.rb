@@ -38,36 +38,47 @@ post 'repos/:user/:repo/disable' => 'repositories#disable', as: :disable_repo
 post 'repos/:user/:repo/refresh' => 'repositories#refresh', as: :refresh_repo
 
 #================================================================
+# Repositories Branches
+#================================================================
+# Get
+get 'repos/:user/:repo/branches' => 'branches#index', as: :branches
+
+get 'repos/:user/:repo/branches/refresh' => 'branches#refresh', as: :refresh_branches
+
+# List
+get 'repos/:user/:repo/:branch' => 'branches#show', as: :branch
+
+
+#================================================================
 # Repositories Revisions
 #================================================================
 # List of all user repositories
-get 'repos/:user/:repo/revisions' => 'revisions#index', as: :revisions
+get 'repos/:user/:repo/:branch/revisions' => 'revisions#index', as: :revisions
 
 post 'repos/:user/:repo/revisions/webhook' => 'revisions#webhook', as: :revisions_hook
 
-
 # List of all user repositories
-get 'repos/:user/:repo/:revision' => 'revisions#show', as: :revision
+get 'repos/:user/:repo/:branch/:revision' => 'revisions#show', as: :revision
 
 
 #================================================================
 # Repositories Revisions Files
 #================================================================
 # List of all files in revision
-get 'repos/:user/:repo/:revision/files' => 'revision_files#index', as: :files
+get 'repos/:user/:repo/:branch/:revision/files' => 'revision_files#index', as: :files
 
 # List of all user repositories
 
 #================================================================
 # Repositories Revisions Files Offenses
 #================================================================
-get 'repos/:user/:repo/:revision/:file/offenses' => 'offenses#index',
+get 'repos/:user/:repo/:branch/:revision/:file/offenses' => 'offenses#index',
     as: :offenses
-get 'repos/:user/:repo/:revision/:file/offenses/:offense' => 'offenses#show',
+get 'repos/:user/:repo/:branch/:revision/:file/offenses/:offense' => 'offenses#show',
     as: :offense
 
-get 'repos/:user/:repo/:revision/:file/content' => 'revision_files#content',
+get 'repos/:user/:repo/:branch/:revision/:file/content' => 'revision_files#content',
     as: :file_content
 
-get 'repos/:user/:repo/:revision/:file' => 'revision_files#show',
+get 'repos/:user/:repo/:branch/:revision/:file' => 'revision_files#show',
     as: :file

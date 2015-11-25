@@ -2,7 +2,8 @@ class RepositoryComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            repository: new Repository(api, props.repository)
+            repository: new Repository(api, props.repository),
+            branch: new Branch(api, props.branch)
         }
     }
 
@@ -51,9 +52,58 @@ class RepositoryComponent extends React.Component {
                     </a>
                 </div>
 
+                <div className="box-banner">
+                    <BranchDropdown branch={this.state.branch} branches={repository.branches}/>
+                </div>
+
                 <div>
                     <RevisionList repository={repository}/>
                 </div>
+            </div>
+        )
+    }
+}
+
+class BranchDropdown extends React.Component {
+    constructor(props) {
+        super(props);
+        this.computeBranches(this.props.branches);
+        this.state = {
+            branch: this.props.branch,
+            branches: []
+        }
+    }
+
+    computeBranches(branches) {
+        Load.association(branches, Branch, this.setItems.bind(this))
+    }
+
+    setItems(items) {
+        this.setState({branches: items})
+    }
+
+    onSelected(option) {
+        for (let branch of this.state.branches) {
+            if (branch.id === option.value) {
+                console.log("going to ", branch.html_url);
+                window.location = branch.html_url;
+                return;
+            }
+        }
+    }
+
+    render() {
+        let options = [];
+        for (let branch of this.state.branches) {
+            options.push({value: branch.id, label: branch.name})
+        }
+
+        return (
+            <div className="branch-dropdown">
+                <Select name="form-field-name"
+                        clearable={false}
+                        value={this.state.branch.id} options={options}
+                        onChange={this.onSelected.bind(this)}/>
             </div>
         )
     }

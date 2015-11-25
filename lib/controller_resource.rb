@@ -15,8 +15,15 @@ module ControllerResource
                                   through: :user, through_association: :repos, **kwargs
     end
 
-    def load_and_auth_revision(**kwargs)
+    def load_and_auth_branch(**kwargs)
       load_and_auth_repository(**kwargs) if kwargs[:parents]
+      load_and_authorize_resource :branch,
+                                  id_param: :branch,
+                                  through: :repository, through_association: :branches, **kwargs
+    end
+
+    def load_and_auth_revision(**kwargs)
+      load_and_auth_branch(**kwargs) if kwargs[:parents]
       load_and_authorize_resource :revision,
                                   id_param: :revision,
                                   through: :repository, through_association: :revisions, **kwargs

@@ -13,10 +13,10 @@ class ApplicationController < ActionController::Base
   end
 
   def github_token
-    session['devise.github_data']['credentials']['token']
+    current_user.access_token
   end
 
   def github
-    @github ||= GithubApi.new(github_token)
+    current_user.github
   end
 end

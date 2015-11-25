@@ -2,3 +2,6 @@
 # Check out https://github.com/42dev/bower-rails#ruby-dsl-configuration for more options
 
 # asset 'bootstrap'
+# asset 'react-select'
+asset 'classnames'
+asset 'react-input-autosize'

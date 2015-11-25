@@ -1,5 +1,6 @@
 {
   "name": "dsl-generated dependencies",
   "dependencies": {
+    "react-select": "latest"
   }
 }

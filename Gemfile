@@ -60,8 +60,7 @@ gem 'rubocop'
 
 gem 'rouge'
 
-gem 'react-rails'
-# gem 'react-rails', git: 'https://github.com/reactjs/react-rails'
+gem 'react-rails', '~> 1.4.0'
 gem 'font-awesome-rails'
 gem 'bower-rails', '~> 0.9.2'
 gem 'neat'
