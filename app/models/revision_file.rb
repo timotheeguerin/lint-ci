@@ -6,7 +6,8 @@ class RevisionFile < ActiveRecord::Base
   belongs_to :revision
   has_many :offenses, foreign_key: 'file_id', dependent: :destroy
 
-  delegate :repository, to: :revision
+  delegate :branch, to: :revision
+  delegate :repository, to: :branch
 
   validates :offense_count, presence: true
   validates :language, presence: true

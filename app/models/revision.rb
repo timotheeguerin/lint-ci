@@ -10,6 +10,8 @@ class Revision < ActiveRecord::Base
 
   enum status: [:queued, :processing, :scanned]
 
+  delegate :repository, to: :branch
+
   # If sha is nil it means it is currently queued.
   validates :sha, uniqueness: {scope: :branch_id}
   validates :branch_id, presence: true
