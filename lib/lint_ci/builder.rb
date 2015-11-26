@@ -3,7 +3,8 @@ class LintCI::Builder
   # @param revision [Revision]
   def initialize(revision)
     @revision = revision
-    @repository = revision.repository
+    @branch = revision.branch
+    @repository = @branch.repository
     checkout
     notify('Repository cloned!')
     cleanup_existing
@@ -70,11 +71,15 @@ class LintCI::Builder
     notify('Cloning repository...')
     clone
     notify('Updating to commit...')
-    @git.checkout(@revision.sha) unless @revision.sha.nil?
+    @git.checkout(checkout_ref) unless @revision.sha.nil?
+  end
+
+  def checkout_ref
+    "#{@branch.name} #{@revision.sha}"
   end
 
   def channel
-    Channel.repo_revision_scan_update(@revision.repository, @revision)
+    Channel.repo_revision_scan_update(@branch.repository, @branch, @revision)
   end
 
   def notify(message)

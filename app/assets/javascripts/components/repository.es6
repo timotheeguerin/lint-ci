@@ -15,7 +15,7 @@ class RepositoryComponent extends React.Component {
 
     refresh(e) {
         e.preventDefault();
-        Rest.post(this.state.repository.refresh_url).done((repository) => {
+        Rest.post(this.state.branch.scan_url).done((repository) => {
             this.setState({repository: repository})
         });
     }
@@ -32,6 +32,7 @@ class RepositoryComponent extends React.Component {
 
     render() {
         var repository = this.state.repository;
+        var branch = this.state.branch;
         var classes = classNames({
             'fa fa-refresh': true,
             'fa-spin': repository.refreshing
@@ -53,11 +54,11 @@ class RepositoryComponent extends React.Component {
                 </div>
 
                 <div className="box-banner">
-                    <BranchDropdown branch={this.state.branch} branches={repository.branches}/>
+                    <BranchDropdown branch={branch} branches={repository.branches}/>
                 </div>
 
                 <div>
-                    <RevisionList repository={repository}/>
+                    <RevisionList branch={branch} revisions={branch.revisions}/>
                 </div>
             </div>
         )

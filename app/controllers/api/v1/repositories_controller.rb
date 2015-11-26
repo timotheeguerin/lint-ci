@@ -28,13 +28,6 @@ class Api::V1::RepositoriesController < Api::V1::BaseController
     render json: @repository
   end
 
-  # Refresh to repo
-  def refresh
-    queued = RevisionScan.new(@repository).scan
-    status = queued ? :accepted : :ok
-    render json: @repository, status: status
-  end
-
   def init
     @repository = Repository.new
     @repositories = Repository.none

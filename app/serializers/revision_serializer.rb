@@ -6,20 +6,26 @@ class RevisionSerializer < ApplicationSerializer
   has_many :linters
 
   link :url do
-    api_revision_url(object.repository.owner, object.repository, object)
+    api_revision_url(*args)
   end
 
   link :html_url do
-    revision_url(object.repository.owner, object.repository, object)
+    revision_url(*args)
   end
 
   link :files_url do
-    api_files_url(object.repository.owner, object.repository, object)
+    api_files_url(*args)
   end
 
   link :channels do
     {
-      scan_update: Channel.repo_revision_scan_update_path(object.repository, object)
+      scan_update: Channel.repo_revision_scan_update_path(object.branch.repository, object.branch, object)
     }
+  end
+
+  def args
+    branch = object.branch
+    repository = branch.repository
+    [repository.owner, repository, branch, object]
   end
 end

@@ -4,13 +4,17 @@ Channel.routes.draw do
     authorize! :read, @user
   end
 
-  channel :repo_revisions_change, 'repos/:repo/revisions/change' do |repo_id|
+  channel :branch_revisions_change, 'repos/:repo/:branch/revisions/change' do |repo_id, branch_id|
     @repository = Repository.find(repo_id)
+    @branch = @repository.branches.find(branch_id)
     authorize! :read, @repository
+    authorize! :read, @branch
   end
 
-  channel :repo_revision_scan_update, 'repos/:repo/revisions/:revision/scan' do |repo_id, _|
+  channel :repo_revision_scan_update, 'repos/:repo/:branch/revisions/:revision/scan' do |repo_id,branch_id, _|
     @repository = Repository.find(repo_id)
+    @branch = @repository.branches.find(branch_id)
     authorize! :read, @repository
+    authorize! :read, @branch
   end
 end

@@ -1,4 +1,6 @@
 # Helper method to select the right channel
+# Call Channel.<channel_name> to get the channel object
+# Call Channel.<channel_name>_path to get the channel path
 module Channel
   class << self
     def config

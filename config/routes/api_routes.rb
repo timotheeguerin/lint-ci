@@ -34,9 +34,6 @@ post 'repos/:user/:repo/enable' => 'repositories#enable', as: :enable_repo
 # Disable a specific repository
 post 'repos/:user/:repo/disable' => 'repositories#disable', as: :disable_repo
 
-# Refresh a repe(i.e trigger a new run to compute the style)
-post 'repos/:user/:repo/refresh' => 'repositories#refresh', as: :refresh_repo
-
 #================================================================
 # Repositories Branches
 #================================================================
@@ -48,6 +45,8 @@ get 'repos/:user/:repo/branches/refresh' => 'branches#refresh', as: :refresh_bra
 # List
 get 'repos/:user/:repo/:branch' => 'branches#show', as: :branch
 
+# Scan
+post 'repos/:user/:repo/:branch/scan' => 'branches#scan', as: :scan_branch
 
 #================================================================
 # Repositories Revisions

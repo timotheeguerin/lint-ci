@@ -1,20 +1,22 @@
 class RevisionList extends List {
     constructor(props) {
         super(props);
-        Object.assign(this.state, {
-            repository: new Repository(api, this.props.repository)
-        });
+        this.computeRevisions(props.revisions);
+    }
+
+    computeRevisions(revisions) {
+        Load.association(revisions, Revision, this.setItems.bind(this))
     }
 
     componentDidMount() {
-        this.state.repository.revisions.fetch().then(function (revisions) {
-            this.setItems(revisions)
-        }.bind(this));
         this.registerWebEvents();
     }
 
     registerWebEvents() {
-        this.channel = websocket.subscribe_private(this.state.repository.channels.revision_changes);
+        if (!this.props.branch) {
+            return;
+        }
+        this.channel = websocket.subscribe_private(this.props.branch.channels.revision_changes);
         this.channel.bind('create', (data) => {
             this.addRevision(data);
         });
@@ -31,14 +33,14 @@ class RevisionList extends List {
     }
 
     addRevision(id) {
-        this.state.repository.revisions.find(id).then((revision) => {
+        this.props.branch.revisions.find(id).then((revision) => {
             let revisions = [revision].concat(this.state.items);
             this.setItems(revisions);
         })
     }
 
     updateRevision(id) {
-        this.state.repository.revisions.find(id).then((revision) => {
+        this.props.branch.revisions.find(id).then((revision) => {
             let revisions = this.state.items;
             for (let i = 0; i < revisions.length; i++) {
                 if (this.state.items[i].id == id) {
@@ -67,7 +69,7 @@ class RevisionList extends List {
 
     renderItem(revision) {
         return (
-            <RevisionListItem revision={revision} repository={this.state.repository}
+            <RevisionListItem revision={revision} branch={this.props.branch}
                               key={revision.id}/>
         )
     }

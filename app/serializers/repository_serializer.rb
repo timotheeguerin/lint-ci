@@ -44,21 +44,11 @@ class RepositorySerializer < ApplicationSerializer
     api_branches_url(object.owner.username, object.name)
   end
 
-  link :refresh_url do
-    api_refresh_repo_url(object.owner.username, object.name)
-  end
-
   link :enable_url do
     api_enable_repo_url(object.owner.username, object.name)
   end
 
   link :disable_url do
     api_disable_repo_url(object.owner.username, object.name)
-  end
-
-  link :channels do
-    {
-      revision_changes: Channel.repo_revisions_change_path(object.id)
-    }
   end
 end

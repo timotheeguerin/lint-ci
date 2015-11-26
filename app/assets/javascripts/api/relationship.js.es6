@@ -28,8 +28,15 @@ class RelationshipProxy {
     }
 
     get url() {
-        let url = URI(this.record[`${this.relationship}_url`]);
-        return url.query(this.filter);
+        try {
+            console.log(this.record);
+            let url = URI(this.record[`${this.relationship}_url`]);
+            return url.query(this.filter);
+        } catch (error) {
+            console.error(`Error while generating url for relation ship '${this.relationship}' ` +
+                `value is '${this.record[`${this.relationship}_url`]}'`)
+            throw error;
+        }
     }
 
     getRelationshipValue() {

@@ -151,10 +151,6 @@ class Repository extends Model {
         return this.api.urls.repo(username, this.name);
     }
 
-    get revisions() {
-        return this.hasMany('revisions', Revision);
-    }
-
     get branches() {
         return this.hasMany('branches', Branch);
     }
@@ -163,6 +159,10 @@ class Repository extends Model {
 class Branch extends Model {
     getUrl() {
         return ''
+    }
+
+    get revisions() {
+        return this.hasMany('revisions', Revision);
     }
 }
 

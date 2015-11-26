@@ -2,28 +2,35 @@
 class RevisionScan
   attr_accessor :repo
 
-  def initialize(repo)
-    @repo = repo
+  def initialize(branch)
+    @branch = branch
+    @repo = branch.repository
   end
 
   def scan(sha = nil)
-    @repo.transaction do
+    @branch.transaction do
       return _scan(sha)
     end
   end
 
   # Scan the repo at the given sha. If sha is nil it will get HEAD
   def _scan(sha)
-    revision = @repo.revisions.find_by_sha(sha)
+    revision = retrieve_revision(sha)
+    return false if revision.nil?
+    scan_revision(revision)
+    true
+  end
+
+  def retrieve_revision(sha)
+    revision = @branch.revisions.find_by_sha(sha)
     if revision.nil?
-      revision = @repo.revisions.build
+      revision = @branch.revisions.build
     elsif revision.scanning?
-      return false
+      return nil
     end
     revision.status = :queued
     revision.save
-    scan_revision(revision)
-    true
+    revision
   end
 
   def scan_revision(revision)

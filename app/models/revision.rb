@@ -3,7 +3,7 @@ class Revision < ActiveRecord::Base
   include FriendlyId
   friendly_id :sha, use: [:finders]
 
-  belongs_to :repository
+  belongs_to :branch
 
   has_many :files, class_name: 'RevisionFile', dependent: :destroy
   has_many :linters, dependent: :destroy
@@ -11,22 +11,29 @@ class Revision < ActiveRecord::Base
   enum status: [:queued, :processing, :scanned]
 
   # If sha is nil it means it is currently queued.
-  validates :sha, uniqueness: {scope: :repository_id}
+  validates :sha, uniqueness: {scope: :branch_id}
+  validates :branch_id, presence: true
 
   default_scope do
     order(created_at: :desc)
   end
 
   after_create do |revision|
-    Channel.repo_revisions_change(revision.repository).trigger(:create, revision.id)
+    revision.channel.trigger(:create, revision.id)
   end
 
   after_update do |revision|
-    Channel.repo_revisions_change(revision.repository).trigger(:update, revision.id)
+    revision.channel.trigger(:update, revision.id)
   end
 
   after_destroy do |revision|
-    Channel.repo_revisions_change(revision.repository).trigger(:destroy, revision.id)
+    revision.channel.trigger(:destroy, revision.id)
+  end
+
+  def channel
+
+    return if branch.nil?
+    Channel.branch_revisions_change(branch.repository, branch)
   end
 
   def style_status

@@ -6,7 +6,6 @@ class BranchSerializer < ApplicationSerializer
 
   belongs_to :repository
 
-
   link :url do
     api_branch_url(object.repository.owner.username, object.repository.name, object.name)
   end
@@ -15,8 +14,17 @@ class BranchSerializer < ApplicationSerializer
     branch_url(object.repository.owner.username, object.repository.name, object.name)
   end
 
-
   link :revisions_url do
     api_revisions_url(object.repository.owner.username, object.repository.name, object.name)
+  end
+
+  link :scan_url do
+    api_scan_branch_url(object.repository.owner.username, object.repository.name, object.name)
+  end
+
+  link :channels do
+    {
+      revision_changes: Channel.branch_revisions_change_path(object.repository.id, object.id)
+    }
   end
 end
