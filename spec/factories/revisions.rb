@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :revision do
-    repository
+    branch
     sha { SecureRandom.hex }
     message { Faker::Lorem.sentence }
     date { DateTime.now }

@@ -3,7 +3,9 @@ require 'rails_helper'
 RSpec.describe Api::V1::RevisionsController do
   let(:owner) { FactoryGirl.create(:user) }
   let(:repository) { FactoryGirl.create(:repository, owner: owner) }
-  let(:collection_params) { {user: owner.username, repo: repository.name} }
+  let(:branch) { FactoryGirl.create(:branch, repository: repository) }
+
+  let(:collection_params) { {user: owner.username, repo: repository.name, branch: branch} }
   let(:params) { collection_params.merge(revision: revision.sha) }
 
   describe 'GET #index' do
@@ -16,12 +18,12 @@ RSpec.describe Api::V1::RevisionsController do
     it { expect(response).to return_json }
 
     it_has_behavior 'Pagination API', :index do
-      let(:records) { FactoryGirl.create_list(:revision, 3, repository: repository).reverse }
+      let(:records) { FactoryGirl.create_list(:revision, 3, branch: branch).reverse }
     end
   end
 
   describe 'GET #show' do
-    let(:revision) { FactoryGirl.create(:revision, repository: repository) }
+    let(:revision) { FactoryGirl.create(:revision, branch: branch) }
     before do
       get :show, params
     end

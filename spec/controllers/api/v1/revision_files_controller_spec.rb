@@ -3,8 +3,11 @@ require 'rails_helper'
 RSpec.describe Api::V1::RevisionFilesController do
   let(:owner) { FactoryGirl.create(:user) }
   let(:repository) { FactoryGirl.create(:repository, owner: owner) }
-  let(:revision) { FactoryGirl.create(:revision, repository: repository) }
-  let(:collection_params) { {user: owner.username, repo: repository.name, revision: revision.sha} }
+  let(:branch) { FactoryGirl.create(:branch, repository: repository) }
+  let(:revision) { FactoryGirl.create(:revision, branch: branch) }
+  
+  let(:collection_params) { {user: owner.username, repo: repository.name,
+                             branch: branch.name, revision: revision.sha} }
   let(:params) { collection_params.merge(file: file.path) }
 
   describe 'GET #index' do

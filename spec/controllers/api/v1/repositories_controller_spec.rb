@@ -71,16 +71,7 @@ RSpec.describe Api::V1::RepositoriesController do
       it { expect(controller).to have_received(:create_webhook) }
     end
 
-    when_user_signed_out do
-      let!(:repository) { FactoryGirl.create(:repository, owner: owner) }
-
-      before do
-        get :refresh, params
-      end
-      it_behaves_like 'forbidden api request'
-    end
-
-    it_has_behavior 'require authorization', :refresh do
+    it_has_behavior 'require authorization', :enable do
       let(:repository) { FactoryGirl.create(:repository, owner: owner) }
     end
   end
@@ -102,39 +93,7 @@ RSpec.describe Api::V1::RepositoriesController do
       it { expect(controller).to have_received(:delete_webhook) }
     end
 
-    it_has_behavior 'require authorization', :refresh do
-      let(:repository) { FactoryGirl.create(:repository, owner: owner) }
-    end
-  end
-
-  describe 'GET #refresh' do
-    when_user_signed_in do
-      can :refresh, Repository
-      let!(:repository) { FactoryGirl.create(:repository, owner: owner) }
-      let(:scanner) { double(:scanner, scan: queue) }
-
-      before do
-        allow(RevisionScan).to receive(:new).and_return(scanner)
-        get :refresh, params
-        repository.reload
-      end
-
-      context 'when scanner queue the revision' do
-        let(:queue) { true }
-
-        it_behaves_like 'accepted api request'
-        it { expect(scanner).to have_received(:scan).with(no_args) }
-      end
-
-      context 'when repository is refreshing' do
-        let(:queue) { false }
-
-        it_behaves_like 'successful api request'
-        it { expect(scanner).to have_received(:scan).with(no_args) }
-      end
-    end
-
-    it_has_behavior 'require authorization', :refresh do
+    it_has_behavior 'require authorization', :disable do
       let(:repository) { FactoryGirl.create(:repository, owner: owner) }
     end
   end

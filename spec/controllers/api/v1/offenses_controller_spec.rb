@@ -3,10 +3,15 @@ require 'rails_helper'
 RSpec.describe Api::V1::OffensesController do
   let(:owner) { FactoryGirl.create(:user) }
   let(:repository) { FactoryGirl.create(:repository, owner: owner) }
-  let(:revision) { FactoryGirl.create(:revision, repository: repository) }
+  let(:branch) { FactoryGirl.create(:branch, repository: repository) }
+  let(:revision) { FactoryGirl.create(:revision, branch: branch) }
   let(:file) { FactoryGirl.create(:revision_file, revision: revision) }
   let(:collection_params) do
-    {user: owner.username, repo: repository.name, revision: revision.sha, file: file.path}
+    {user: owner.username,
+     repo: repository.name,
+     branch: branch.name,
+     revision: revision.sha,
+     file: file.path}
   end
   let(:params) { collection_params.merge(offense: offense.id) }
 

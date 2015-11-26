@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :branch do
-    name "MyString"
-repository nil
+    sequence(:name) { |n| "#{ Faker::Name.name}#{n}" }
+    repository
   end
 
 end
