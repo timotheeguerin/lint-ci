@@ -18,7 +18,7 @@
 //= require vendor/uri
 //= require vendor/uri-template
 //= require classnames
-//= require react-input-autosize/dist/react-input-autosize
+//= require react-input-autosize/dist/react-input-autosize.min.js
 //= require vendor/react-select
 // require react-select
 //= require components

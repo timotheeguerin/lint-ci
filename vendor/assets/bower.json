@@ -1,6 +1,7 @@
 {
   "name": "dsl-generated dependencies",
   "dependencies": {
-    "react-select": "latest"
+    "classnames": "latest",
+    "react-input-autosize": "latest"
   }
 }
