@@ -6,7 +6,9 @@ require File.expand_path('../config/application', __FILE__)
 Rails.application.load_tasks
 
 task 'npm:install' do
+  puts 'Running npm install'
   `npm install`
+  puts 'Npm install completed'
 end
 
 task 'bower:before_precompile' => 'npm:install'
