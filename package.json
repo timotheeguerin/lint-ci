@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "jshint": "2.8.0",
-    "bower": "1.6.7"
+    "bower": "^1.6.7",
+    "jshint": "2.8.0"
   }
 }
