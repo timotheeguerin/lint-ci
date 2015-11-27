@@ -72,20 +72,7 @@ class RepositoryList extends List {
     }
 
     computeRepositories(repositories) {
-        if (repositories instanceof RelationshipProxy) {
-            repositories.fetch().then(this.setItems.bind(this));
-        } else if (repositories instanceof Promise) {
-            repositories.then(this.setItems.bind(this));
-        } else {
-            let repos = repositories.map((x) => {
-                if (x instanceof Repository) {
-                    return x;
-                } else {
-                    return new Repository(x);
-                }
-            });
-            this.setItems(repos)
-        }
+        Load.association(repositories, Repository, this.setItems.bind(this));
     }
 
     itemMatch(repository, query) {
@@ -110,6 +97,8 @@ class RepositoryList extends List {
 }
 
 class RepositoryListItem extends React.Component {
+    static defaultProps = {readonly: true};
+
     constructor(props) {
         super();
         this.state = {repository: props.repository}
@@ -145,8 +134,8 @@ class RepositoryListItem extends React.Component {
                 <div className='details'>
                     <h3>{this.props.repository.name}</h3>
                     <i>
-                        <a href={this.props.repository.github_url}>
-                            <i className="fa fa-github"></i> {this.props.repository.github_url}
+                        <a href={this.props.repository.github_url} target="_blank">
+                            <i className="fa fa-github"/> {this.props.repository.github_url}
                         </a>
                     </i>
                 </div>
@@ -179,13 +168,12 @@ class RepositoryListItem extends React.Component {
     }
 }
 
-RepositoryListItem.defaultProps = {readonly: true};
 
 function renderOffenseCount(count) {
     if (count === 'unavailable') {
-        return <i className='fa fa-chain-broken' title='Unavailable'></i>
+        return <i className='fa fa-chain-broken' title='Unavailable'/>
     } else if (count == 0) {
-        return <i className='fa fa-check' title='No offenses'></i>
+        return <i className='fa fa-check' title='No offenses'/>
     } else {
         return count;
     }

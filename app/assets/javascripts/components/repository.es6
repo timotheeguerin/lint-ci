@@ -1,4 +1,4 @@
-class RepositoryComponent extends React.Component {
+component.Repository = class extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -54,7 +54,7 @@ class RepositoryComponent extends React.Component {
                 </div>
 
                 <div className="box-banner">
-                    <BranchDropdown branch={branch} branches={repository.branches}/>
+                    <component.BranchDropdown branch={branch} branches={repository.branches}/>
                 </div>
 
                 <div>
@@ -63,9 +63,9 @@ class RepositoryComponent extends React.Component {
             </div>
         )
     }
-}
+};
 
-class BranchDropdown extends React.Component {
+component.BranchDropdown = class extends React.Component {
     constructor(props) {
         super(props);
         this.computeBranches(this.props.branches);
@@ -109,5 +109,3 @@ class BranchDropdown extends React.Component {
         )
     }
 }
-
-component.Repository = RepositoryComponent;

@@ -4,13 +4,13 @@ var Link = React.createClass({
     },
     handleMouseDown: function (e) {
         var node = $(e.target);
-        if (this.validTag(e.target.tagName) && node.closest('a, .link')[0] === this.refs.link.getDOMNode()) {
+        if (this.validTag(e.target.tagName) && node.closest('a, .link')[0] === this.refs.link) {
             e.preventDefault();
         }
     },
     handleMouseUp: function (e) {
         var node = $(e.target);
-        if (this.validTag(e.target.tagName) && node.closest('a, .link')[0] === this.refs.link.getDOMNode()) {
+        if (this.validTag(e.target.tagName) && node.closest('a, .link')[0] === this.refs.link) {
             if (e.button == 1) {
                 var win = window.open(this.props.href, '_blank');
                 win.focus();

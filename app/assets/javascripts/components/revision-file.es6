@@ -79,7 +79,7 @@ class RevisionFileViewer extends React.Component {
 
     registerEvents() {
         var self = this;
-        $(React.findDOMNode(this)).on('click', '.offense', function () {
+        $(ReactDOM.findDOMNode(this)).on('click', '.offense', function () {
             var id = $(this).data('id');
             var offense = self.findOffense(id);
             var annotations = self.state.annotations;

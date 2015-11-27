@@ -32,9 +32,6 @@ var port = window.location.port;
 //port = 3001;
 
 var websocketUrl = host + ':' + port + '/websocket';
-if (window.rails_env == 'production') {
-    websocketUrl = 'ws://websocket.' + websocketUrl;
-}
 
 var websocket = new WebSocketRails(websocketUrl);
 websocket.on_open = function (data) {
