@@ -9,4 +9,4 @@ task 'npm:install' do
   `npm install`
 end
 
-task 'assets:precompile' => 'npm:install'
+task 'npm:install' => 'assets:precompile'
