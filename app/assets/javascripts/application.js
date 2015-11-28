@@ -21,8 +21,8 @@
 //= require react-input-autosize/dist/react-input-autosize.min.js
 //= require vendor/react-select
 // require react-select
-//= require components
 //= require rest
+//= require components
 //= require_tree .
 //= require websocket_rails/main
 
