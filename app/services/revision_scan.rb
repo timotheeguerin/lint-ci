@@ -24,7 +24,7 @@ class RevisionScan
   def retrieve_revision(sha)
     revision = @branch.revisions.find_by_sha(sha)
     if revision.nil?
-      revision = @branch.revisions.build
+      revision = @branch.revisions.build(sha: sha)
     elsif revision.scanning?
       return nil
     end

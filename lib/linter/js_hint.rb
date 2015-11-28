@@ -28,7 +28,7 @@ class Linter::JsHint < Linter::Base
   def parse_file(path, json)
     file = new_file(path)
     json.each do |offense_hash|
-      file.offenses << parse_offense(offense_hash)
+      file.offenses << parse_offense(offense_hash) unless offense_hash['id'].nil?
     end
     file.offense_count = file.offenses.size
     file

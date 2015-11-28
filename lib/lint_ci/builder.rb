@@ -71,11 +71,11 @@ class LintCI::Builder
     notify('Cloning repository...')
     clone
     notify('Updating to commit...')
-    @git.checkout(checkout_ref) unless @revision.sha.nil?
+    @git.checkout(checkout_ref)
   end
 
   def checkout_ref
-    "#{@branch.name} #{@revision.sha}"
+    [@branch.name, @revision.sha].compact.join(' ')
   end
 
   def channel

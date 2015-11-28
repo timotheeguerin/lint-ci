@@ -33,6 +33,10 @@ var port = window.location.port;
 
 var websocketUrl = host + ':' + port + '/websocket';
 
+if (window.rails_env == 'production') {
+    websocketUrl = 'wss://websocket.' + websocketUrl;
+}
+
 var websocket = new WebSocketRails(websocketUrl);
 websocket.on_open = function (data) {
     console.log('Connection has been established: ', data);

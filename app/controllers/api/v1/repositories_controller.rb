@@ -1,6 +1,7 @@
 # Repository API controller
 class Api::V1::RepositoriesController < Api::V1::BaseController
-  load_and_auth_repository parents: true
+  load_and_auth_user
+  load_and_auth_repository except: :webhook
 
   def index
     super
@@ -39,7 +40,12 @@ class Api::V1::RepositoriesController < Api::V1::BaseController
 
   # Github triggered hook
   def webhook
-    branch = params[:ref].split('/')[-1]
+    branch_name = params[:ref].split('/')[-1]
+    branch  = @repository.branches.find_by_name(branch_name)
+    if branch.nil?
+      branch = @repository.branches.build(name: branch_name)
+      branch.save
+    end
     @repository.transaction do
       queued = RevisionScan.new(branch).scan(params[:after])
       status = queued ? :accepted : :ok
