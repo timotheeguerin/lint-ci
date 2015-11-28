@@ -108,9 +108,6 @@ RelationshipProxy.counter = 0;
 class HasManyRelationship extends RelationshipProxy {
     constructor(...args) {
         super(...args);
-        this.items = [];
-        this.reachedLast = false;
-        this.setRelationshipValue([]);
         this.resetFetchAllPromise();
     }
 
@@ -118,7 +115,10 @@ class HasManyRelationship extends RelationshipProxy {
         this.allPromise = new Promise((resolve) => {
                 this.allResolve = resolve;
             }
-        )
+        );
+        this.reachedLast = false;
+        this.items = [];
+        this.setRelationshipValue([]);
     }
 
     get nextUrl() {

@@ -4,6 +4,11 @@ Channel.routes.draw do
     authorize! :read, @user
   end
 
+  channel :sync_branches, 'repos/:repo/branches/sync' do |repo_id|
+    @repository = Repository.find(repo_id)
+    authorize! :read, @repository
+  end
+
   channel :branch_revisions_change, 'repos/:repo/:branch/revisions/change' do |repo_id, branch_id|
     @repository = Repository.find(repo_id)
     @branch = @repository.branches.find(branch_id)

@@ -54,7 +54,8 @@ component.Repository = class extends React.Component {
                 </div>
 
                 <div className="box-banner">
-                    <component.BranchDropdown branch={branch} branches={repository.branches}/>
+                    <component.BranchDropdown repository={this.state.repository} branch={branch}
+                                              branches={repository.branches}/>
                 </div>
 
                 <div>
@@ -72,7 +73,8 @@ component.BranchDropdown = class extends React.Component {
         this.state = {
             branch: this.props.branch,
             branches: []
-        }
+        };
+        this.registerWebEvents();
     }
 
     computeBranches(branches) {
@@ -93,6 +95,45 @@ component.BranchDropdown = class extends React.Component {
         }
     }
 
+    registerWebEvents() {
+        this.channel = websocket.subscribe_private(this.props.repository.channels.sync_branches);
+        this.channel.bind('completed', () => {
+            this.props.branches.resetFetchAllPromise();
+            this.computeBranches(this.props.branches);
+            this.setState({refreshing: false, success: true});
+            setTimeout(() => {
+                this.setState({success: false})
+            }, RepositoriesSettings.successDuration);
+            NotificationManager.success('Completed', 'Your repository were synced successfully');
+        });
+    }
+
+    onSyncBranch(e) {
+        e.preventDefault();
+        Rest.post(this.props.repository.sync_branches_url).done(() => {
+            this.setState({refreshing: true, success: false})
+        });
+    }
+
+    iconClasses() {
+        if (this.state.success) {
+            return 'fa fa-check'
+        } else {
+            return classNames({
+                'fa fa-refresh': true,
+                'fa-spin': this.state.refreshing
+            });
+        }
+    }
+
+    renderSyncBranchBtn() {
+        return (
+            <a href='#' className='btn btn-default' onClick={this.onSyncBranch.bind(this)}>
+                <i className={this.iconClasses()}/> Sync Branches
+            </a>
+        )
+    }
+
     render() {
         let options = [];
         for (let branch of this.state.branches) {
@@ -101,11 +142,16 @@ component.BranchDropdown = class extends React.Component {
 
         return (
             <div className="branch-dropdown">
-                <Select name="form-field-name"
-                        clearable={false}
-                        value={this.state.branch.id} options={options}
-                        onChange={this.onSelected.bind(this)}/>
+                <div className="sync-branches">
+                    {this.renderSyncBranchBtn()}
+                </div>
+                <div className="dropdown">
+                    <Select name="form-field-name"
+                            clearable={false}
+                            value={this.state.branch.id} options={options}
+                            onChange={this.onSelected.bind(this)}/>
+                </div>
             </div>
         )
     }
-}
+};

@@ -6,9 +6,14 @@ Rest.get = function (url, data) {
 
 Rest.post = function (url, data) {
     return Rest.request("POST", url, data)
+
 };
 
 Rest.request = function (method, url, data) {
+    if (!url) {
+        console.error(`Url cannot be undefined`);
+        return;
+    }
     // Temporary hack to allow cloudflare flexible SSL
     if (window.location.protocol == 'https') {
         url.replace('http://', 'https://');

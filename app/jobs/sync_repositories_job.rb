@@ -25,6 +25,7 @@ class SyncRepositoriesJob < ActiveJob::Base
     repo.github_url = github_repo.html_url
     repo.save
     user.repositories << repo unless user.repositories.include?(repo)
+    create_default_branch(repo, github_repo)
   end
 
   def find_or_create_repo(github_repo)
@@ -36,5 +37,15 @@ class SyncRepositoriesJob < ActiveJob::Base
     repo.name = github_repo.name
     repo.owner = User.find_or_create_owner(github_repo.owner.login)
     repo
+  end
+
+  def create_default_branch(repo, github_repo)
+    branch = repo.branches.find_by_name(github_repo.default_branch)
+    if branch.nil?
+      branch = repo.branches.build
+      branch.name = github_repo.default_branch
+      branch.save
+    end
+    branch
   end
 end

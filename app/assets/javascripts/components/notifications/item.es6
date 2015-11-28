@@ -67,7 +67,7 @@ class NotificationItem extends React.Component {
         var transitionEvent = whichTransitionEvent();
         var notification = this.props.notification;
 
-        var element = React.findDOMNode(this);
+        var element = ReactDOM.findDOMNode(this);
 
         this._height = element.offsetHeight;
 

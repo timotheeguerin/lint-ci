@@ -37,8 +37,18 @@ class Api::V1::RepositoriesController < Api::V1::BaseController
     params.permit(:enabled)
   end
 
+  # Github triggered hook
+  def webhook
+    branch = params[:ref].split('/')[-1]
+    @repository.transaction do
+      queued = RevisionScan.new(branch).scan(params[:after])
+      status = queued ? :accepted : :ok
+      render json: {success: 'Repository queued for scan!'}, status: status
+    end
+  end
+
   protected def create_webhook
-    url = api_revisions_hook_url(@repository.owner, @repository)
+    url = api_repository_hook_url(@repository.owner, @repository)
     github.create_hook(@repository, url) do |hook|
       @repository.update(hook_id: hook.id)
     end

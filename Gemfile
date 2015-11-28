@@ -62,7 +62,7 @@ gem 'rouge'
 
 gem 'react-rails', '~> 1.4.0'
 gem 'font-awesome-rails'
-gem 'bower-rails', '~> 0.9.2'
+gem 'bower-rails', '~> 0.10.0'
 gem 'neat'
 gem 'benchmark-ips'
 

@@ -10,6 +10,7 @@ class SyncBranchesJob < ActiveJob::Base
     github_branches.each do |branch|
       find_or_create_branch(repository, branch)
     end
+    Channel.sync_branches(repository).trigger(:completed, true)
   end
 
   def remove_deleted_branches(repository, github_branches)

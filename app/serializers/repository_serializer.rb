@@ -51,4 +51,14 @@ class RepositorySerializer < ApplicationSerializer
   link :disable_url do
     api_disable_repo_url(object.owner.username, object.name)
   end
+
+  link :sync_branches_url do
+    api_sync_branches_url(object.owner.username, object.name)
+  end
+
+  link :channels do
+    {
+      sync_branches: Channel.sync_branches_path(object.id)
+    }
+  end
 end

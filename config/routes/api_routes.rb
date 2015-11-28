@@ -34,13 +34,14 @@ post 'repos/:user/:repo/enable' => 'repositories#enable', as: :enable_repo
 # Disable a specific repository
 post 'repos/:user/:repo/disable' => 'repositories#disable', as: :disable_repo
 
+post 'repos/:user/:repo/scan_webhook' => 'repositories#webhook', as: :repository_hook
 #================================================================
 # Repositories Branches
 #================================================================
 # Get
 get 'repos/:user/:repo/branches' => 'branches#index', as: :branches
 
-get 'repos/:user/:repo/branches/refresh' => 'branches#refresh', as: :refresh_branches
+post 'repos/:user/:repo/branches/refresh' => 'branches#refresh', as: :sync_branches
 
 # List
 get 'repos/:user/:repo/:branch' => 'branches#show', as: :branch
@@ -54,7 +55,6 @@ post 'repos/:user/:repo/:branch/scan' => 'branches#scan', as: :scan_branch
 # List of all user repositories
 get 'repos/:user/:repo/:branch/revisions' => 'revisions#index', as: :revisions
 
-post 'repos/:user/:repo/revisions/webhook' => 'revisions#webhook', as: :revisions_hook
 
 # List of all user repositories
 get 'repos/:user/:repo/:branch/:revision' => 'revisions#show', as: :revision

@@ -10,13 +10,11 @@ class Repository < ActiveRecord::Base
 
   has_many :branches, dependent: :destroy
 
-  has_one :current_revision, class_name: 'Revision'
-
   validates :owner_id, presence: true
   validates :name, uniqueness: {scope: :owner_id}
 
   default_scope do
-    includes(:current_revision, :owner)
+    includes(:owner)
   end
 
   before_create do
@@ -24,7 +22,13 @@ class Repository < ActiveRecord::Base
   end
 
   def default_branch
-    branches.where(name: 'master').first || branches.first
+    if branches.empty?
+      branch = branches.build(name: 'master')
+      branch.save
+      branch
+    else
+      branches.where(name: 'master').first || branches.first
+    end
   end
 
   def owner_path
@@ -48,12 +52,14 @@ class Repository < ActiveRecord::Base
   end
 
   def style_status
-    revision = current_revision
+    revision = default_branch.current_revision
     revision ? revision.style_status : :unavailable
   end
 
+  # Get the current number of offense in the latest revision of the default branch
+  # If the branch has never been scanned it will return unavailable.
   def offense_count
-    revision = current_revision
+    revision = default_branch.current_revision
     revision ? revision.offense_count : :unavailable
   end
 

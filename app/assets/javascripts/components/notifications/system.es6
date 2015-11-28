@@ -105,7 +105,6 @@ class NotificationSystem extends React.Component {
                 var _notifications = notifications.filter(function (notification) {
                     return position === notification.position;
                 });
-                console.log(position, key);
                 if (_notifications.length) {
                     return (
                         <NotificationContainer

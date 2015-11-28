@@ -23,7 +23,7 @@ function isNull(o) {
 class Load {
     static association(association, type, callback) {
         if (association instanceof RelationshipProxy) {
-            association.fetch().then(callback);
+            association.fetchAll().then(callback);
         } else if (association instanceof Promise) {
             association.then(callback);
         } else {

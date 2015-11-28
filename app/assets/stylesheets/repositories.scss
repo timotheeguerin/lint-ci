@@ -123,9 +123,18 @@
   box-shadow: 1px 1px 5px 0 $grey_medium_light inset;
 }
 
-
 .branch-dropdown {
   width: 10rem;
   font-size: 1rem;
   margin: 0.5rem;
+  @extend .flex-center;
+
+  .sync-branches {
+    flex: 1 0 auto;
+    padding: 1rem;
+  }
+
+  .dropdown {
+    flex: 0 0 12rem;
+  }
 }

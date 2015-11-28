@@ -1,44 +1,63 @@
-var RepositoriesSettings = React.createClass({
-    loadCommentsFromServer: function () {
+class RepositoriesSettings extends React.Component {
+    static successDuration = 2000;
+    loadCommentsFromServer() {
         this.state.user.repos.clone().fetchAll().then((repos) => {
             this.setState({repositories: repos})
         });
-    },
-    getInitialState: function () {
-        return {repositories: [], query: '', refreshing: false};
-    },
-    componentDidMount: function () {
+    }
+
+    constructor(props) {
+        super(props);
+        this.state = {repositories: [], query: '', refreshing: false, success: false};
+    }
+
+    componentDidMount() {
         api.user().fetch().then((user) => {
             this.setState({user: user});
             this.loadCommentsFromServer();
             this.registerWebEvents();
         });
-    },
-    registerWebEvents: function () {
+    }
+
+    registerWebEvents() {
         this.channel = websocket.subscribe_private(this.state.user.channels.sync_repo);
-        this.channel.bind('completed', (data) => {
+        this.channel.bind('completed', () => {
             this.loadCommentsFromServer();
-            this.setState({refreshing: false})
+            this.setState({refreshing: false, success: true});
+            setTimeout(() => {
+                this.setState({success: false})
+            }, RepositoriesSettings.successDuration);
+            NotificationManager.success('Completed', 'Your repository were synced successfully');
         });
-    },
-    onSync: function (e) {
+    }
+
+    onSync(e) {
         e.preventDefault();
-        Rest.post('/api/v1/user/repos/sync').done(function (data) {
-            this.setState({refreshing: true})
-        }.bind(this));
-    },
-    renderSyncBtn() {
-        var classes = classNames({
-            'fa fa-refresh': true,
-            'fa-spin': this.state.refreshing
+        Rest.post('/api/v1/user/repos/sync').done(() => {
+            this.setState({refreshing: true, success: false})
         });
+    }
+
+    iconClasses() {
+        if (this.state.success) {
+            return 'fa fa-check'
+        } else {
+            return classNames({
+                'fa fa-refresh': true,
+                'fa-spin': this.state.refreshing
+            });
+        }
+    }
+
+    renderSyncBtn() {
         return (
-            <a href='#' className='btn btn-default' onClick={this.onSync}>
-                <i className={classes}></i> Sync
+            <a href='#' className='btn btn-default' onClick={this.onSync.bind(this)}>
+                <i className={this.iconClasses()}/> Sync
             </a>
         )
-    },
-    render: function () {
+    }
+
+    render() {
         return (
             <div className="repositories-settings">
                 <div className="box-title flex-center">
@@ -49,5 +68,5 @@ var RepositoriesSettings = React.createClass({
             </div>
         );
     }
-});
+}
 
