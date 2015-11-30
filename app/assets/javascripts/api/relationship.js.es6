@@ -129,6 +129,10 @@ class HasManyRelationship extends RelationshipProxy {
         }
     }
 
+    hasMore() {
+        return !this.reachedLast;
+    }
+
     // Iterate thought all the page
     fetchAll() {
         this.fetchNext().then((data) => {
@@ -163,9 +167,13 @@ class HasManyRelationship extends RelationshipProxy {
     }
 
     fetchNext() {
-        return this.proxyPromise('fetchNext', (resolve) => {
-            this._fetch(resolve);
-        });
+        if (this.hasMore()) {
+            return this.proxyPromise('fetchNext', (resolve) => {
+                this._fetch(resolve);
+            });
+        } else {
+            return Promise.resolve(this.items);
+        }
     }
 
     _handleLinkHeader(links) {

@@ -1,78 +1,7 @@
-/**
- * Reusable class for any type of list
- */
-class List extends React.Component {
+class RepositoryList extends Component.Base.List {
     constructor(props) {
-        super(props);
-        this.state = {
-            loading: true,
-            items: [],
-            query: ""
-        }
-    }
-
-    listClasses() {
-        return "";
-    }
-
-    setItems(items) {
-        this.setState({items: items, loading: false})
-    }
-
-    renderItem(item) {
-
-    }
-
-    itemMatch(item, query) {
-        return true;
-    }
-
-    renderNoItems() {
-        return (
-            <div>
-                <div className='fa fa-database'></div>
-                <div>No data!</div>
-            </div>
-        )
-    }
-
-    filterItems(e) {
-        this.setState({query: e.target.value})
-    }
-
-    render() {
-        var items = this.state.items.filter((item) => {
-            return this.itemMatch(item, this.state.query)
-        }).map(this.renderItem.bind(this));
-        if (items.length === 0) {
-            items = (
-                <div className='flex-center no-repository'>
-                    {this.renderNoItems()}
-                </div>
-            )
-        }
-        return (
-            <div className={'list '+ this.listClasses()}>
-                <div className='box-search'>
-                    <input type="text" onChange={this.filterItems.bind(this)}
-                           placeholder="Search..."/>
-                </div>
-                <Loader loading={this.state.loading} size={4} message={this.props.loadingMessage}>
-                    {items}
-                </Loader>
-            </div>
-        )
-    }
-}
-
-class RepositoryList extends List {
-    constructor(props) {
-        super(props);
-        this.computeRepositories(props.repositories)
-    }
-
-    computeRepositories(repositories) {
-        Load.association(repositories, Repository, this.setItems.bind(this));
+        super(props, Repository);
+        this.loadItems(props.repositories)
     }
 
     itemMatch(repository, query) {
@@ -91,7 +20,7 @@ class RepositoryList extends List {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.repositories != this.state.items) {
-            this.computeRepositories(nextProps.repositories);
+            this.loadItems(nextProps.repositories);
         }
     }
 }

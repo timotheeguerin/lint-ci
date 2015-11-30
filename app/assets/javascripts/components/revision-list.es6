@@ -1,11 +1,7 @@
-class RevisionList extends List {
+class RevisionList extends Component.Base.List {
     constructor(props) {
-        super(props);
-        this.computeRevisions(props.revisions);
-    }
-
-    computeRevisions(revisions) {
-        Load.association(revisions, Revision, this.setItems.bind(this))
+        super(props, Revision);
+        this.loadItems(props.revisions);
     }
 
     componentDidMount() {
@@ -184,6 +180,8 @@ class RevisionListItem extends React.Component {
 }
 
 class LinterPreview extends React.Component {
+    static defaultProps = {show: 2};
+
     percent(linter) {
         return Math.round(linter.offense_ratio * 100)
     }
@@ -208,4 +206,3 @@ class LinterPreview extends React.Component {
     }
 }
 
-LinterPreview.defaultProps = {show: 2};

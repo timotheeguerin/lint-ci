@@ -1,21 +1,12 @@
-class RevisionFileList extends List {
+class RevisionFileList extends Component.Base.List {
     constructor(props) {
-        super(props);
-        Object.assign(this.state, {
-            revision: new Revision(api, props.revision),
-            loading: true
-        });
-    }
-
-    componentDidMount() {
-        this.state.revision.files.fetchAll().then(function (files) {
-            this.setItems(files);
-        }.bind(this));
+        super(props, RevisionFile);
+        this.loadItems(this.props.files)
     }
 
     renderOffenseCount(count) {
         if (count == 0) {
-            return <i className='fa fa-check' title='No offenses'></i>
+            return <i className='fa fa-check' title='No offenses'/>
         } else {
             return count;
         }

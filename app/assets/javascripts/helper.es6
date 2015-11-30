@@ -20,24 +20,39 @@ function isNull(o) {
     return !isDefined(o)
 }
 
+class ModelHelper {
+    static convert(obj, modelCls) {
+        if (obj instanceof modelCls) {
+            return obj;
+        } else {
+            return new modelCls(obj);
+        }
+    }
+
+    static convertArray(objects, modelCls) {
+        return association.map((x) => {
+            ModelHelper.convert(x)
+        });
+    }
+}
+
 class Load {
-    static association(association, type, callback) {
+    static association(association, modelCls, callback) {
         if (association instanceof RelationshipProxy) {
             association.fetchAll().then(callback);
         } else if (association instanceof Promise) {
             association.then(callback);
         } else {
-            let objects = association.map((x) => {
-                if (x instanceof type) {
-                    return x;
-                } else {
-                    return new type(x);
-                }
-            });
+            let objects = ModelHelper.convertArray(association, modelCls);
             //Timeout so it can be called in constructor on React component
             setTimeout(() => {
                 callback(objects);
             }, 0);
         }
     }
+}
+
+function sleepFor( sleepDuration ){
+    var now = new Date().getTime();
+    while(new Date().getTime() < now + sleepDuration){ /* do nothing */ }
 }

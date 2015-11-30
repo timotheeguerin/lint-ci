@@ -2,13 +2,14 @@ class UserComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: new User(api, props.user)
+            user: new User(api, props.user),
+            loading: true
         }
     }
 
     componentDidMount() {
         this.state.user.fetch().then((user) => {
-            this.setState({user: user})
+            this.setState({user: user, loading: false})
         });
     }
 
@@ -23,7 +24,8 @@ class UserComponent extends React.Component {
                 </div>
 
                 <div>
-                    <RepositoryList repositories={user.repos.where({enabled: true})}/>
+                    <RepositoryList loading={this.state.loading}
+                                    repositories={user.repos.where({enabled: true})}/>
                 </div>
             </div>
         )

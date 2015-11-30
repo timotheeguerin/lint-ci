@@ -13,7 +13,7 @@ class RevisionFile < ActiveRecord::Base
   validates :language, presence: true
 
   default_scope do
-    order(offense_count: :desc)
+    order(offense_count: :desc, id: :asc)
   end
 
   def status
