@@ -1,4 +1,4 @@
- # Controller that handle the repository badges
+# Controller that handle the repository badges
 class BadgesController < ApplicationController
   load_and_auth_repository parents: true
 
@@ -6,12 +6,12 @@ class BadgesController < ApplicationController
   end
 
   def quality
-    badge = badge('Style', @repository.badge_message)
+    badge = badge('Style', branch.badge_message)
     send_file badge.file, disposition: 'inline'
   end
 
   def offense
-    badge = badge('Offenses', @repository.offense_count)
+    badge = badge('Offenses', branch.offense_count)
     send_file badge.file, disposition: 'inline'
   end
 
@@ -19,8 +19,16 @@ class BadgesController < ApplicationController
     params.permit(:label, :style)
   end
 
-  protected def badge(label, value, color = nil)
-    color ||= @repository.badge_color
+  protected def branch
+    @branch ||= if params[:branch]
+                  @repository.branches.find(params[:branch])
+                else
+                  @repository.default_branch
+                end
+  end
+
+  protected def badge(label, value)
+    color = branch.badge_color
     LintCI::Badge.new(label, value, color, badge_params)
   end
 end

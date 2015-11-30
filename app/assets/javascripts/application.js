@@ -22,6 +22,7 @@
 //= require vendor/react-select
 // require react-select
 //= require rest
+//= require api
 //= require components
 //= require_tree .
 //= require websocket_rails/main

@@ -1,63 +1,79 @@
-var BadgeSelector = React.createClass({
-    getInitialState: function () {
-        return {
-            repository: new Repository(api, this.props.repository)
+class BadgeSelector extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            repository: new Repository(api, props.repository),
+            branch: new Branch(api, props.repository.default_branch)
         }
-    },
-    componentDidMount: function () {
+    }
+
+    componentDidMount() {
         this.state.repository.fetch(true).then(function (repository) {
             this.setState({repository: repository})
         }.bind(this));
-    },
-    renderLinks: function (url) {
+    }
+
+    onBranchSelected(branch) {
+        this.setState({branch: branch})
+    }
+
+    renderLinks(url) {
         var link = this.state.repository.html_url;
         return (
             <div>
                 <div className='form-section'>
                     <label>Url</label>
-                    <input value={url}></input>
+                    <input value={url} readOnly={true}/>
                 </div>
                 <div className='form-section'>
                     <label>Html</label>
-                    <input value={badgeHtml(url, link)}></input>
+                    <input value={badgeHtml(url, link)} readOnly={true}/>
                 </div>
                 <div className='form-section'>
                     <label>Markdown</label>
-                    <input value={badgeMarkdown(url, link)}></input>
+                    <input value={badgeMarkdown(url, link)} readOnly={true}/>
                 </div>
                 <div className='form-section'>
                     <label>Textile</label>
-                    <input value={badgeTextile(url, link)}></input>
+                    <input value={badgeTextile(url, link)} readOnly={true}/>
                 </div>
                 <div className='form-section'>
                     <label>RDoc</label>
-                    <input value={badgeRDoc(url, link)}></input>
+                    <input value={badgeRDoc(url, link)} readOnly={true}/>
                 </div>
             </div>
 
         )
-    },
-    render: function () {
+    }
+
+    render() {
+        let branch = this.state.branch;
+        let repository = this.state.repository;
         return (
             <div className='sm-container badge-box'>
                 <h1>
                     <a href={this.state.repository.html_url}>
                         {this.state.repository.full_name}
                     </a> Badges
+                    <Component.BranchDropdown repository={repository} branch={branch}
+                                              branches={repository.branches}
+                                              onBranchSelected={this.onBranchSelected.bind(this)}/>
                 </h1>
                 <Tabs tabActive={1}>
                     <Tabs.Panel title={'Rating'} active={true}>
                         <h2>Rating badge</h2>
+                        <a className='badge' href={repository.badges_url}><img
+                            src={branch.badge_url}/></a>
 
                         <div><img src={this.state.repository.badge_url}/></div>
-                        {this.renderLinks(this.state.repository.badge_url)}
+                        {this.renderLinks(this.state.branch.badge_url)}
                     </Tabs.Panel>
                     <Tabs.Panel title={'Offenses'}>
-
                         <h2>Offense count badge</h2>
-
+                        <a className='badge' href={repository.badges_url}><img
+                            src={branch.offense_badge_url}/></a>
                         <div><img src={this.state.repository.offense_badge_url}/></div>
-                        {this.renderLinks(this.state.repository.offense_badge_url)}
+                        {this.renderLinks(this.state.branch.offense_badge_url)}
 
                     </Tabs.Panel>
                 </Tabs>
@@ -65,7 +81,8 @@ var BadgeSelector = React.createClass({
             </div>
         )
     }
-});
+}
+;
 
 
 function badgeMarkdown(badge_url, link) {

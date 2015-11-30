@@ -7,58 +7,43 @@ class RepositorySerializer < ApplicationSerializer
              :style_status, :offense_count, :last_sync_at
 
   belongs_to :owner
+  has_one :default_branch
 
-  # link :links do
-  #   {
-  #     url: api_repo_url(object.owner.username, object.name),
-  #     html_url: repository_url(object.owner.username, object.name),
-  #     badges_url: repository_badges_url(object.owner.username, object.name),
-  #     offense_badge_url: repository_offense_badge_url(object.owner.username, object.name),
-  #     revisions_url: api_revisions_url(object.owner.username, object.name),
-  #     refresh_url: api_refresh_repo_url(object.owner.username, object.name),
-  #     enable_url: api_enable_repo_url(object.owner.username, object.name),
-  #     disable_url: api_disable_repo_url(object.owner.username, object.name)
-  #   }
-  # end
   link :url do
-    api_repo_url(object.owner.username, object.name)
+    api_repo_url(*args)
   end
 
   link :html_url do
-    repository_url(object.owner.username, object.name)
+    repository_url(*args)
   end
 
   link :badges_url do
-    repository_badges_url(object.owner.username, object.name)
-  end
-
-  link :badge_url do
-    repository_badge_url(object.owner.username, object.name)
-  end
-
-  link :offense_badge_url do
-    repository_offense_badge_url(object.owner.username, object.name)
+    repository_badges_url(*args)
   end
 
   link :branches_url do
-    api_branches_url(object.owner.username, object.name)
+    api_branches_url(*args)
   end
 
   link :enable_url do
-    api_enable_repo_url(object.owner.username, object.name)
+    api_enable_repo_url(*args)
   end
 
   link :disable_url do
-    api_disable_repo_url(object.owner.username, object.name)
+    api_disable_repo_url(*args)
   end
 
   link :sync_branches_url do
-    api_sync_branches_url(object.owner.username, object.name)
+    api_sync_branches_url(*args)
   end
 
   link :channels do
     {
       sync_branches: Channel.sync_branches_path(object.id)
     }
+  end
+
+  def args
+    [object.owner.username, object.name]
   end
 end
