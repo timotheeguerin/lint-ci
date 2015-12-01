@@ -32,12 +32,12 @@ Component.Base.List = class extends React.Component {
             this.association = association;
             this.fetchNextBatch(); //Initial load rest is with paging/infinite load
         } else if (association instanceof Promise) {
-            association.then(callback);
+            association.then(this.setItems.bind(this));
         } else {
-            let objects = ModelHelper.convertArray(association, modelCls);
+            let objects = ModelHelper.convertArray(association, this.modelCls);
             //Timeout so it can be called in constructor on React component
             setTimeout(() => {
-                callback(objects);
+                this.setItems(objects);
             }, 0);
         }
     }

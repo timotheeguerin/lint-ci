@@ -65,6 +65,7 @@ gem 'font-awesome-rails'
 gem 'bower-rails', '~> 0.10.0'
 gem 'neat'
 gem 'benchmark-ips'
+gem 'autoprefixer-rails'
 
 # For Sidekiq monitor
 gem 'sinatra', require: nil

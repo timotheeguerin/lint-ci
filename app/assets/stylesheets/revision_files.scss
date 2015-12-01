@@ -4,6 +4,8 @@
   margin: 0;
   border-top: 1px solid $grey_medium_light;
   counter-reset: line-numbering;
+  font-size: 12px;
+  font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
   table {
     width: 100%;
   }
@@ -16,12 +18,17 @@
       cursor: pointer;
       text-decoration: none;
       padding-right: 0.5rem;
+      user-select: none;
     }
 
     td.line {
       width: 100%;
       padding-left: 0.5rem;
       border-left: 1px solid #e5e5e5;
+
+      &:before {
+        content: "";
+      }
     }
   }
   .offense {

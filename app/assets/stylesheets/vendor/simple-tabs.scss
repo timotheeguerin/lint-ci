@@ -30,16 +30,23 @@ tabs-navigation {
   color: #3498db;
 }
 
-.tabs-menu-item.is-active a {
-  background: $tab-background;
-  border: 1px solid #ddd;
-  border-top: 2px solid #3498db;
-  border-bottom: 0;
-  color: #333;
+.tabs-menu-item.is-active {
+  a {
+    background: $tab-background;
+    border: 0;
+    border-right: 1px solid #ddd;
+    border-top: 3px solid #3498db;
+    color: #333;
+  }
+  &:not(:first-child) {
+    a {
+      border-left: 1px solid #ddd;
+    }
+  }
 }
 
 .tab-panel {
-  margin: -1px;
+  margin-top: -1px;
   background-color: $tab-background;
   border-top: 1px solid #e5e5e5;
   overflow: auto;

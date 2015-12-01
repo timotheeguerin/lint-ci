@@ -30,8 +30,8 @@ class ModelHelper {
     }
 
     static convertArray(objects, modelCls) {
-        return association.map((x) => {
-            ModelHelper.convert(x)
+        return objects.map((x) => {
+            return ModelHelper.convert(x, modelCls)
         });
     }
 }
