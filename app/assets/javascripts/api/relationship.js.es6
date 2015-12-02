@@ -24,12 +24,13 @@ class RelationshipProxy {
     }
 
     clone() {
-        return new this.constructor(this.api, this.record, this.relationship, this.cls)
+        let copy = new this.constructor(this.api, this.record, this.relationship, this.cls);
+        copy.filter = this.filter;
+        return copy
     }
 
     get url() {
         try {
-            console.log(this.record);
             let url = URI(this.record[`${this.relationship}_url`]);
             return url.query(this.filter);
         } catch (error) {
@@ -122,6 +123,7 @@ class HasManyRelationship extends RelationshipProxy {
     }
 
     get nextUrl() {
+        console.log("next url is:", this._next_url);
         if (this._next_url == undefined) {
             return this.url;
         } else {

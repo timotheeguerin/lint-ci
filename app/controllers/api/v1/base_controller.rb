@@ -13,6 +13,7 @@ module Api::V1
       end
       resource = resource.page(params[:page]).per(params[:per_page])
       resource = resource.where(params.permit(:id).merge(query_params))
+      resource = search(resource)
       set_resources resource
       paginate json: get_resources
     end
@@ -61,11 +62,20 @@ module Api::V1
       instance_variable_get("@#{resources_name}")
     end
 
-    # Returns the allowed parameters for searching
+    # Returns the allowed parameters for FILTERING
+    # Override this method in each API controller
+    # to permit additional parameters to filter on
+    # to permit additional parameters to filter on
+    # @return [Hash]
+    def query_params
+      {}
+    end
+
+    # Returns the allowed parameters for SEARCHING
     # Override this method in each API controller
     # to permit additional parameters to search on
     # @return [Hash]
-    def query_params
+    def search_params
       {}
     end
 
@@ -112,6 +122,13 @@ module Api::V1
     # @return [Object]
     def set_resources(resources)
       instance_variable_set("@#{resource_name.pluralize}", resources)
+    end
+
+    def search(resource)
+      search_params.each do |key, value|
+        resource = resource.where("#{key} LIKE ?", "%#{value}%")
+      end
+      resource
     end
   end
 end

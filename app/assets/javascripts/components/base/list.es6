@@ -56,6 +56,7 @@ Component.Base.List = class extends React.Component {
     }
 
     setItems(items) {
+        console.log("Setting items", items);
         this.setState({items: items, loading: (this.props.loading)})
     }
 
@@ -83,7 +84,11 @@ Component.Base.List = class extends React.Component {
     }
 
     filterItems(e) {
-        this.setState({query: e.target.value})
+        this.onQueryChange(e.target.value)
+    }
+
+    onQueryChange(query) {
+        this.setState({query: query})
     }
 
     hasMore() {
@@ -107,14 +112,39 @@ Component.Base.List = class extends React.Component {
                     <input type="text" onChange={this.filterItems.bind(this)}
                            placeholder="Search..."/>
                 </div>
-                <Component.Controls.InfiniteScroll loadMore={this.fetchNextBatch.bind(this)} hasMore={this.hasMore()}>
+                <Component.Controls.InfiniteScroll loadMore={this.fetchNextBatch.bind(this)}
+                                                   hasMore={this.hasMore()}>
                     {items}
                 </Component.Controls.InfiniteScroll>
             </div>
         )
     }
-}
+};
 
-//<Loader loading={this.state.loading} size={4} message={this.props.loadingMessage}>
-//    {items}
-//</Loader>
+/** This list will refresh the content depending on the query of the user
+ *  It will reload data from the server
+ */
+Component.Base.LiveList = class extends Component.Base.List {
+    static typeDelay = 300;
+
+    loadItems(association) {
+        if (!association instanceof RelationshipProxy) {
+            console.error(`${this.constructor.name} require association to be a proxy`);
+        }
+        this.originalAssociation = association;
+        super.loadItems(association.clone());
+        this.timeout = null;
+    }
+
+    onQueryChange(query) {
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+        }
+        this.timeout = setTimeout(() => {
+            this.setState({loading: true})
+            this.timeout = null;
+            let filteredAssociation = this.filterAssociation(this.originalAssociation, query).clone();
+            this.loadItems(filteredAssociation)
+        }, Component.Base.LiveList.typeDelay)
+    }
+};

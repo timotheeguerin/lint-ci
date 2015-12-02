@@ -1,4 +1,4 @@
-class RevisionFileList extends Component.Base.List {
+class RevisionFileList extends Component.Base.LiveList {
     constructor(props) {
         super(props, RevisionFile);
         this.loadItems(this.props.files)
@@ -18,6 +18,10 @@ class RevisionFileList extends Component.Base.List {
 
     itemMatch(file, query) {
         return file.path.indexOf(query) !== -1;
+    }
+
+    filterAssociation(association, query) {
+        return association.where({path: query})
     }
 
     renderItem(file) {
