@@ -1,20 +1,21 @@
 class RepositoriesSettings extends React.Component {
     static successDuration = 2000;
-    loadCommentsFromServer() {
-        this.state.user.repos.clone().fetchAll().then((repos) => {
-            this.setState({repositories: repos})
-        });
-    }
 
     constructor(props) {
         super(props);
-        this.state = {repositories: [], query: '', refreshing: false, success: false};
+        this.state = {
+            repositories: [],
+            query: '',
+            refreshing: false,
+            success: false,
+            loading: true,
+            user: api.user()
+        };
     }
 
     componentDidMount() {
-        api.user().fetch().then((user) => {
-            this.setState({user: user});
-            this.loadCommentsFromServer();
+        this.state.user.fetch().then((user) => {
+            this.setState({user: user, loading: false});
             this.registerWebEvents();
         });
     }
@@ -64,7 +65,8 @@ class RepositoriesSettings extends React.Component {
                     <h2 className='flex-fill'>Repositories</h2>
                     {this.renderSyncBtn()}
                 </div>
-                <RepositoryList repositories={this.state.repositories} readonly={false}/>
+                <RepositoryList repositories={this.state.user.repos} readonly={false}
+                                loading={this.state.loading}/>
             </div>
         );
     }

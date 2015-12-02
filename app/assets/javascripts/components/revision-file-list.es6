@@ -24,6 +24,16 @@ class RevisionFileList extends Component.Base.LiveList {
         return association.where({path: query})
     }
 
+    renderNoItems() {
+        let message = this.state.query === '' ? 'No files!' : 'No matching files found!';
+        return (
+            <div className='v-flex flex-center'>
+                <div className='fa fa-files-o'></div>
+                <div>{message}</div>
+            </div>
+        )
+    }
+
     renderItem(file) {
         return (
             <a className='item flex-center' href={file.html_url} key={file.id}>

@@ -45,13 +45,13 @@
   }
 }
 
-.repository-list {
-  .no-repository {
+.list {
+  .no-items {
     padding: 2rem 0;
     display: flex;
     justify-content: center;
     flex-direction: column;
-    font-weight: bold;
+    font-weight: 100;
     font-size: 3rem;
     color: #454545
   }

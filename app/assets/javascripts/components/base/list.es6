@@ -75,10 +75,11 @@ Component.Base.List = class extends React.Component {
     }
 
     renderNoItems() {
+        let message = this.state.query === '' ? 'No data!' : 'No items matched query!';
         return (
-            <div>
+            <div className='v-flex flex-center'>
                 <div className='fa fa-database'></div>
-                <div>No data!</div>
+                <div>{message}</div>
             </div>
         )
     }
@@ -99,9 +100,9 @@ Component.Base.List = class extends React.Component {
         var items = this.state.items.filter((item) => {
             return this.itemMatch(item, this.state.query)
         }).map(this.renderItem.bind(this));
-        if (items.length === 0) {
+        if (!this.state.loading && items.length === 0) {
             items = (
-                <div className='flex-center no-repository'>
+                <div className='flex-center no-items'>
                     {this.renderNoItems()}
                 </div>
             )
@@ -141,10 +142,11 @@ Component.Base.LiveList = class extends Component.Base.List {
             clearTimeout(this.timeout);
         }
         this.timeout = setTimeout(() => {
-            this.setState({loading: true})
+            this.setState({loading: true});
             this.timeout = null;
             let filteredAssociation = this.filterAssociation(this.originalAssociation, query).clone();
             this.loadItems(filteredAssociation)
+            super.onQueryChange(query);
         }, Component.Base.LiveList.typeDelay)
     }
 };
