@@ -23,7 +23,6 @@ class RepositoriesSettings extends React.Component {
     registerWebEvents() {
         this.channel = websocket.subscribe_private(this.state.user.channels.sync_repo);
         this.channel.bind('completed', () => {
-            this.loadCommentsFromServer();
             this.setState({refreshing: false, success: true});
             setTimeout(() => {
                 this.setState({success: false})

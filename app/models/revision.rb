@@ -58,6 +58,6 @@ class Revision < ActiveRecord::Base
   end
 
   def scanning?
-    status != :scanned
+    status.to_sym != :scanned
   end
 end
