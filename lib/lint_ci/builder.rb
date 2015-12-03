@@ -30,7 +30,7 @@ class LintCI::Builder
 
   def cleanup_existing
     revision = Revision.find_by_sha(commit.sha)
-    revision.destroy if revision.present?
+    revision.destroy if revision.present? && @revision.id != revision.id
   end
 
   def init_revision
