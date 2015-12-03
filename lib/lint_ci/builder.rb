@@ -63,19 +63,15 @@ class LintCI::Builder
   end
 
   def clone
+    notify('Cloning repository...')
     FileUtils.mkdir_p(root_dir)
-    @git ||= Git.clone(@repository.github_url, @repository.name, path: root_dir)
+    @git ||= Git.clone(@repository.github_url, @repository.name, branch: @branch.name, path: root_dir)
   end
 
   def checkout
-    notify('Cloning repository...')
     clone
     notify('Updating to commit...')
-    @git.checkout(checkout_ref)
-  end
-
-  def checkout_ref
-    [@branch.name, @revision.sha].compact.join(' ')
+    @git.checkout(@revision.sha)
   end
 
   def channel
