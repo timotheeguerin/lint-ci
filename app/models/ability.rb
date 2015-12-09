@@ -13,6 +13,7 @@ class Ability
     can :sync, Repository
     can [:enable, :disable], Repository, memberships: {user_id: user.id}
     can [:refresh, :scan], Branch, repository: {memberships: {user_id: user.id}}
+    can [:create], Revision, branch: {repository: {memberships: {user_id: user.id}}}
 
     if user.admin?
       can :manage, :sidekiq

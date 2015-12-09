@@ -41,7 +41,6 @@ class Api::V1::RepositoriesController < Api::V1::BaseController
   # Github triggered hook
   def webhook
     @repository = @user.repositories.find(params[:repo])
-    puts "Params webhook: #{params}"
     branch_name = params[:ref].split('/')[-1]
     branch  = @repository.branches.find_by_name(branch_name)
     if branch.nil?

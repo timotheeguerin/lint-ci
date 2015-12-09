@@ -1,12 +1,16 @@
 @import 'variables';
 
+.btn-group > .btn {
+  &:not(:first-child) {
+    margin-left: 0.5rem;
+  }
+}
+
 .btn {
   border: 2px solid;
   color: #a0a8a8;
   padding: 0.2em 0.4em;
   border-radius: 3px;
-
-
 
   &.btn-default {
     background-color: #e4e7e7;
@@ -16,6 +20,22 @@
       background-color: $blue;
       border-color: $blue;
       color: $grey_medium_light;
+    }
+  }
+
+  &.btn-danger {
+    background-color: #e4e7e7;
+    border-color: #e4e7e7;
+
+    &:hover {
+      background-color: $red;
+      border-color: $red;
+      color: $grey_medium_light;
+    }
+
+    &:active {
+      background-color: $red_dark;
+      border-color: $red_dark;
     }
   }
 }

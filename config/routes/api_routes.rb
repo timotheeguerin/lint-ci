@@ -52,13 +52,17 @@ post 'repos/:user/:repo/:branch/scan' => 'branches#scan', as: :scan_branch
 #================================================================
 # Repositories Revisions
 #================================================================
-# List of all user repositories
+# List
 get 'repos/:user/:repo/:branch/revisions' => 'revisions#index', as: :revisions
 
+# Create
+post 'repos/:user/:repo/:branch/revisions' => 'revisions#create'
 
-# List of all user repositories
+# Get
 get 'repos/:user/:repo/:branch/:revision' => 'revisions#show', as: :revision
 
+# Delete
+get 'repos/:user/:repo/:branch/:revision' => 'revisions#destroy'
 
 #================================================================
 # Repositories Revisions Files
