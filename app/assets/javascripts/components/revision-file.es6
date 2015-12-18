@@ -96,7 +96,6 @@ class RevisionFileViewer extends React.Component {
     componentDidMount() {
         var promises = [this.state.file.content.fetch(), this.state.file.offenses.fetchAll()];
         Promise.all(promises).then((values) => {
-            console.log(values[0].highlighted);
             var content = atob(values[0].highlighted);
             var offenses = values[1];
             this.setState({
@@ -111,7 +110,6 @@ class RevisionFileViewer extends React.Component {
     getLinters() {
         var linters = [];
         for (var offense of this.state.offenses) {
-            console.log(offense);
             var linter = offense.linter;
             if (!(linter.name in linters)) {
                 linter.offense_count = 1;

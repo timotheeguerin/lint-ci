@@ -9,30 +9,68 @@
 class NotificationManager {
     static notify(level, title, message, options) {
         let notification = new Notification(level, title, message, options);
+        return new NotificationProxy(notification);
+    }
+
+    static notifyNow(notification) {
         EventManager.trigger('notification', notification);
     }
 
     static warning(...args) {
-        NotificationManager.notify('warning', ...args)
+        return NotificationManager.notify('warning', ...args)
     }
 
     static warn = (...args) => {
-        NotificationManager.warning(...args)
+        return NotificationManager.warning(...args)
     };
 
     static success(...args) {
-        NotificationManager.notify('success', ...args)
+        return NotificationManager.notify('success', ...args)
     }
 
     static info(...args) {
-        NotificationManager.notify('info', ...args)
+        return NotificationManager.notify('info', ...args)
     }
 
     static inform = (...args) => {
-        NotificationManager.info(...args)
+        return NotificationManager.info(...args)
     };
 
     static error(...args) {
-        NotificationManager.notify('error', ...args)
+        return NotificationManager.notify('error', ...args)
+    }
+}
+
+class NotificationProxy {
+    constructor(notification) {
+        this.notification = notification;
+    }
+
+    /**
+     * Show notification right now
+     */
+    now() {
+        NotificationManager.notifyNow(this.notification);
+    }
+
+    /**
+     * Show the notification in x milliseconds
+     * @milliseconds Time in milliseconds for when the notification will be shown
+     */
+    in(milliseconds) {
+        setTimeout(() => {
+            this.now();
+        }, milliseconds);
+    }
+
+    /**
+     * Goto the given location and then show up the notification when page load.
+     * @param location Relative/Absolute url
+     */
+    afterGoto(location) {
+        Persistent.performAfterGoto(location, (notificationHash) => {
+            let notification = Notification.fromObject(notificationHash);
+            NotificationManager.notifyNow(notification);
+        }, this.notification);
     }
 }

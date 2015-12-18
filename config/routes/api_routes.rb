@@ -62,7 +62,7 @@ post 'repos/:user/:repo/:branch/revisions' => 'revisions#create'
 get 'repos/:user/:repo/:branch/:revision' => 'revisions#show', as: :revision
 
 # Delete
-get 'repos/:user/:repo/:branch/:revision' => 'revisions#destroy'
+delete 'repos/:user/:repo/:branch/:revision' => 'revisions#destroy'
 
 #================================================================
 # Repositories Revisions Files

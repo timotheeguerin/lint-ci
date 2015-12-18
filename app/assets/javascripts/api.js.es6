@@ -133,6 +133,13 @@ class Model {
         return this._proxy[relation];
 
     }
+
+    /**
+     * Call the server to destroy this model
+     */
+    destroy() {
+        return Rest.delete(this.url);
+    }
 }
 
 class User extends Model {
@@ -177,6 +184,10 @@ class Revision extends Model {
 
     get files() {
         return this.hasMany('files', RevisionFile);
+    }
+
+    get short_sha() {
+        return this.sha && this.sha.substr(0, 6)
     }
 }
 

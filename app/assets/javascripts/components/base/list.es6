@@ -56,7 +56,6 @@ Component.Base.List = class extends React.Component {
     }
 
     setItems(items) {
-        console.log("Setting items", items);
         this.setState({items: items, loading: (this.props.loading)})
     }
 

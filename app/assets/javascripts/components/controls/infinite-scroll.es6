@@ -35,13 +35,10 @@ Component.Controls.InfiniteScroll = class extends React.Component {
             this.detachScrollListener();
             // call loadMore after detachScrollListener to allow
             // for non-async loadMore functions
-            console.log("Should load more... at page:", this.pageLoaded);
             let promise = this.props.loadMore(this.pageLoaded++);
             this.loading = true;
-            console.log(promise);
             if (promise instanceof Promise) {
                 promise.then(() => {
-                    console.log("Done loading");
                     this.loading = false;
                 })
             }
@@ -63,7 +60,6 @@ Component.Controls.InfiniteScroll = class extends React.Component {
     }
 
     render() {
-        console.log("has more:", this.props.hasMore);
         return (
             <div>
                 {this.props.children}

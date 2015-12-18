@@ -5,7 +5,10 @@ class Rest {
 
     static post(url, data) {
         return Rest.request("POST", url, data)
+    };
 
+    static delete(url, data) {
+        return Rest.request("DELETE", url, data)
     };
 
     static request(method, url, data) {

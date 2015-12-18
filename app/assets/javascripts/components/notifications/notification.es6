@@ -40,6 +40,10 @@ class Notification {
         bc: new Position(Position.bottom, Position.center)
     };
 
+    static fromObject(obj) {
+        return new Notification(obj.level, obj.title, obj.message, obj);
+    }
+
     constructor(level, title, message, options = {}) {
         this.title = title;
         this.message = message;

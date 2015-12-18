@@ -19,7 +19,11 @@ Component.Revision = class extends React.Component {
     }
 
     deleteRevision() {
-        //TODO
+        this.state.revision.destroy().then(()=> {
+            //window.location = this.state.branch.html_url;
+            let message = `Revision ${this.state.revision.short_sha} was deleted successfully!`;
+            NotificationManager.success("Deleted!", message).afterGoto(this.state.branch.html_url)
+        });
     }
 
     render() {
