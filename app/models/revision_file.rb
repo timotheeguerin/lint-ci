@@ -11,6 +11,7 @@ class RevisionFile < ActiveRecord::Base
 
   validates :offense_count, presence: true
   validates :language, presence: true
+  validates :path, uniqueness: {scope: :revision_id}
 
   default_scope do
     order(offense_count: :desc, id: :asc)

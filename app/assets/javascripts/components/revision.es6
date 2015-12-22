@@ -15,12 +15,14 @@ Component.Revision = class extends React.Component {
     }
 
     rescanRevision() {
-        Rest.post(this.state.branch.revisions_url, {sha: this.state.revision.sha});
+        Rest.post(this.state.branch.revisions_url, {sha: this.state.revision.sha}).then(() => {
+            let message = `Revision ${this.state.revision.short_sha} is queued for scan!`;
+            NotificationManager.success("Rescanning!", message).afterGoto(this.state.branch.html_url)
+        });
     }
 
     deleteRevision() {
         this.state.revision.destroy().then(()=> {
-            //window.location = this.state.branch.html_url;
             let message = `Revision ${this.state.revision.short_sha} was deleted successfully!`;
             NotificationManager.success("Deleted!", message).afterGoto(this.state.branch.html_url)
         });

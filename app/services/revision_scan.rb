@@ -28,6 +28,7 @@ class RevisionScan
     elsif revision.scanning?
       return nil
     end
+    revision.files.destroy_all
     revision.status = :queued
     revision.save
     revision

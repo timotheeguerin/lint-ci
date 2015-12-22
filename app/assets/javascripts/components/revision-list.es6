@@ -65,8 +65,7 @@ class RevisionList extends Component.Base.List {
 
     renderItem(revision) {
         return (
-            <RevisionListItem revision={revision} branch={this.props.branch}
-                              key={revision.id}/>
+            <RevisionList.Item revision={revision} branch={this.props.branch} key={revision.id}/>
         )
     }
 
@@ -78,57 +77,18 @@ class RevisionList extends Component.Base.List {
     }
 }
 
-class RevisionListItem extends React.Component {
+RevisionList.Item = class extends React.Component {
     constructor() {
         super();
-        this.state = {
-            scanMessages: []
-        }
     }
 
     get shortSha() {
-        var revision = this.props.revision;
-        if (revision.sha) {
-            return revision.sha.substring(0, 8);
-        } else {
-            return ''
-        }
+        let revision = this.props.revision;
+        return revision.sha ? revision.short_sha : '';
     }
 
     isScanning() {
         return this.props.revision.status != 'scanned';
-    }
-
-    componentDidMount() {
-        this.updateEvents(this.props);
-    }
-
-    componentWillReceiveProps(newProps) {
-        this.updateEvents(newProps);
-    }
-
-    componentWillUnMount() {
-        this.clearEvents();
-    }
-
-    updateEvents(props) {
-        if (this.isScanning()) {
-            if (this.channel == null) {
-                this.channel = websocket.subscribe_private(this.props.revision.channels.scan_update);
-                this.channel.bind('update', (message) => {
-                    this.setState({scanMessages: this.state.scanMessages.concat([message])});
-                })
-            }
-        } else {
-            this.clearEvents();
-        }
-    }
-
-    clearEvents() {
-        if (this.channel) {
-            this.channel.unbind('update');
-            this.channel = null;
-        }
     }
 
     render() {
@@ -142,7 +102,7 @@ class RevisionListItem extends React.Component {
                     {this.renderDetails()}
                 </div>
                 <div className='extra'>
-                    <i className="fa fa-github"></i> {this.shortSha}
+                    <i className="fa fa-github"/> {this.shortSha}
                 </div>
             </a>
         )
@@ -152,9 +112,7 @@ class RevisionListItem extends React.Component {
         var revision = this.props.revision;
         if (this.isScanning()) {
             return (
-                <div className='live-scan-messages'>
-                    <div>{this.state.scanMessages[this.state.scanMessages.length - 1]}</div>
-                </div>
+                <RevisionScanProgressTracker revision={this.props.revision}/>
             )
         } else {
             return (
@@ -176,6 +134,37 @@ class RevisionListItem extends React.Component {
         } else {
             return revision.offense_count;
         }
+    }
+};
+
+class RevisionScanProgressTracker extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            messages: []
+        }
+    }
+
+    componentDidMount() {
+        this.channel = websocket.subscribe_private(this.props.revision.channels.scan_update);
+        this.channel.bind('update', (message) => {
+            this.setState({scanMessages: this.state.messages.concat([message])});
+        })
+    }
+
+    componentWillUnmount() {
+        if (this.channel) {
+            this.channel.unbind('update');
+            this.channel = null;
+        }
+    }
+
+    render() {
+        return (
+            <div className='live-scan-messages'>
+                <div>{this.state.messages[this.state.messages.length - 1]}</div>
+            </div>
+        )
     }
 }
 
