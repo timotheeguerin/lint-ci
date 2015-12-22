@@ -77,11 +77,7 @@ Rails.application.routes.draw do
   # Allow :repo, :file to be more than the regular format.
   constraints LintCI::Constraints.all do
     constraints LintCI::Constraints::Exclude.new do
-      get 'settings/repositories'
-
-
       devise_for :users, controllers: {omniauth_callbacks: 'users/omniauth_callbacks'}
-
 
       root 'welcome#index'
 
@@ -95,6 +91,8 @@ Rails.application.routes.draw do
       get 'settings' => 'settings#index', as: :user_settings
       get 'settings/repositories' => 'settings#repositories', as: :user_repo_settings
 
+      get 'users' => 'users#index', as: :users
+      
       get ':user' => 'users#show', as: :user
 
       get ':user/:repo' => 'repositories#show', as: :repository

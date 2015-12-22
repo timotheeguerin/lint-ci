@@ -92,7 +92,7 @@ Component.Base.List = class extends React.Component {
     }
 
     hasMore() {
-        return this.association !== undefined && !this.association.reachedLast;
+        return this.association !== undefined && this.association.hasMore();
     }
 
     render() {

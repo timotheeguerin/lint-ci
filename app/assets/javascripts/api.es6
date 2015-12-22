@@ -40,6 +40,10 @@ class ApiUrl {
         this.urls = urls;
     }
 
+    users() {
+        return this.urls['users']
+    }
+
     user(username = null) {
         if (username == null) {
             return this.urls['current_user']

@@ -41,13 +41,13 @@ class RevisionFileViewer extends React.Component {
                 var text = $(this).text();
                 if (current < start) {
                     if (current + text.length >= start) {
-                        var left = text.slice(0, start - current);
-                        var right = text.slice(start - current, text.length);
+                        let left = text.slice(0, start - current);
+                        let right = text.slice(start - current, text.length);
                         $(this).html(that.keep(left) + that.highlightOffense(offense, right));
                     }
                 } else if (current < end) {
-                    var left = text.slice(0, end - current);
-                    var right = text.slice(end - current, text.length);
+                    let left = text.slice(0, end - current);
+                    let right = text.slice(end - current, text.length);
                     $(this).html(that.highlightOffense(offense, left) + that.keep(right));
                 }
                 current += text.length;
@@ -129,34 +129,31 @@ class RevisionFileViewer extends React.Component {
 
     render() {
         return (
-            <div>
-                <Tabs tabActive={1}>
-                    <Tabs.Panel title={'Preview'} active={true}>
-                        <Loader loading={this.state.loading} size={4} message="Loading content...">
-                            <div className='linters'>
-                                <LinterPreview linters={this.getLinters()}/>
-                            </div>
-
-                            <RevisionFileViewerCode lines={this.state.lines}
-                                                    annotations={this.state.annotations}/>
-                        </Loader>
-                    </Tabs.Panel>
-                    <Tabs.Panel title={'Offenses'}>
-                        <div className='list'>
-                            <OffenseList offenses={this.state.offenses}
-                                         lines={this.state.lines}/>
+            <Tabs tabActive={1}>
+                <Tabs.Panel title={'Preview'} active={true}>
+                    <Loader loading={this.state.loading} size={4} message="Loading content...">
+                        <div className='linters'>
+                            <LinterPreview linters={this.getLinters()}/>
                         </div>
-                    </Tabs.Panel>
-                </Tabs>
 
-            </div>
-
-
+                        <RevisionFileViewerCode lines={this.state.lines}
+                                                annotations={this.state.annotations}/>
+                    </Loader>
+                </Tabs.Panel>
+                <Tabs.Panel title={'Offenses'}>
+                    <div className='list'>
+                        <OffenseList offenses={this.state.offenses}
+                                     lines={this.state.lines}/>
+                    </div>
+                </Tabs.Panel>
+            </Tabs>
         )
     }
 }
 
 class RevisionFileViewerCode extends React.Component {
+    static defaultProps = {annotations: {}};
+
     render() {
         return (
             <pre className='highlight'>
@@ -201,7 +198,6 @@ class RevisionFileViewerCode extends React.Component {
         )
     }
 }
-RevisionFileViewerCode.defaultProps = {annotations: {}};
 
 class RevisionFileViewerLine extends React.Component {
     render() {
