@@ -28,7 +28,7 @@ Component.Base.List = class extends React.Component {
      * - HasManyRelationship
      */
     loadItems(association) {
-        if (association instanceof RelationshipProxy) {
+        if (association instanceof RelationshipProxy || association instanceof Association) {
             this.association = association;
             this.fetchNextBatch(); //Initial load rest is with paging/infinite load
         } else if (association instanceof Promise) {
@@ -128,8 +128,8 @@ Component.Base.LiveList = class extends Component.Base.List {
     static typeDelay = 300;
 
     loadItems(association) {
-        if (!association instanceof RelationshipProxy) {
-            console.error(`${this.constructor.name} require association to be a proxy`);
+        if (!association instanceof RelationshipProxy || association instanceof Association) {
+            console.error(`${this.constructor.name} require association to be an association or a proxy`);
         }
         this.originalAssociation = association;
         super.loadItems(association.clone());

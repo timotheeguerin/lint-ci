@@ -2,6 +2,10 @@
   <div class="header-left">
     <a href="/"><h1>Lint CI</h1></a>
   </div>
+  <div class="header-left">
+    <a href="<%= users_path %>"><span class="header-link">Users</span></a>
+  </div>
+  <div class="header-fill"></div>
   <div class="header-right">
     <% if user_signed_in? %>
         <div class="nav-item">
@@ -14,7 +18,7 @@
         </div>
     <% else %>
         <a class="github-sign-in" href="<%= user_omniauth_authorize_path(:github) %>">
-            Sign in with Github <%= fa_icon 'github' %>
+          Sign in with Github <%= fa_icon 'github' %>
         </a>
     <% end %>
   </div>

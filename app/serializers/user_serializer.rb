@@ -3,7 +3,7 @@
 class UserSerializer < ApplicationSerializer
   cache key: 'user', expires_in: 3.hours
 
-  attributes :id, :username, :active
+  attributes :id, :username, :active, :gravatar_url
 
   link :url do
     api_user_url(object.username)

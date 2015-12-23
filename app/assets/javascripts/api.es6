@@ -1,9 +1,14 @@
+//=require api/api-url
+
 class Api {
     constructor(host = '') {
         this.root = URI(host + '/api/v1');
         this.ready = false;
         this.readyCallbacks = [];
-        this.loadUrls();
+        this.urls = new ApiUrl(this);
+        this.urls.loadPromise.then(() => {
+            this.notifyLoaded();
+        });
     }
 
     onLoad(callback) {
@@ -21,55 +26,12 @@ class Api {
         }
     }
 
-    loadUrls() {
-        Rest.get(this.root).done(function (data) {
-            this.urls = new ApiUrl(this, data);
-            this.notifyLoaded();
-        }.bind(this));
-    }
-
     user(username = null) {
-        var user = new User(this, {username: username});
-        return user;
-    }
-}
-
-class ApiUrl {
-    constructor(api, urls) {
-        this.api = api;
-        this.urls = urls;
+        return User(this, {username: username});
     }
 
     users() {
-        return this.urls['users']
-    }
-
-    user(username = null) {
-        if (username == null) {
-            return this.urls['current_user']
-        } else {
-            return URI.expand(this.urls['user'], {id: username})
-        }
-    }
-
-    repos(username = null) {
-        if (username == null) {
-            return this.urls['current_user_repos']
-        } else {
-            return URI.expand(this.urls['repos'], {user_id: username})
-        }
-    }
-
-    repo(username, repo) {
-        return URI.expand(this.urls['repo'], {user_id: username, id: repo})
-    }
-
-    branch(username, repo, branch) {
-        return URI.expand(this.urls['branch'], {
-            user_id: username,
-            repository: repo,
-            branch: branch
-        })
+        return new Association(this.urls.users(), User);
     }
 }
 
@@ -228,7 +190,6 @@ class Offense extends Model {
 // Get the link header from the xhr of jquery
 function getLinkHeader(xhr) {
     return parseLinkHeader(xhr.getResponseHeader('Link'));
-
 }
 // Parse the link header
 function parseLinkHeader(header) {

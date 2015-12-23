@@ -9,11 +9,11 @@ header {
   padding: 0 2rem;
   box-shadow: 1px 1px 5px 0 $grey_medium_light;
 
-  .header-left {
+  .header-fill {
     @extend .flex-fill;
   }
 
-  .header-right {
+  .header-left, .header-right {
     @extend .flex-center
   }
 
@@ -22,8 +22,9 @@ header {
   }
 
   h1 {
-    margin: 0;
+    margin: 0 3rem 0 0;
     font-weight: 100;
+    display: inline;
   }
 
   a {
@@ -32,6 +33,10 @@ header {
     &:hover {
       color: $grey_medium_light
     }
+  }
+
+  .header-link {
+    font-weight: 200;
   }
 }
 

@@ -60,6 +60,10 @@ class User < ActiveRecord::Base
     @github_api ||= GithubApi.new(access_token)
   end
 
+  def gravatar_url
+    "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(self.email || '')}"
+  end
+
   def to_s
     username
   end
