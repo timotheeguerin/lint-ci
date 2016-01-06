@@ -102,3 +102,4 @@ end
 require_dependency 'linter/rubocop'
 require_dependency 'linter/js_hint'
 require_dependency 'linter/coffeelint'
+require_dependency 'linter/tslint'
