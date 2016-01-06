@@ -86,6 +86,24 @@ class HasManyRelationship extends RelationshipProxy {
         other.association = this.association.where(filter);
         return other;
     }
+
+    /**
+     * Filter the association and return the first result only
+     * @param filter
+     * @returns {Promise} that will resolve the first item
+     */
+    findBy(filter) {
+        return this.association.findBy(filter)
+    }
+
+    /**
+     * Find by id
+     * @param id Id of the item
+     * @returns {Promise}
+     */
+    find(id) {
+        return this.association.find(id)
+    }
 }
 
 class HasOneRelationship extends RelationshipProxy {

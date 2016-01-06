@@ -1,5 +1,6 @@
 class Rest {
     static get(url, data) {
+        console.log(url.toString());
         return Rest.request("GET", url, data)
     }
 

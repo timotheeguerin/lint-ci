@@ -64,8 +64,8 @@ class RepositoriesSettings extends React.Component {
                     <h2 className='flex-fill'>Repositories</h2>
                     {this.renderSyncBtn()}
                 </div>
-                <RepositoryList repositories={this.state.user.repos} readonly={false}
-                                loading={this.state.loading}/>
+                <RepositoryList repositories={this.state.user.repos.where({type: 'member'})}
+                                readonly={false} loading={this.state.loading}/>
             </div>
         );
     }

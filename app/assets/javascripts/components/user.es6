@@ -25,7 +25,7 @@ class UserComponent extends React.Component {
 
                 <div>
                     <RepositoryList loading={this.state.loading}
-                                    repositories={user.repos.where({enabled: true})}/>
+                                    repositories={user.repos.where({type: 'member', enabled: true})}/>
                 </div>
             </div>
         )

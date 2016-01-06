@@ -94,7 +94,7 @@ class Association {
         if (this._next_url == undefined) {
             return this.computeUrl();
         } else {
-            return Q.resolve(this._next_url);
+            return Promise.resolve(this._next_url);
         }
     }
 

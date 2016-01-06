@@ -10,7 +10,8 @@ class SyncRepositoriesJob < ActiveJob::Base
 
   def load_github_repos(user)
     user.github.client.auto_paginate = true
-    user.github.client.repos(user.username, type: :all)
+    owned = user.github.client.repos(user.username, type: :owner)
+    owned + user.github.client.repos(user.username, type: :member)
   end
 
   def save_repos(user, repos)

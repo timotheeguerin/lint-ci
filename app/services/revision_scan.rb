@@ -35,6 +35,7 @@ class RevisionScan
   end
 
   def scan_revision(revision)
+    # ScanRepositoryJob.perform_now(revision)
     ScanRepositoryJob.perform_later(revision)
   end
 end

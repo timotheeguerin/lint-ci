@@ -27,7 +27,7 @@ class Api {
     }
 
     user(username = null) {
-        return User(this, {username: username});
+        return new User(this, {username: username});
     }
 
     users() {
