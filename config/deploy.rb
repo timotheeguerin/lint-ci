@@ -5,7 +5,7 @@ set :application, 'lint-ci'
 set :repo_url, 'https://github.com/timcolonel/lint-ci'
 
 set :rbenv_type, :system
-set :rbenv_custom_path, '/opt/rbenv'
+set :rbenv_custom_path, '/usr/local/rbenv'
 set :rbenv_ruby, File.read('.ruby-version').strip
 
 set :linked_dirs, %w(tmp/pids tmp/sockets log node_modules)

@@ -30,7 +30,7 @@ class GithubApi
     yield hook if block_given?
     hook
   rescue Octokit::UnprocessableEntity => e
-    if e.message.include? 'Hook already exists!'
+    if e.message.include? 'Hook already exists'
       true
     else
       raise
