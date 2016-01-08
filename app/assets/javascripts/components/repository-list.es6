@@ -1,4 +1,8 @@
 class RepositoryList extends Component.Base.List {
+    static defaultProps = {
+        noRepoContent: 'No repository!'
+    }
+
     constructor(props) {
         super(props, Repository);
         this.loadItems(props.repositories)
@@ -11,6 +15,16 @@ class RepositoryList extends Component.Base.List {
     renderItem(item) {
         return (
             <RepositoryListItem repository={item} readonly={this.props.readonly} key={item.id}/>
+        )
+    }
+
+    renderNoItem() {
+        let message = this.state.query === '' ? this.props.noRepoContent : 'No repository matched query!';
+        return (
+            <div className='v-flex flex-center'>
+                <div className='fa fa-database'></div>
+                <div>{message}</div>
+            </div>
         )
     }
 
