@@ -19,4 +19,12 @@ class ApplicationController < ActionController::Base
   def github
     current_user.github
   end
+
+  def after_sign_in_path_for(user)
+    if user.memberships.empty?
+      user_repo_settings_path
+    else
+      root_path
+    end
+  end
 end
