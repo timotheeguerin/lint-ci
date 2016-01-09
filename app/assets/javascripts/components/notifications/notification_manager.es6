@@ -39,6 +39,16 @@ class NotificationManager {
     static error(...args) {
         return NotificationManager.notify('error', ...args)
     }
+
+    /**
+     * This will notify an error from the server
+     * @param error JQuery error returned
+     */
+    static serverError(error) {
+        let title = I18n.t("notification.server_error");
+        let message = I18n.t(`common.error.${error.statusCode}`);
+        this.error(title, message);
+    }
 }
 
 class NotificationProxy {

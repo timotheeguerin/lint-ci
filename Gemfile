@@ -31,6 +31,7 @@ gem 'sprockets-es6'
 # gem 'websocket-rails', github: 'moaa/websocket-rails', branch: 'sync_fixes'
 gem 'websocket-rails', github: 'moaa/websocket-rails', branch: 'threadsocket-rails'
 gem 'websocket-rails-js', github: 'websocket-rails/websocket-rails-js', branch: 'sub_protocols'
+gem 'i18n-js', '>= 3.0.0.rc11'
 
 gem 'figaro'
 

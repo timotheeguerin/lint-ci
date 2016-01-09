@@ -4,7 +4,6 @@ class RepositoryList extends Component.Base.List {
     };
 
     constructor(props) {
-        console.log("Using a repolist: ", props);
         super(props, Repository);
         this.loadItems(props.repositories)
     }
@@ -20,7 +19,6 @@ class RepositoryList extends Component.Base.List {
     }
 
     renderNoItem() {
-        console.log("NO item in repolist");
         let message = this.state.query === '' ? this.props.noRepoContent : 'No repository matched query!';
         return (
             <div className='v-flex flex-center'>
@@ -50,20 +48,27 @@ class RepositoryListItem extends React.Component {
     }
 
     toggleRepository() {
-        var url;
+        let url, action;
         if (!this.state.repository.enabled) {
             url = this.state.repository.enable_url;
+            action = 'enabled';
         } else {
             url = this.state.repository.disable_url;
+            action = 'disabled';
         }
 
         $.post(url).done(function (data) {
             this.setState({
                 repository: data
-            })
+            });
+            let title = I18n.t(`notification.repository.${action}.title`)
+            let message = I18n.t(`notification.repository.${action}.message`,
+                {name: this.state.repository.full_name});
+            NotificationManager.success(title, message).now();
         }.bind(this)).fail(function (xhr, status, err) {
             console.error("Failure");
             console.error(url, status, err.toString());
+            NotificationManager.serverError(err).now();
         });
     }
 
