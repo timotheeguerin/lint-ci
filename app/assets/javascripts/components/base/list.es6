@@ -73,7 +73,7 @@ Component.Base.List = class extends React.Component {
         return true;
     }
 
-    renderNoItems() {
+    renderNoItem() {
         let message = this.state.query === '' ? 'No data!' : 'No items matched query!';
         return (
             <div className='v-flex flex-center'>
@@ -102,7 +102,7 @@ Component.Base.List = class extends React.Component {
         if (!this.state.loading && items.length === 0) {
             items = (
                 <div className='flex-center no-items'>
-                    {this.renderNoItems()}
+                    {this.renderNoItem()}
                 </div>
             )
         }

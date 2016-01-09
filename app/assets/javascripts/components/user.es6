@@ -13,6 +13,18 @@ class UserComponent extends React.Component {
         });
     }
 
+    renderNoRepoContent() {
+        return (
+            <div>
+                <div>No repositories!</div>
+                <div className="text-md flex-center">
+                    <a href="/settings/repositories" className="btn btn-default h-center">Enable a
+                        repository</a>
+                </div>
+            </div>
+        )
+    }
+
     render() {
         var user = this.state.user;
         return (
@@ -25,7 +37,8 @@ class UserComponent extends React.Component {
 
                 <div>
                     <RepositoryList loading={this.state.loading}
-                                    repositories={user.repos.where({type: 'member', enabled: true})}/>
+                                    repositories={user.repos.where({type: 'member', enabled: true})}
+                                    noRepoContent={this.renderNoRepoContent()}/>
                 </div>
             </div>
         )
