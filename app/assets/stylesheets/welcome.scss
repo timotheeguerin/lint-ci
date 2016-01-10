@@ -26,4 +26,13 @@
     text-align: center;
     font-size: 1.5rem;
   }
+
+  .language-box {
+    width: 25%;
+    color: $grey_darker;
+
+    .box-subtitle {
+      padding: 0.5rem;
+    }
+  }
 }

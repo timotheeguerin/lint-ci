@@ -5,10 +5,9 @@
 <% else %>
     <div class="container">
       <div class="welcome-page">
-        <h1 class="title">Automated code review</h1>
+        <h1 class="title"><%= t('welcome.title') %></h1>
 
-        <h2 class="subtitle">Lint-CI provide simple and automated ways to keep a great style in your
-          code. </h2>
+        <h2 class="subtitle"><%= t('welcome.subtitle') %></h2>
 
         <div class="sign-up-links">
           <a class="github-sign-in" href="<%= user_omniauth_authorize_path(:github) %>">
@@ -16,12 +15,22 @@
           </a>
         </div>
         <br>
+        <% languages = {ruby: {name: 'rubocop', url: 'https://github.com/bbatsov/rubocop'},
+                        javascript: {name: 'jshint', url: 'http://jshint.com/'},
+                        coffeescript: {name: 'coffeelint', url: 'http://www.coffeelint.org/'},
+                        typescript: {name: 'tslint', url: 'https://github.com/palantir/tslint'}} %>
         <div class="available-languages">
-          <div>
-            <a href="https://github.com/bbatsov/rubocop">Ruby</a>
-            <a href="http://jshint.com/">Javascript</a>
-            <a href="http://www.coffeelint.org/">Coffeescript</a>
-            <a href="https://github.com/palantir/tslint">Typescript</a>
+          <div class="flex">
+            <% languages.each do |language, linter| %>
+                <a href="<%= linter[:url] %>" class="shadow-box language-box" target="_blank">
+                  <div class="box-title">
+                    <%= language.capitalize %>
+                  </div>
+                  <div class="box-subtitle">
+                    <%= linter[:name] %>
+                  </div>
+                </a>
+            <% end %>
           </div>
         </div>
       </div>

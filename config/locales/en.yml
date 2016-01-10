@@ -14,3 +14,7 @@ en:
       disabled:
         title: "Repository disabled!"
         message: "Repository %{name} is now disabled"
+
+  welcome:
+    title: Automated code review
+    subtitle: Lint-CI provide simple and automated ways to maintain great style in your code.
