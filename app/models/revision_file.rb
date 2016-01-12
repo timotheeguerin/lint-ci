@@ -22,10 +22,8 @@ class RevisionFile < ActiveRecord::Base
     when 0
       :perfect
     when 1
-      :acceptable
-    when 2..3
       :warning
-    when 4..5
+    when 2..3
       :dirty
     else
       :bad

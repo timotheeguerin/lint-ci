@@ -13,15 +13,9 @@ class Linter < ActiveRecord::Base
     case offense_count
     when 0
       :perfect
-    when 1..5
-      :great
-    when 6..10
-      :good
-    when 11..15
-      :acceptable
-    when 16..20
+    when 1..10
       :warning
-    when 21..30
+    when 11..20
       :dirty
     else
       :bad

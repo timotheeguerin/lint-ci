@@ -8,7 +8,7 @@
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
 
-server '40.112.146.86', user: 'deploy', roles: %w(web app db)
+server 'lintci-prod1.westus.cloudapp.azure.com', user: 'deploy', roles: %w(web app db)
 set :rails_env, 'production'
 
 # role-based syntax

@@ -69,18 +69,6 @@
     color: #6EDE45;
   }
 
-  &.great {
-    color: $green;
-  }
-
-  &.good {
-    color: $green;
-  }
-
-  &.acceptable {
-    color: #D3F64C;
-  }
-
   &.warning {
     color: #FFD34F;
   }
@@ -97,11 +85,12 @@
 .linter-preview {
   margin-top: 0.5rem;
   .linter {
+    border-radius: 3px;
     display: inline-block;
     margin-right: 1rem;
-    background: $grey_lightest;
-    color: $grey_dark;
-    box-shadow: 1px 1px 5px 0 $grey_medium_light inset;
+    //background: $grey_lightest;
+    background: #f5f5f5;
+    color: #6A7777;
 
     > * {
       display: inline-block;

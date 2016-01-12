@@ -93,4 +93,5 @@ end
 
 group :production do
   gem 'puma', '>= 2.15.3'
+  gem 'sentry-raven'
 end
