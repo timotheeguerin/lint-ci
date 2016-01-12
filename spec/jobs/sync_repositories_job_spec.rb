@@ -6,7 +6,8 @@ RSpec.describe SyncRepositoriesJob, type: :job do
     let(:user) { create(:user) }
     it 'call the github api with the repos' do
       expect(user.github.client).to receive(:auto_paginate=).with(true)
-      expect(user.github.client).to receive(:repos)
+      expect(user.github.client).to receive(:repos).with(user.username, type: :owner).and_return([])
+      expect(user.github.client).to receive(:repos).with(user.username, type: :member).and_return([])
       subject.load_github_repos(user)
     end
   end
