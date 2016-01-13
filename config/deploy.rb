@@ -8,6 +8,7 @@ set :rbenv_type, :system
 set :rbenv_custom_path, '/usr/local/rbenv'
 set :rbenv_ruby, File.read('.ruby-version').strip
 
+set :linked_files, %w{config/application.yml}
 set :linked_dirs, %w(tmp/pids tmp/sockets log node_modules)
 set :puma_bind, ["unix://#{shared_path}/tmp/sockets/puma.sock", 'tcp://0.0.0.0:3000']
 

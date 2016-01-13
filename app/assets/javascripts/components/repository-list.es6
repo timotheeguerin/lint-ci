@@ -61,7 +61,7 @@ class RepositoryListItem extends React.Component {
             this.setState({
                 repository: data
             });
-            let title = I18n.t(`notification.repository.${action}.title`)
+            let title = I18n.t(`notification.repository.${action}.title`);
             let message = I18n.t(`notification.repository.${action}.message`,
                 {name: this.state.repository.full_name});
             NotificationManager.success(title, message).now();

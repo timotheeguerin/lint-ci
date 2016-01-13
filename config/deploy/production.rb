@@ -11,6 +11,7 @@
 server 'lintci-prod1.westus.cloudapp.azure.com', user: 'deploy', roles: %w(web app db)
 set :rails_env, 'production'
 
+set :branch, fetch(:branch, 'production')
 # role-based syntax
 # ==================
 
@@ -24,7 +25,6 @@ set :rails_env, 'production'
 # role :db,  %w{deploy@example.com}
 
 
-
 # Configuration
 # =============
 # You can set any configuration variable like in config/deploy.rb
@@ -32,7 +32,6 @@ set :rails_env, 'production'
 # For available Capistrano configuration variables see the documentation page.
 # http://capistranorb.com/documentation/getting-started/configuration/
 # Feel free to add new variables to customise your setup.
-
 
 
 # Custom SSH Options
