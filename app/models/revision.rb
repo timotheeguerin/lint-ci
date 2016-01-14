@@ -33,7 +33,6 @@ class Revision < ActiveRecord::Base
   end
 
   def channel
-
     return if branch.nil?
     Channel.branch_revisions_change(branch.repository, branch)
   end

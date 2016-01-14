@@ -45,7 +45,8 @@ class User < ActiveRecord::Base
 
   def self.new_with_session(_params, session)
     super.tap do |user|
-      if (data = session['devise.github_data']) && session['devise.github_data']['extra']['raw_info']
+      data = session['devise.github_data']
+      if data && session['devise.github_data']['extra']['raw_info']
         user.email = data['email'] if user.email.blank?
       end
     end
@@ -61,7 +62,7 @@ class User < ActiveRecord::Base
   end
 
   def gravatar_url
-    "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(self.email || '')}"
+    "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(email || '')}"
   end
 
   def to_s

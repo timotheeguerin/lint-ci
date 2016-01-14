@@ -27,9 +27,7 @@ module LintCi
 
     config.active_job.queue_adapter = :sidekiq
     config.middleware.delete 'Rack::Lock'
-    config.autoload_paths <<
-      "#{Rails.root}/lib/" <<
-      "#{Rails.root}/config/routes"
+    config.autoload_paths += %W(#{Rails.root}/lib/ #{Rails.root}/config/routes)
     config.react.jsx_transform_options = {
       harmony: true
     }

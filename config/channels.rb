@@ -16,7 +16,8 @@ Channel.routes.draw do
     authorize! :read, @branch
   end
 
-  channel :repo_revision_scan_update, 'repos/:repo/:branch/revisions/:revision/scan' do |repo_id,branch_id, _|
+  channel :repo_revision_scan_update,
+          'repos/:repo/:branch/revisions/:revision/scan' do |repo_id, branch_id, _|
     @repository = Repository.find(repo_id)
     @branch = @repository.branches.find(branch_id)
     authorize! :read, @repository

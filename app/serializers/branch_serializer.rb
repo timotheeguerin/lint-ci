@@ -1,7 +1,6 @@
 # Branch serializer
 # @see Branch
 class BranchSerializer < ApplicationSerializer
-
   attributes :id, :name, :repository_id
 
   belongs_to :repository

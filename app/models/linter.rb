@@ -1,9 +1,7 @@
 # Revision linter
 class Linter < ActiveRecord::Base
   belongs_to :revision
-
   has_many :offenses
-
 
   default_scope do
     order(offense_count: :desc)

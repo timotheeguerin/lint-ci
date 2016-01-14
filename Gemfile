@@ -56,7 +56,7 @@ gem 'friendly_id'
 # For ruby lint
 gem 'rubocop'
 
-
+# For syntax highlighting
 gem 'rouge'
 
 gem 'react-rails', '~> 1.4.0'

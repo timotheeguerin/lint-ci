@@ -5,6 +5,7 @@
 # Add back
 
 module ActionController
+  # Serialization
   module Serialization
     [:_render_option_json, :_render_with_renderer_json].each do |renderer_method|
       define_method renderer_method do |resource, options|

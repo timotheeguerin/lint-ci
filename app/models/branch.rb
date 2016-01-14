@@ -1,3 +1,4 @@
+# Repository branch
 class Branch < ActiveRecord::Base
   extend FriendlyId
   friendly_id :name, use: [:finders]

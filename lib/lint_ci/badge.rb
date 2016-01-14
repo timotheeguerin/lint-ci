@@ -1,6 +1,5 @@
 # Class that handle download badge from shields.io
 class LintCI::Badge
-
   # Left side of the badge
   attr_accessor :label
 

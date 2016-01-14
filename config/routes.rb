@@ -12,6 +12,7 @@ class ActionDispatch::Routing::Mapper
     instance_eval(File.read(filename))
   end
 end
+
 # Sidekiq cancan auth
 class CanCanConstraint
   def initialize(action, resource)
@@ -30,7 +31,6 @@ end
 # General constraints
 module LintCI::Constraints
   class << self
-
     def user
       {user: %r{[^/]+}}
     end
@@ -71,7 +71,7 @@ Rails.application.routes.draw do
   get 'branches/show'
 
   scope path: '/admin' do
-    mount Sidekiq::Web => '/sidekiq' #, constraints: CanCanConstraint.new(:manage, :sidekiq)
+    mount Sidekiq::Web => '/sidekiq' # , constraints: CanCanConstraint.new(:manage, :sidekiq)
   end
 
   # Allow :repo, :file to be more than the regular format.
@@ -80,7 +80,6 @@ Rails.application.routes.draw do
       devise_for :users, controllers: {omniauth_callbacks: 'users/omniauth_callbacks'}
 
       root 'welcome#index'
-
 
       namespace :api do
         scope path: :v1, module: :v1 do
@@ -92,7 +91,7 @@ Rails.application.routes.draw do
       get 'settings/repositories' => 'settings#repositories', as: :user_repo_settings
 
       get 'users' => 'users#index', as: :users
-      
+
       get ':user' => 'users#show', as: :user
 
       get ':user/:repo' => 'repositories#show', as: :repository
@@ -103,15 +102,12 @@ Rails.application.routes.draw do
 
       get ':user/:repo/offense.svg' => 'badges#offense', as: :repository_offense_badge
 
-
       get ':user/:repo/:branch' => 'branches#show', as: :branch
 
       get ':user/:repo/:branch/:revision' => 'revisions#show', as: :revision
 
       get ':user/:repo/:branch/:revision/:file/' => 'revision_files#show',
           as: :file, constraints: LintCI::Constraints.file
-
     end
   end
 end
-

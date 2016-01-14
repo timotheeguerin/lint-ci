@@ -9,4 +9,4 @@ module Channel
   end
 end
 
-load "#{Rails.root}/config/channels.rb" if File.exists?("#{Rails.root}/config/channels.rb")
+load "#{Rails.root}/config/channels.rb" if File.exist?("#{Rails.root}/config/channels.rb")

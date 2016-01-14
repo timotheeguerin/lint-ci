@@ -19,7 +19,8 @@ class RevisionSerializer < ApplicationSerializer
 
   link :channels do
     {
-      scan_update: Channel.repo_revision_scan_update_path(object.branch.repository, object.branch, object)
+      scan_update: Channel.repo_revision_scan_update_path(object.branch.repository,
+                                                          object.branch, object)
     }
   end
 

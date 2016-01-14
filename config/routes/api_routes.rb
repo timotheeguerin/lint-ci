@@ -24,7 +24,6 @@ post 'user/repos/sync' => 'current_user#sync_repos', as: :current_user_sync_repo
 # List of all user repositories
 get 'users/:user/repos' => 'repositories#index', as: :user_repos
 
-
 # Get specific repo
 get 'repos/:user/:repo' => 'repositories#show', as: :repo
 

@@ -1,5 +1,5 @@
+# Controller for websocket channels It will authenticate the request and retrieve the right channel
 class AuthorizationController < WebsocketRails::BaseController
-
   def authorize_channels
     channel = Channel.routes.find(message[:channel])
     return deny_channel(message: '404 Channel not found!') if channel.nil?

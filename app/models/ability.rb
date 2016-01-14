@@ -15,8 +15,7 @@ class Ability
     can [:refresh, :scan], Branch, repository: {memberships: {user_id: user.id}}
     can [:create, :destroy], Revision, branch: {repository: {memberships: {user_id: user.id}}}
 
-    if user.admin?
-      can :manage, :sidekiq
-    end
+    return unless user.admin?
+    can :manage, :sidekiq
   end
 end

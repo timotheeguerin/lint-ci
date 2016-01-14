@@ -24,9 +24,8 @@ class SyncBranchesJob < ActiveJob::Base
 
   def find_or_create_branch(repository, github_branch)
     branch = repository.branches.where(name: github_branch.name).first
-    if branch.nil?
-      branch = repository.branches.build(name: github_branch.name)
-      branch.save
-    end
+    return if branch.present?
+    branch = repository.branches.build(name: github_branch.name)
+    branch.save
   end
 end

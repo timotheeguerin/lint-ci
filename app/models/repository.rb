@@ -1,5 +1,5 @@
-class Repository < ActiveRecord::Base
 # Class containing repository
+class Repository < ActiveRecord::Base
   extend FriendlyId
   friendly_id :name, use: [:finders]
 
@@ -39,15 +39,12 @@ class Repository < ActiveRecord::Base
     File.join(owner_path, name)
   end
 
-  # @return Git object
+  # @return Git object for the repository
   def git
     if File.directory?(File.join(local_path, '.git'))
-      logger.info "#{full_name} repository already cloned."
-      Git.open(local_path)
+      git_open
     else
-      logger.info "Cloning repository #{full_name}"
-      FileUtils.mkdir_p(owner_path)
-      Git.clone(github_url, name, path: owner_path)
+      git_clone
     end
   end
 
@@ -63,5 +60,16 @@ class Repository < ActiveRecord::Base
 
   def refreshing
     !job_id.nil?
+  end
+
+  protected def git_open
+    logger.info "#{full_name} repository already cloned."
+    Git.open(local_path)
+  end
+
+  protected def git_clone
+    logger.info "Cloning repository #{full_name}"
+    FileUtils.mkdir_p(owner_path)
+    Git.clone(github_url, name, path: owner_path)
   end
 end
