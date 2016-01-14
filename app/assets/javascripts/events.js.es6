@@ -1,7 +1,9 @@
 class EventManager {
+    static subscribers = {};
+
     static on(eventName, callback) {
         if (isNull(EventManager.subscribers[eventName])) {
-            EventManager.subscribers[eventName] = [];
+            EventManager.subscribers[eventName] = {};
         }
         var listener = new EventListener();
         EventManager.subscribers[eventName][listener.id] = callback;
@@ -12,8 +14,8 @@ class EventManager {
         var subs = EventManager.subscribers[eventName];
         console.log("Subs: ", subs);
         if (!isNull(subs)) {
-            for (let sub of subs) {
-                sub(...args);
+            for (let sub_id of subs) {
+                subs[sub_id](...args);
             }
         }
     }
@@ -24,7 +26,6 @@ class EventManager {
         }
     }
 }
-EventManager.subscribers = {};
 
 class EventListener {
     constructor() {
