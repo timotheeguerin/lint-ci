@@ -10,6 +10,7 @@ class EventManager {
 
     static trigger(eventName, ...args) {
         var subs = EventManager.subscribers[eventName];
+        console.log("Subs: ", subs);
         if (!isNull(subs)) {
             for (let sub of subs) {
                 sub(...args);
