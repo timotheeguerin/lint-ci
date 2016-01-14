@@ -3,7 +3,7 @@
  */
 Component.BranchDropdown = class extends React.Component {
     static propTypes = {
-        repository: React.PropTypes.instanceOf(Repository), //Repository having the branches
+        repository: React.PropTypes.any.isRequired, //Repository having the branches
         branches: React.PropTypes.any.isRequired, //List of branches/has many assoc
         branch: React.PropTypes.any.isRequired, //Current branch
         onBranchSelected: React.PropTypes.func.isRequired

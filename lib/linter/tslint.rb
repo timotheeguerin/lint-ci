@@ -31,13 +31,30 @@ class Linter::TsLint < Linter::Base
   end
 
   def parse_location(offense, json)
-    offense.line = json['startPosition']['line'] + 1
-    offense.column = json['startPosition']['character'] + 1
+    offense.line = line(json)
+    offense.column = start_char(json)
+    offense.length = length(json)
+  end
 
-    if json['startPosition']['line'] != json['endPosition']['line']
-      offense.length = 1
+  # Return the line for the offense
+  # @param offense_json Offense hash object
+  def line(offense_json)
+    offense_json['startPosition']['line'] + 1
+  end
+
+  # First character for the offense
+  # @param offense_json Offense hash object
+  def start_char(offense_json)
+    offense_json['startPosition']['character'] + 1
+  end
+
+  # Number of character for the offense
+  # @param offense_json Offense hash object
+  def length(offense_json)
+    if offense_json['startPosition']['line'] != offense_json['endPosition']['line']
+      1
     else
-      offense.length =  json['endPosition']['character'] - json['startPosition']['character']
+      offense_json['endPosition']['character'] - offense_json['startPosition']['character']
     end
   end
 

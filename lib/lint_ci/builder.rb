@@ -18,11 +18,7 @@ class LintCI::Builder
 
     linters.each do |cls|
       notify("Running #{cls}...")
-
-      linter = cls.new(@revision, dir, config)
-      linter.review
-      @revision.linters << linter.linter
-      @revision.offense_count += linter.linter.offense_count
+      cls.new(@revision, dir, config).review
     end
     notify('Scanning complete!')
     @revision.save!
@@ -65,7 +61,8 @@ class LintCI::Builder
   def clone
     notify('Cloning repository...')
     FileUtils.mkdir_p(root_dir)
-    @git ||= Git.clone(@repository.github_url, @repository.name, branch: @branch.name, path: root_dir)
+    @git ||= Git.clone(@repository.github_url, @repository.name,
+                       branch: @branch.name, path: root_dir)
   end
 
   def checkout

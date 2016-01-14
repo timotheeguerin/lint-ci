@@ -1,6 +1,5 @@
 # User config
 class LintCI::Config
-
   # Languages
   attr_accessor :linters
 

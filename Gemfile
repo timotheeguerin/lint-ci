@@ -26,10 +26,8 @@ gem 'active_model_serializers',
 
 gem 'sprockets'
 gem 'sprockets-es6'
-# gem 'websocket-rails', github: 'timcolonel/websocket-rails'
-# gem 'websocket-rails', path: '../websocket-rails'
-# gem 'websocket-rails', github: 'moaa/websocket-rails', branch: 'sync_fixes'
 gem 'websocket-rails', github: 'moaa/websocket-rails', branch: 'threadsocket-rails'
+gem 'faye-websocket', '0.10.0'
 gem 'websocket-rails-js', github: 'websocket-rails/websocket-rails-js', branch: 'sub_protocols'
 gem 'i18n-js', '>= 3.0.0.rc11'
 

@@ -5,7 +5,6 @@ class Linter::Base
     attr_accessor :_keys
   end
 
-
   # Set the linter language
   # Any file created in the linter will be mapped to this language
   def self.language(language)
@@ -28,11 +27,10 @@ class Linter::Base
     linters
   end
 
-
   attr_accessor :directory
   attr_accessor :config
 
-  # Track the number of offenses found while scanning
+  # Linter model
   attr_accessor :linter
 
   def initialize(revision, directory, config)
@@ -51,6 +49,8 @@ class Linter::Base
 
       b.report 'Upload data' do
         upload(data)
+        @revision.linters << @linter
+        @revision.offense_count += @linter.offense_count
       end
     end
   end
@@ -60,7 +60,7 @@ class Linter::Base
     fail NotImplementedError
   end
 
-  # Upload takes the output of #run_linter and upload to the database
+  # Upload parse the output of #run_linter and upload to the database
   def upload(_data)
     fail NotImplementedError
   end
