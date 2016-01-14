@@ -38,7 +38,10 @@ class Api::V1::RepositoriesController < Api::V1::BaseController
 
   # Github triggered hook
   def webhook
-    @repository = @user.repositories.find(params[:repo])
+    @repository = @user.repos.find(params[:repo])
+    if params[:ref].nil?
+      render json: {success: 'Missing ref attribute!'}, status: :unprocessable_entity
+    end
     branch_name = params[:ref].split('/')[-1]
     branch = @repository.branches.find_by_name(branch_name)
     if branch.nil?
@@ -46,9 +49,8 @@ class Api::V1::RepositoriesController < Api::V1::BaseController
       branch.save
     end
     @repository.transaction do
-      queued = RevisionScan.new(branch).scan(params[:after])
-      status = queued ? :accepted : :ok
-      render json: {success: 'Repository queued for scan!'}, status: status
+      RevisionScan.new(branch).scan(params[:after])
+      render json: {success: 'Repository queued for scan!'}, status: :accepted
     end
   end
 
