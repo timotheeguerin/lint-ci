@@ -14,7 +14,7 @@ class EventManager {
         var subs = EventManager.subscribers[eventName];
         console.log("Subs: ", subs);
         if (!isNull(subs)) {
-            for (let sub_id of subs) {
+            for (let sub_id of Object.keys(subs)) {
                 subs[sub_id](...args);
             }
         }
