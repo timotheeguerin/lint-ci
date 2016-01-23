@@ -1,6 +1,6 @@
 # Lint-CI
 [![Build Status](https://img.shields.io/travis/timcolonel/lint-ci/master.svg?style=flat-square)](https://travis-ci.org/timcolonel/lint-ci)
-
+[![Lint-CI](https://lint-ci.io/timcolonel/lint-ci/offense.svg?branch=master)](https://lint-ci.io/timcolonel/lint-ci)
 ****IN DEV****
 
 Lint-CI is a web app that check for style error in your repositories.
@@ -11,8 +11,8 @@ Lint-CI is a web app that check for style error in your repositories.
 Supported style checked:
 * Rubocop(Ruby)
 * Jshint(Javascript)
-* tslint(Typescript) **SOON**
-* coffeelint(Coffeescript) **SOON**
+* tslint(Typescript)
+* coffeelint(Coffeescript)
 
 
 Installation:

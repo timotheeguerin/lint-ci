@@ -2,25 +2,33 @@ class UserComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            current_user: api.user(),
             user: new User(api, props.user),
             loading: true
         }
     }
 
     componentDidMount() {
-        this.state.user.fetch().then((user) => {
-            this.setState({user: user, loading: false})
+        let promises = [this.state.current_user.fetch(), this.state.user.fetch()];
+        Promise.all(promises).then(([current_user, user]) => {
+            this.setState({current_user: current_user, user: user, loading: false})
         });
     }
 
     renderNoRepoContent() {
-        return (
-            <div>
-                <div>No repositories!</div>
+        let link;
+        if (this.state.current_user.id === this.state.user.id) {
+            link = (
                 <div className="text-md flex-center">
                     <a href="/settings/repositories" className="btn btn-default h-center">Enable a
                         repository</a>
                 </div>
+            )
+        }
+        return (
+            <div>
+                <div>No repositories!</div>
+                {link}
             </div>
         )
     }
