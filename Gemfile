@@ -87,6 +87,7 @@ end
 group :test do
   gem 'faker'
   gem 'webmock'
+  gem 'simplecov', require: false
 end
 
 group :production do

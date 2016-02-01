@@ -24,7 +24,7 @@ module Channel
     # @params args List of arguments to generate channel path
     def websocket_channel(name, *args)
       return unless routes.channels.key?(name)
-      channel = routes.channels[method_sym]
+      channel = routes.channels[name]
       WebsocketRails[channel.path(*args)]
     end
   end
